@@ -1,1 +1,0 @@
-storage = "This is a variable"
