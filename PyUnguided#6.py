@@ -69,3 +69,5 @@ if game == "YES":
         print(role4)
     else:
         print("Invalid input, you lose.")
+        
+#This is a test
