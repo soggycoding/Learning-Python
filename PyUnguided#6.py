@@ -1,7 +1,13 @@
 #This project will be a turn base battle, there will be a player and an enemy. The enemy would be a bot that has RNG to make its decision
 #It will ask the user what their role would be and what they would like to be called.
-
+import random
 game = input("Would you like to play a game? ").upper()
+def roll():
+    min_number = 1
+    max_number= 6
+    rolled = random.randint(min_number, max_number)
+    return rolled
+        
 
 class roles:       
     def __init__(self,job, lvl, xp, hp, mana):
@@ -35,6 +41,7 @@ role1 = roles("ARCHER", 1, 0, 100, 100)
 role2 = roles("BARBARIAN", 1, 0, 200, 100)
 role3 = roles("WIZARD", 1, 0, 100, 300)
 role4 = roles("BRUTE", 1, 0, 500, 50)
+dice = roll()
 
 """
     What to learn:
@@ -50,17 +57,24 @@ if game == "YES":
         skill = input("Would you like to see the skill of your chosen class? ").upper()
         if skill == "YES":
             print("The Archer has these skills: \n1. Powershot \n2. Snipe \n3. Direct shot \n4. Multishot")
-            use_skill = input("Please select a number from the skills to attack the enemy: ")
-            if use_skill == "1":
-                print(roles.powershot(role1))
-            elif use_skill == "2":
-                print(roles.snipe(role1))
-            elif use_skill == "3":
-                print(roles.direct_shot(role1))
-            elif use_skill == "4":
-                print(roles.multishot(role1))
-            else:
-                print("Invalid input")
+            start = input("Would you like to start the game? ").upper()
+            if start == "YES":
+                fight = input("You are walking along the forest and you have seen an enemy, are you going to fight it or run away? ").upper()
+                if fight == "FIGHT":
+                    die = input("This die will decide who will go first, input 1 to roll: ")
+                    if die == "1":
+                        print("You rolled: ", dice)
+                    use_skill = input("Please select a number from the skills to attack the enemy: ")
+                    if use_skill == "1":
+                        print(roles.powershot(role1))
+                    elif use_skill == "2":
+                        print(roles.snipe(role1))
+                    elif use_skill == "3":
+                        print(roles.direct_shot(role1))
+                    elif use_skill == "4":
+                        print(roles.multishot(role1))
+                    else:
+                        print("Invalid input")
     elif role == "BARBARIAN":
         print(role2)
     elif role == "WIZARD":
