@@ -3,8 +3,8 @@
 import random
 game = input("Would you like to play a game? ").upper()
 
-player_roll = random.randint(1, 6)
-enemy_roll = random.randint(1, 1)
+player_roll = random.randint(1, 1)
+enemy_roll = random.randint(1, 6)
 enemy_attacks = random.randint(1, 4)
 
 class roles:       
@@ -79,6 +79,10 @@ archer_skills = {"1" : role1.powershot,
                  "2" : role1.snipe,
                  "3" : role1.direct_shot,
                  "4" : role1.multishot}
+enemy_skill = {1 : enemy1.swing,
+               2 : enemy1.bane,
+               3 : enemy1.meditate,
+               4 : enemy1.pass_attack}
 
 if game == "YES":
     role = input("Welcome, to a RNG turn base battle. Please select a role. (Archer/Barbarian/Wizard/Brute)\n").upper()
@@ -101,15 +105,7 @@ if game == "YES":
                             print(archer_skills[use_skill]())
                         else:
                             print("The enemy goes first:")
-                            if enemy_attacks == 1:
-                                print(enemy.swing(enemy1))
-                            elif enemy_attacks == 2:
-                                print(enemy.bane(enemy1))
-                            elif enemy_attacks == 3:
-                                print(enemy.meditate(enemy1))
-                            elif enemy_attacks == 4:
-                                print(enemy.pass_attack(enemy1))
-
+                            print(enemy_skill[enemy_attacks]())
     elif role == "BARBARIAN":
         print(role2)
     elif role == "WIZARD":
