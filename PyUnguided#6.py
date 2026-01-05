@@ -2,11 +2,10 @@
 #It will ask the user what their role would be and what they would like to be called.
 import random
 game = input("Would you like to play a game? ").upper()
-def roll():
-    min_number = 1
-    max_number= 6
-    rolled = random.randint(min_number, max_number)
-    return rolled
+
+player_roll = random.randint(1, 6)
+enemy_roll = random.randint(1, 6)
+
         
 
 class roles:       
@@ -32,8 +31,7 @@ class roles:
     def multishot(self):
         if self.mana >= 100:
             self.mana -= 100
-            return "You have use Multishot! dealing 100 damage to the enemy"
-        
+            return "You have use Multishot! dealing 100 damage to the enemy"    
     def __str__(self):
         return f"You have chosen {self.job} \nLEVEL:{self.lvl} \nXP:{self.xp}/100 \nHP:{self.hp} \nMANA:{self.mana}"
     
@@ -41,7 +39,17 @@ role1 = roles("ARCHER", 1, 0, 100, 100)
 role2 = roles("BARBARIAN", 1, 0, 200, 100)
 role3 = roles("WIZARD", 1, 0, 100, 300)
 role4 = roles("BRUTE", 1, 0, 500, 50)
-dice = roll()
+
+class enemy:
+    def __init__(self,name, lvl, hp, mana):
+        self.name = name
+        self.lvl = lvl
+        self.hp = hp
+        self.mana = mana
+    def __str__(self):
+        return f"{self.name} LEVEL:{self.lvl}, HP:{self.hp}, MANA:{self.mana}"
+    
+enemy1 = enemy("Dark Lord of Death", 50, 500, 1000)
 
 """
     What to learn:
@@ -63,18 +71,23 @@ if game == "YES":
                 if fight == "FIGHT":
                     die = input("This die will decide who will go first, input 1 to roll: ")
                     if die == "1":
-                        print("You rolled: ", dice)
-                    use_skill = input("Please select a number from the skills to attack the enemy: ")
-                    if use_skill == "1":
-                        print(roles.powershot(role1))
-                    elif use_skill == "2":
-                        print(roles.snipe(role1))
-                    elif use_skill == "3":
-                        print(roles.direct_shot(role1))
-                    elif use_skill == "4":
-                        print(roles.multishot(role1))
-                    else:
-                        print("Invalid input")
+                        print("You rolled: ", player_roll)
+                        print(" ")
+                        print("The enemy has rolled:", enemy_roll)
+                        if player_roll > enemy_roll:
+                            use_skill = input("Please select a number from the skills to attack the enemy: ")
+                            if use_skill == "1":
+                                print(roles.powershot(role1))
+                            elif use_skill == "2":
+                                print(roles.snipe(role1))
+                            elif use_skill == "3":
+                                print(roles.direct_shot(role1))
+                            elif use_skill == "4":
+                                print(roles.multishot(role1))
+                            else:
+                                print("Invalid input")
+                        else:
+                            print("The enemy goes first:")
     elif role == "BARBARIAN":
         print(role2)
     elif role == "WIZARD":
