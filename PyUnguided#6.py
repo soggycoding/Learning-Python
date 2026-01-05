@@ -4,7 +4,7 @@ import random
 game = input("Would you like to play a game? ").upper()
 
 player_roll = random.randint(1, 6)
-enemy_roll = random.randint(1, 6)
+enemy_roll = random.randint(1, 1)
 enemy_attacks = random.randint(1, 4)
 
 class roles:       
@@ -75,10 +75,10 @@ Instance methods - Methods that modify self attributes
 Method parameters - Passing values (like mana cost) to methods
 Basic arithmetic on attributes - self.mana -= cost
 """
-archer_skills = {"1": role1.powershot,
-                 "2": role1.snipe,
-                 "3": role1.direct_shot,
-                 "4": role1.multishot}
+archer_skills = {"1" : role1.powershot,
+                 "2" : role1.snipe,
+                 "3" : role1.direct_shot,
+                 "4" : role1.multishot}
 
 if game == "YES":
     role = input("Welcome, to a RNG turn base battle. Please select a role. (Archer/Barbarian/Wizard/Brute)\n").upper()
@@ -98,7 +98,7 @@ if game == "YES":
                         print("The enemy has rolled:", enemy_roll)
                         if player_roll > enemy_roll:
                             use_skill = input("Please select a number from the skills to attack the enemy: ")
-                            archer_skills.get(use_skill)(use_skill, lambda: "Invalid")
+                            print(archer_skills[use_skill]())
                         else:
                             print("The enemy goes first:")
                             if enemy_attacks == 1:
