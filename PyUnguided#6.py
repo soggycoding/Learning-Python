@@ -5,8 +5,7 @@ game = input("Would you like to play a game? ").upper()
 
 player_roll = random.randint(1, 6)
 enemy_roll = random.randint(1, 6)
-
-        
+enemy_attacks = random.randint(1, 4)
 
 class roles:       
     def __init__(self,job, lvl, xp, hp, mana):
@@ -49,6 +48,25 @@ class enemy:
     def __str__(self):
         return f"{self.name} LEVEL:{self.lvl}, HP:{self.hp}, MANA:{self.mana}"
     
+    def swing(self):
+        if self.mana >= 500:
+            self.mana -= 50
+            return "The enemy has used Swing! Dealing 30 damage to you"
+    
+    def bane(self):
+        if self.mana >= 500:
+            self.mana -= 100
+            return "The enemy has used Bane! Dealing 50 damage to you"
+    
+    def meditate(self):
+        if self.mana >= 500:
+            self.mana -= 150
+            self.hp += 100
+            return f"The enemy has use Meditate, regenerating health by 100! His health is now {self.hp}"
+        
+    def pass_attack(self):
+        return "The enemy has pass to attack"
+    
 enemy1 = enemy("Dark Lord of Death", 50, 500, 1000)
 
 """
@@ -88,6 +106,15 @@ if game == "YES":
                                 print("Invalid input")
                         else:
                             print("The enemy goes first:")
+                            if enemy_attacks == 1:
+                                print(enemy.swing(enemy1))
+                            elif enemy_attacks == 2:
+                                print(enemy.bane(enemy1))
+                            elif enemy_attacks == 3:
+                                print(enemy.meditate(enemy1))
+                            elif enemy_attacks == 4:
+                                print(enemy.pass_attack(enemy1))
+
     elif role == "BARBARIAN":
         print(role2)
     elif role == "WIZARD":
@@ -96,5 +123,3 @@ if game == "YES":
         print(role4)
     else:
         print("Invalid input, you lose.")
-        
-#This is a test
