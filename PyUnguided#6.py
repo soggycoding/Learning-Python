@@ -3,8 +3,8 @@
 import random
 game = input("Would you like to play a game? ").upper()
 
-player_roll = random.randint(1, 1)
-enemy_roll = random.randint(1, 6)
+player_roll = random.randint(1, 6)
+enemy_roll = random.randint(1, 1)
 enemy_attacks = random.randint(1, 4)
 
 class roles:       
@@ -35,9 +35,11 @@ class roles:
         return f"You have chosen {self.job} \nLEVEL:{self.lvl} \nXP:{self.xp}/100 \nHP:{self.hp} \nMANA:{self.mana}"
     
 role1 = roles("ARCHER", 1, 0, 100, 100)
+"""
 role2 = roles("BARBARIAN", 1, 0, 200, 100)
 role3 = roles("WIZARD", 1, 0, 100, 300)
 role4 = roles("BRUTE", 1, 0, 500, 50)
+"""
 
 class enemy:
     def __init__(self,name, lvl, hp, mana):
@@ -68,7 +70,8 @@ class enemy:
         return "The enemy has pass to attack"
     
 enemy1 = enemy("Dark Lord of Death", 50, 500, 1000)
-
+player_hp = role1.hp
+enemy_hp = enemy1.hp
 """
     What to learn:
 Instance methods - Methods that modify self attributes
@@ -84,33 +87,48 @@ enemy_skill = {1 : enemy1.swing,
                3 : enemy1.meditate,
                4 : enemy1.pass_attack}
 
-if game == "YES":
-    role = input("Welcome, to a RNG turn base battle. Please select a role. (Archer/Barbarian/Wizard/Brute)\n").upper()
-    if role == "ARCHER":
-        print(role1)
-        skill = input("Would you like to see the skill of your chosen class? ").upper()
-        if skill == "YES":
-            print("The Archer has these skills: \n1. Powershot \n2. Snipe \n3. Direct shot \n4. Multishot")
-            start = input("Would you like to start the game? ").upper()
-            if start == "YES":
-                fight = input("You are walking along the forest and you have seen an enemy, are you going to fight it or run away? ").upper()
-                if fight == "FIGHT":
-                    die = input("This die will decide who will go first, input 1 to roll: ")
-                    if die == "1":
-                        print("You rolled: ", player_roll)
-                        print(" ")
-                        print("The enemy has rolled:", enemy_roll)
-                        if player_roll > enemy_roll:
-                            use_skill = input("Please select a number from the skills to attack the enemy: ")
-                            print(archer_skills[use_skill]())
-                        else:
-                            print("The enemy goes first:")
-                            print(enemy_skill[enemy_attacks]())
+class game_mechanics:
+    def skill_use(self):
+        self.use_skill = input("Please select a number from the skills to attack the enemy: ")
+        return self.use_skill
+
+user_input = game_mechanics()
+
+if game != "YES":
+    print("Invalid input, you lose.")
+    exit()
+role = input("Welcome, to a RNG turn base battle. Please select a role. (Archer/Barbarian/Wizard/Brute)\n").upper()
+if role == "ARCHER":
+    print(role1)
+    skill = input("Would you like to see the skill of your chosen class? ").upper()
+    if skill == "YES":
+        print("The Archer has these skills: \n1. Powershot \n2. Snipe \n3. Direct shot \n4. Multishot")
+        start = input("Would you like to start the game? ").upper()
+        if start != "YES":
+            print("Game over!")
+        fight = input("You are walking along the forest and you have seen an enemy, are you going to fight it or run away? ").upper()
+        if fight != "FIGHT":
+            print("You have chosen to run away, coward")
+            exit()
+        print("You rolled: ", player_roll)
+        print("________________________")
+        print("The enemy has rolled:", enemy_roll)
+        if player_roll > enemy_roll:
+            print(archer_skills[user_input.skill_use()]())
+            print("The enemy's turn")
+            print(enemy_skill[enemy_attacks]())
+            print(archer_skills[user_input.skill_use()]())
+                
+        else:
+            print(enemy_skill[enemy_attacks]())
+            print("It is now your turn, please choose a skill")
+            print(archer_skills[user_input.skill_use()]())
+                
+    """
     elif role == "BARBARIAN":
         print(role2)
     elif role == "WIZARD":
         print(role3)
     elif role == "BRUTE":
         print(role4)
-    else:
-        print("Invalid input, you lose.")
+    """
