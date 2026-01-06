@@ -16,37 +16,33 @@ class roles:
         self.skills = skills
     
     def powershot(self):
-        if self.mana <= 100:
-            self.mana -= 30
-            enemy1.hp -= 30
+        if self.mana != 0:
+            current_player.mana -= 30
+            current_enemy.hp -= 30
             return "You have use Powershot! dealing 30 damage to the enemy"
-        else:
-            print("Insufficient Mana")
+        return "Insufficient Mana"
     def snipe(self):
-        if self.mana <= 100:
-            self.mana -= 50
-            enemy1.hp -= 50
+        if self.mana != 0:
+            current_player.mana -= 50
+            current_enemy.hp -= 50
             return "You have use Snipe! dealing 50 damage to the enemy"
-        else:
-            print("Insufficient Mana")
+        return "Insufficient Mana"
     def direct_shot(self):
-        if self.mana <= 100:
-            self.mana -= 60
-            enemy1.hp -= 80
+        if self.mana != 0:
+            current_player.mana -= 60
+            current_enemy.hp -= 80
             return "You have use Direct Shot! dealing 80 damage to the enemy"
-        else:
-            print("Insufficient Mana")
+        return "Insufficient Mana"
     def multishot(self):
-        if self.mana <= 100:
-            self.mana -= 100
-            enemy1.hp -= 100
+        if self.mana != 0:
+            current_player.mana -= 100
+            current_enemy.hp -= 100
             return "You have use Multishot! dealing 100 damage to the enemy"
-        else:
-            print("Insufficient Mana")    
+        return "Insufficient Mana"
     def __str__(self):
-        return f"\n________________________________________You have chosen {self.job} \nLEVEL:{self.lvl} \nXP:{self.xp}/100 \nHP:{self.hp} \nMANA:{self.mana} \n{self.skills}"
+        return f"________________________________________\nYou have chosen {self.job}: \nLEVEL:{self.lvl} \nXP:{self.xp}/100 \nHP:{self.hp} \nMANA:{self.mana} \n{self.skills}"
     
-role1 = roles("ARCHER", 1, 0, 100, 100, "\n_________________SKILLS__________________ \n1: Powershot Damage: 30 Mana cost: 30 \n2: Snipe Damage: 50 Mana cost: 50 \n3: Direct Shot Damage: 80 Mana cost: 60 \n4: Multishot Damage: 100 Mana cost: 100\n________________________________________")
+role1 = roles("ARCHER", 1, 0, 100, 300, "\n_________________SKILLS__________________ \n1: Powershot Damage: 30 Mana cost: 30 \n2: Snipe Damage: 50 Mana cost: 50 \n3: Direct Shot Damage: 80 Mana cost: 60 \n4: Multishot Damage: 100 Mana cost: 100\n________________________________________")
 """
 role2 = roles("BARBARIAN", 1, 0, 200, 100)
 role3 = roles("WIZARD", 1, 0, 100, 300)
@@ -63,29 +59,31 @@ class enemy:
         return f"{self.name} LEVEL:{self.lvl}, HP:{self.hp}, MANA:{self.mana}"
     
     def swing(self):
-        if self.mana >= 500:
+        if self.mana != 0:
             self.mana -= 50
-            role1.hp -= 30
+            current_player.hp -= 30
             return "The enemy has used Swing! Dealing 30 damage to you"
+        return "The enemy has no mana, and has pass to attack"
     
     def bane(self):
-        if self.mana >= 500:
+        if self.mana != 0:
             self.mana -= 100
-            role1.hp -= 50
+            current_player.hp -= 50
             return "The enemy has used Bane! Dealing 50 damage to you"
+        return "The enemy has no mana, and has pass to attack"
     
     def meditate(self):
-        if self.mana >= 500:
+        if self.mana != 0:
             self.mana -= 150
-            role1.hp += 100
             return f"The enemy has use Meditate, regenerating health by 100! His health is now {enemy1.hp}"
+        return "The enemy has no mana, and has pass to attack"
         
     def pass_attack(self):
         return "The enemy has pass to attack"
     
 enemy1 = enemy("Dark Lord of Death", 50, 500, 1000)
-player_hp = role1.hp
-enemy_hp = enemy1.hp
+current_player = role1
+current_enemy = enemy1
 
 archer_skills = {"1" : role1.powershot,
                  "2" : role1.snipe,
@@ -97,6 +95,14 @@ enemy_skill = {1 : enemy1.swing,
                4 : enemy1.pass_attack}
 
 class game_mechanics:
+    def user_hp_update(self):
+        print("Mana", current_player.mana, "HP", current_player.hp)
+        if current_player.hp <= 0:
+            return "You have died, game over!"
+    def enemy_hp_update(self):
+        print("Mana:", current_enemy.mana, "HP:", current_enemy.hp)
+        if current_enemy.hp <= 0:
+            return "You have defeated the enemy, you win!"
     def skill_use(self):
         self.use_skill = input("Please select a number from the skills to attack the enemy: ")
         return self.use_skill
@@ -114,22 +120,22 @@ class game_mechanics:
         return self.game
     def user_first(self):
         print("It is now your turn")
-        while role1.hp > 0 and enemy1.hp > 0:
-            print(archer_skills[user_input.skill_use()]())
-            print("Mana", role1.mana)
-            game_design.divider()
-            print("Enemy's turn")
-            print(enemy_skill[enemy_attacks]())
-            game_design.divider()
+        print(archer_skills[user_input.skill_use()]())
+        user_input.user_hp_update()
+        game_design.divider()
+        user_input.enemy_hp_update()
+        print("Enemy's turn")
+        print(enemy_skill[enemy_attacks]())
+        game_design.divider()
     def enemy_first(self):
+        user_input.enemy_hp_update()
         print("It is the enemy's turn")
-        while role1.hp > 0 and enemy1.hp > 0:
-            print(enemy_skill[enemy_attacks]())
-            game_design.divider()
-            print("It is now your turn, please choose a skill")
-            print(archer_skills[user_input.skill_use()]())
-            print("Mana", role1.mana)
-            game_design.divider()
+        print(enemy_skill[enemy_attacks]())
+        game_design.divider()
+        print("It is now your turn, please choose a skill")
+        print(archer_skills[user_input.skill_use()]())
+        user_input.user_hp_update()
+        game_design.divider()
             
 class design:
     def divider(self):
@@ -157,11 +163,14 @@ if user_input.user_role() == "ARCHER":
     if player_roll > enemy_roll:
         print("You are going first.")
         game_design.divider()
-        user_input.user_first() 
+        while current_player.hp >= 0 and current_enemy.hp >= 0:
+            user_input.user_first()
     else:
         print("The enemy is going first.")
         game_design.divider()
-        user_input.enemy_first()
+        while current_enemy.hp >= 0 and current_player.hp >= 0:
+            user_input.enemy_first()
+
     """
     elif role == "BARBARIAN":
         print(role2)
