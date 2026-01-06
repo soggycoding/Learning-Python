@@ -16,25 +16,33 @@ class roles:
         self.skills = skills
     
     def powershot(self):
-        if self.mana >= 100:
+        if self.mana <= 100:
             self.mana -= 30
             enemy1.hp -= 30
             return "You have use Powershot! dealing 30 damage to the enemy"
+        else:
+            print("Insufficient Mana")
     def snipe(self):
-        if self.mana >= 100:
+        if self.mana <= 100:
             self.mana -= 50
             enemy1.hp -= 50
             return "You have use Snipe! dealing 50 damage to the enemy"
+        else:
+            print("Insufficient Mana")
     def direct_shot(self):
-        if self.mana >= 100:
+        if self.mana <= 100:
             self.mana -= 60
             enemy1.hp -= 80
             return "You have use Direct Shot! dealing 80 damage to the enemy"
+        else:
+            print("Insufficient Mana")
     def multishot(self):
-        if self.mana >= 100:
+        if self.mana <= 100:
             self.mana -= 100
             enemy1.hp -= 100
-            return "You have use Multishot! dealing 100 damage to the enemy"    
+            return "You have use Multishot! dealing 100 damage to the enemy"
+        else:
+            print("Insufficient Mana")    
     def __str__(self):
         return f"\n________________________________________You have chosen {self.job} \nLEVEL:{self.lvl} \nXP:{self.xp}/100 \nHP:{self.hp} \nMANA:{self.mana} \n{self.skills}"
     
@@ -108,6 +116,7 @@ class game_mechanics:
         print("It is now your turn")
         while role1.hp > 0 and enemy1.hp > 0:
             print(archer_skills[user_input.skill_use()]())
+            print("Mana", role1.mana)
             game_design.divider()
             print("Enemy's turn")
             print(enemy_skill[enemy_attacks]())
@@ -119,6 +128,7 @@ class game_mechanics:
             game_design.divider()
             print("It is now your turn, please choose a skill")
             print(archer_skills[user_input.skill_use()]())
+            print("Mana", role1.mana)
             game_design.divider()
             
 class design:
