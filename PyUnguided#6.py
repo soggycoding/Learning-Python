@@ -70,7 +70,8 @@ class enemy:
             self.mana -= 100
             current_player.hp -= 50
             return "The enemy has used Bane! Dealing 50 damage to you"
-        return "The enemy has no mana, and has pass to attack"
+        else:
+            return "The enemy has no mana, and has pass to attack"
     
     def meditate(self):
         if self.mana != 0:
@@ -95,14 +96,17 @@ enemy_skill = {1 : enemy1.swing,
                4 : enemy1.pass_attack}
 
 class game_mechanics:
-    def user_hp_update(self):
-        print("Mana", current_player.mana, "HP", current_player.hp)
+    def hp_update(self):
         if current_player.hp <= 0:
-            return "You have died, game over!"
-    def enemy_hp_update(self):
-        print("Mana:", current_enemy.mana, "HP:", current_enemy.hp)
+            print("You have died, game over!")
+            exit()
         if current_enemy.hp <= 0:
-            return "You have defeated the enemy, you win!"
+            print("You have defeated the enemy, congratulations!")
+            exit()
+        if current_player.hp != 0:
+            return f'Mana',current_player.mana,'HP',current_player.hp
+        if current_enemy.hp != 0:
+            return f'Mana:',current_enemy.mana,'HP:',current_enemy.hp
     def skill_use(self):
         self.use_skill = input("Please select a number from the skills to attack the enemy: ")
         return self.use_skill
@@ -121,20 +125,20 @@ class game_mechanics:
     def user_first(self):
         print("It is now your turn")
         print(archer_skills[user_input.skill_use()]())
-        user_input.user_hp_update()
+        print("Enemy's Status: ",user_input.hp_update())
         game_design.divider()
-        user_input.enemy_hp_update()
         print("Enemy's turn")
         print(enemy_skill[enemy_attacks]())
+        print("Your status: ",user_input.hp_update())
         game_design.divider()
     def enemy_first(self):
-        user_input.enemy_hp_update()
         print("It is the enemy's turn")
         print(enemy_skill[enemy_attacks]())
+        print("Your status: ",user_input.hp_update())
         game_design.divider()
         print("It is now your turn, please choose a skill")
         print(archer_skills[user_input.skill_use()]())
-        user_input.user_hp_update()
+        print("Enemy's Status: ",user_input.hp_update())
         game_design.divider()
             
 class design:
@@ -163,12 +167,12 @@ if user_input.user_role() == "ARCHER":
     if player_roll > enemy_roll:
         print("You are going first.")
         game_design.divider()
-        while current_player.hp >= 0 and current_enemy.hp >= 0:
+        while current_player.hp >= 0 or current_enemy.hp >= 0:
             user_input.user_first()
     else:
         print("The enemy is going first.")
         game_design.divider()
-        while current_enemy.hp >= 0 and current_player.hp >= 0:
+        while current_enemy.hp >= 0 or current_player.hp >= 0:
             user_input.enemy_first()
 
     """
