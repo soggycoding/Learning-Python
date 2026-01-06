@@ -104,6 +104,28 @@ class game_mechanics:
     def game_start(self):
         self.game = input("Would you like to play a game? ").upper()
         return self.game
+    def user_first(self):
+        print("It is now your turn")
+        while role1.hp > 0 and enemy1.hp > 0:
+            print(archer_skills[user_input.skill_use()]())
+            game_design.divider()
+            print("Enemy's turn")
+            print(enemy_skill[enemy_attacks]())
+            game_design.divider()
+    def enemy_first(self):
+        print("It is the enemy's turn")
+        while role1.hp > 0 and enemy1.hp > 0:
+            print(enemy_skill[enemy_attacks]())
+            game_design.divider()
+            print("It is now your turn, please choose a skill")
+            print(archer_skills[user_input.skill_use()]())
+            game_design.divider()
+            
+class design:
+    def divider(self):
+        print("________________________")
+            
+game_design = design()
 
 user_input = game_mechanics()
 
@@ -115,26 +137,21 @@ if user_input.user_role() == "ARCHER":
     if user_input.start_game() != "YES":
         print("Game over!")
         exit()
-    if user_input.fight() != "yes":
+    if user_input.fight() != "YES":
         print("You have chosen to run away, coward")
         exit()
+    game_design.divider()
     print("You rolled: ", player_roll)
-    print("________________________")
     print("The enemy has rolled:", enemy_roll)
+    game_design.divider()
     if player_roll > enemy_roll:
         print("You are going first.")
-        while player_hp > 0 and enemy_hp > 0:
-            print(archer_skills[user_input.skill_use()]())
-            print("The enemy's turn")
-            print(enemy_skill[enemy_attacks]())
-    
+        game_design.divider()
+        user_input.user_first() 
     else:
-        print("The enemy goes first:")
-        while player_hp > 0 and enemy_hp > 0:
-            print(enemy_skill[enemy_attacks]())
-            print("It is now your turn, please choose a skill")
-            print(archer_skills[user_input.skill_use()]())
-                
+        print("The enemy is going first.")
+        game_design.divider()
+        user_input.enemy_first()
     """
     elif role == "BARBARIAN":
         print(role2)
