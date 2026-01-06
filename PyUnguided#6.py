@@ -4,7 +4,7 @@ import random
 
 player_roll = random.randint(1, 6)
 enemy_roll = random.randint(1, 6)
-enemy_attacks = random.randint(1, 4)
+enemy_attacks = random.randint(1, 5)
 
 class roles:       
     def __init__(self,job, lvl, xp, hp, mana, skills):
@@ -16,33 +16,48 @@ class roles:
         self.skills = skills
     
     def powershot(self):
-        if self.mana != 0:
+        if current_enemy.block_attack == True:
+            current_enemy.block_attack = False
+            return "The enemy has blocked your attack"
+        elif self.mana > 0:
             current_player.mana -= 30
             current_enemy.hp -= 30
             return "You have use Powershot! dealing 30 damage to the enemy"
-        return "Insufficient Mana"
+        return "Insufficient Mana, you have passed a turn"
     def snipe(self):
-        if self.mana != 0:
+        if current_enemy.block_attack == True:
+            current_enemy.block_attack = False
+            return "The enemy has blocked your attack"
+        elif self.mana > 0:
             current_player.mana -= 50
             current_enemy.hp -= 50
             return "You have use Snipe! dealing 50 damage to the enemy"
-        return "Insufficient Mana"
+        return "Insufficient Mana, you have passed a turn"
     def direct_shot(self):
-        if self.mana != 0:
+        if current_enemy.block_attack == True:
+            current_enemy.block_attack = False
+            return "The enemy has blocked your attack"
+        elif self.mana > 0:
             current_player.mana -= 60
             current_enemy.hp -= 80
             return "You have use Direct Shot! dealing 80 damage to the enemy"
-        return "Insufficient Mana"
+        return "Insufficient Mana, you have passed a turn"
     def multishot(self):
-        if self.mana != 0:
+        if current_enemy.block_attack == True:
+            current_enemy.block_attack = False
+            return "The enemy has blocked your attack"
+        elif self.mana > 0:
             current_player.mana -= 100
             current_enemy.hp -= 100
             return "You have use Multishot! dealing 100 damage to the enemy"
-        return "Insufficient Mana"
+        return "Insufficient Mana, you have passed a turn"
+    def user_block_attack(self):
+        self.user_is_blocking = True
+        return "You have blocked the enemy's attack!"
     def __str__(self):
         return f"________________________________________\nYou have chosen {self.job}: \nLEVEL:{self.lvl} \nXP:{self.xp}/100 \nHP:{self.hp} \nMANA:{self.mana} \n{self.skills}"
     
-role1 = roles("ARCHER", 1, 0, 100, 300, "\n_________________SKILLS__________________ \n1: Powershot Damage: 30 Mana cost: 30 \n2: Snipe Damage: 50 Mana cost: 50 \n3: Direct Shot Damage: 80 Mana cost: 60 \n4: Multishot Damage: 100 Mana cost: 100\n________________________________________")
+role1 = roles("ARCHER", 1, 0, 500, 500, "\n_________________SKILLS__________________ \n1: Powershot Damage: 30 Mana cost: 30 \n2: Snipe Damage: 50 Mana cost: 50 \n3: Direct Shot Damage: 80 Mana cost: 60 \n4: Multishot Damage: 100 Mana cost: 100\n5: Block\n________________________________________")
 """
 role2 = roles("BARBARIAN", 1, 0, 200, 100)
 role3 = roles("WIZARD", 1, 0, 100, 300)
@@ -59,14 +74,20 @@ class enemy:
         return f"{self.name} LEVEL:{self.lvl}, HP:{self.hp}, MANA:{self.mana}"
     
     def swing(self):
-        if self.mana != 0:
+        if current_player.user_block_attack == True:
+            current_player.user_block_attack = False
+            return f"The {current_player} has blocked your attack"
+        elif current_enemy.mana > 0:
             self.mana -= 50
             current_player.hp -= 30
             return "The enemy has used Swing! Dealing 30 damage to you"
         return "The enemy has no mana, and has pass to attack"
     
     def bane(self):
-        if self.mana != 0:
+        if current_player.user_block_attack == True:
+            current_player.user_block_attack = False
+            return f"The {current_player} has blocked your attack"
+        elif current_enemy.mana > 0:
             self.mana -= 100
             current_player.hp -= 50
             return "The enemy has used Bane! Dealing 50 damage to you"
@@ -76,11 +97,16 @@ class enemy:
     def meditate(self):
         if self.mana != 0:
             self.mana -= 150
-            return f"The enemy has use Meditate, regenerating health by 100! His health is now {enemy1.hp}"
+            current_enemy.hp + 100
+            return f"The enemy has use Meditate, regenerating health by 100! His health is now {current_enemy.hp}"
         return "The enemy has no mana, and has pass to attack"
         
     def pass_attack(self):
         return "The enemy has pass to attack"
+    
+    def block_attack(self):
+        self.is_blocking = True
+        return "The enemy has use block!"
     
 enemy1 = enemy("Dark Lord of Death", 50, 500, 1000)
 current_player = role1
@@ -89,11 +115,13 @@ current_enemy = enemy1
 archer_skills = {"1" : role1.powershot,
                  "2" : role1.snipe,
                  "3" : role1.direct_shot,
-                 "4" : role1.multishot}
+                 "4" : role1.multishot,
+                 "5" : role1.user_block_attack}
 enemy_skill = {1 : enemy1.swing,
                2 : enemy1.bane,
                3 : enemy1.meditate,
-               4 : enemy1.pass_attack}
+               4 : enemy1.pass_attack,
+               5 : enemy1.block_attack}
 
 class game_mechanics:
     def hp_update(self):
@@ -146,14 +174,14 @@ class design:
         print("________________________")
             
 game_design = design()
-
 user_input = game_mechanics()
 
 if user_input.game_start() != "YES":
     print("Invalid input, you lose.")
     exit()
 if user_input.user_role() == "ARCHER":
-    print(role1)
+    current_player = role1
+    print(current_player)
     if user_input.start_game() != "YES":
         print("Game over!")
         exit()
