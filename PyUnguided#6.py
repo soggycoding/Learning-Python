@@ -4,37 +4,42 @@ import random
 game = input("Would you like to play a game? ").upper()
 
 player_roll = random.randint(1, 6)
-enemy_roll = random.randint(1, 1)
+enemy_roll = random.randint(1, 6)
 enemy_attacks = random.randint(1, 4)
 
 class roles:       
-    def __init__(self,job, lvl, xp, hp, mana):
+    def __init__(self,job, lvl, xp, hp, mana, skills):
         self.job = job
         self.lvl = lvl
         self.xp = xp
         self.hp = hp
         self.mana = mana
+        self.skills = skills
     
     def powershot(self):
         if self.mana >= 100:
             self.mana -= 30
+            enemy1.hp -= 30
             return "You have use Powershot! dealing 30 damage to the enemy"
     def snipe(self):
         if self.mana >= 100:
             self.mana -= 50
+            enemy1.hp -= 50
             return "You have use Snipe! dealing 50 damage to the enemy"
     def direct_shot(self):
         if self.mana >= 100:
             self.mana -= 60
+            enemy1.hp -= 80
             return "You have use Direct Shot! dealing 80 damage to the enemy"
     def multishot(self):
         if self.mana >= 100:
             self.mana -= 100
+            enemy1.hp -= 100
             return "You have use Multishot! dealing 100 damage to the enemy"    
     def __str__(self):
-        return f"You have chosen {self.job} \nLEVEL:{self.lvl} \nXP:{self.xp}/100 \nHP:{self.hp} \nMANA:{self.mana}"
+        return f"You have chosen {self.job} \nLEVEL:{self.lvl} \nXP:{self.xp}/100 \nHP:{self.hp} \nMANA:{self.mana} \n{self.skills}"
     
-role1 = roles("ARCHER", 1, 0, 100, 100)
+role1 = roles("ARCHER", 1, 0, 100, 100, "SKILLS: \n1: Powershot Damage: 30 Mana: 30 \n2: Snipe Damage: 50 Mana: 50 \n3: Direct Shot Damage: 80 Mana: 60 \n4: Multishot Damage: 100 Mana: 100")
 """
 role2 = roles("BARBARIAN", 1, 0, 200, 100)
 role3 = roles("WIZARD", 1, 0, 100, 300)
@@ -53,18 +58,20 @@ class enemy:
     def swing(self):
         if self.mana >= 500:
             self.mana -= 50
+            role1.hp -= 30
             return "The enemy has used Swing! Dealing 30 damage to you"
     
     def bane(self):
         if self.mana >= 500:
             self.mana -= 100
+            role1.hp -= 50
             return "The enemy has used Bane! Dealing 50 damage to you"
     
     def meditate(self):
         if self.mana >= 500:
             self.mana -= 150
-            self.hp += 100
-            return f"The enemy has use Meditate, regenerating health by 100! His health is now {self.hp}"
+            role1.hp += 100
+            return f"The enemy has use Meditate, regenerating health by 100! His health is now {enemy1.hp}"
         
     def pass_attack(self):
         return "The enemy has pass to attack"
@@ -91,6 +98,9 @@ class game_mechanics:
     def skill_use(self):
         self.use_skill = input("Please select a number from the skills to attack the enemy: ")
         return self.use_skill
+    def start_game(self):
+        self.start = input("Would you like to start the game? ").upper()
+        return self.start
 
 user_input = game_mechanics()
 
@@ -100,26 +110,26 @@ if game != "YES":
 role = input("Welcome, to a RNG turn base battle. Please select a role. (Archer/Barbarian/Wizard/Brute)\n").upper()
 if role == "ARCHER":
     print(role1)
-    skill = input("Would you like to see the skill of your chosen class? ").upper()
-    if skill == "YES":
-        print("The Archer has these skills: \n1. Powershot \n2. Snipe \n3. Direct shot \n4. Multishot")
-        start = input("Would you like to start the game? ").upper()
-        if start != "YES":
-            print("Game over!")
-        fight = input("You are walking along the forest and you have seen an enemy, are you going to fight it or run away? ").upper()
-        if fight != "FIGHT":
-            print("You have chosen to run away, coward")
-            exit()
-        print("You rolled: ", player_roll)
-        print("________________________")
-        print("The enemy has rolled:", enemy_roll)
-        if player_roll > enemy_roll:
+    if user_input.start_game() != "YES":
+        print("Game over!")
+        exit()
+    fight = input("You are walking along the forest and you have seen an enemy, are you going to fight it or run away? ").upper()
+    if fight != "FIGHT":
+        print("You have chosen to run away, coward")
+        exit()
+    print("You rolled: ", player_roll)
+    print("________________________")
+    print("The enemy has rolled:", enemy_roll)
+    if player_roll > enemy_roll:
+        print("You are going first.")
+        while player_hp > 0 and enemy_hp > 0:
             print(archer_skills[user_input.skill_use()]())
             print("The enemy's turn")
             print(enemy_skill[enemy_attacks]())
-            print(archer_skills[user_input.skill_use()]())
-                
-        else:
+    
+    else:
+        print("The enemy goes first:")
+        while player_hp > 0 and enemy_hp > 0:
             print(enemy_skill[enemy_attacks]())
             print("It is now your turn, please choose a skill")
             print(archer_skills[user_input.skill_use()]())
