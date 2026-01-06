@@ -1,7 +1,6 @@
 #This project will be a turn base battle, there will be a player and an enemy. The enemy would be a bot that has RNG to make its decision
 #It will ask the user what their role would be and what they would like to be called.
 import random
-game = input("Would you like to play a game? ").upper()
 
 player_roll = random.randint(1, 6)
 enemy_roll = random.randint(1, 6)
@@ -37,9 +36,9 @@ class roles:
             enemy1.hp -= 100
             return "You have use Multishot! dealing 100 damage to the enemy"    
     def __str__(self):
-        return f"You have chosen {self.job} \nLEVEL:{self.lvl} \nXP:{self.xp}/100 \nHP:{self.hp} \nMANA:{self.mana} \n{self.skills}"
+        return f"\n________________________________________You have chosen {self.job} \nLEVEL:{self.lvl} \nXP:{self.xp}/100 \nHP:{self.hp} \nMANA:{self.mana} \n{self.skills}"
     
-role1 = roles("ARCHER", 1, 0, 100, 100, "SKILLS: \n1: Powershot Damage: 30 Mana: 30 \n2: Snipe Damage: 50 Mana: 50 \n3: Direct Shot Damage: 80 Mana: 60 \n4: Multishot Damage: 100 Mana: 100")
+role1 = roles("ARCHER", 1, 0, 100, 100, "\n_________________SKILLS__________________ \n1: Powershot Damage: 30 Mana cost: 30 \n2: Snipe Damage: 50 Mana cost: 50 \n3: Direct Shot Damage: 80 Mana cost: 60 \n4: Multishot Damage: 100 Mana cost: 100\n________________________________________")
 """
 role2 = roles("BARBARIAN", 1, 0, 200, 100)
 role3 = roles("WIZARD", 1, 0, 100, 300)
@@ -79,12 +78,7 @@ class enemy:
 enemy1 = enemy("Dark Lord of Death", 50, 500, 1000)
 player_hp = role1.hp
 enemy_hp = enemy1.hp
-"""
-    What to learn:
-Instance methods - Methods that modify self attributes
-Method parameters - Passing values (like mana cost) to methods
-Basic arithmetic on attributes - self.mana -= cost
-"""
+
 archer_skills = {"1" : role1.powershot,
                  "2" : role1.snipe,
                  "3" : role1.direct_shot,
@@ -101,20 +95,27 @@ class game_mechanics:
     def start_game(self):
         self.start = input("Would you like to start the game? ").upper()
         return self.start
+    def fight(self):
+        self.fight_enemy = input("Would you like to fight an enemy? ").upper()
+        return self.fight_enemy
+    def user_role(self):
+        self.role = input("Welcome, to a RNG turn base battle. Please select a role. (Archer/Barbarian/Wizard/Brute)\n").upper()
+        return self.role
+    def game_start(self):
+        self.game = input("Would you like to play a game? ").upper()
+        return self.game
 
 user_input = game_mechanics()
 
-if game != "YES":
+if user_input.game_start() != "YES":
     print("Invalid input, you lose.")
     exit()
-role = input("Welcome, to a RNG turn base battle. Please select a role. (Archer/Barbarian/Wizard/Brute)\n").upper()
-if role == "ARCHER":
+if user_input.user_role() == "ARCHER":
     print(role1)
     if user_input.start_game() != "YES":
         print("Game over!")
         exit()
-    fight = input("You are walking along the forest and you have seen an enemy, are you going to fight it or run away? ").upper()
-    if fight != "FIGHT":
+    if user_input.fight() != "yes":
         print("You have chosen to run away, coward")
         exit()
     print("You rolled: ", player_roll)
