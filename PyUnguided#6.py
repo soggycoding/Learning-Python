@@ -148,7 +148,7 @@ class enemy:
         if current_enemy.mana > 0:
             if current_player.user_is_blocking == True:
                 current_player.user_is_blocking = False
-                return "The user has Bane! Dealing no damage"
+                return "The user has blocked Bane! Dealing no damage"
             self.mana -= 100
             current_player.hp -= 50
             return "The enemy has used Bane! Dealing 50 damage to you"
@@ -213,15 +213,26 @@ class game_mechanics:
     def user_first(self):
         print("It is now your turn")
         enemy_attacks = random.randint(1, 5)
+        if enemy_attacks != 5:
+            print(archer_skills[user_input.skill_use()]())
+            print("Enemy's Status: ",user_input.enemy_hp_update())
+            game_design.divider()
+            print("Enemy's turn")
+            print(enemy_skill[enemy_attacks]())
+            print("Your status: ",user_input.hp_update())
+            game_design.divider()
+        enemy1.block_attack()
+        print(archer_skills[user_input.skill_use()]())
         print("Enemy's Status: ",user_input.enemy_hp_update())
         game_design.divider()
-        print("Enemy's turn")
         print(enemy_skill[enemy_attacks]())
         print("Your status: ",user_input.hp_update())
         game_design.divider()
     def enemy_first(self):
         print("It is the enemy's turn")
         enemy_attacks = random.randint(1, 5)
+        print(enemy_skill[enemy_attacks]())
+        print("Enemy's Status: ",user_input.enemy_hp_update())
         print("Your status: ",user_input.hp_update())
         game_design.divider()
         print("It is now your turn, please choose a skill")
