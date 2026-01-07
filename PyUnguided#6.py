@@ -6,6 +6,7 @@ player_roll = random.randint(1, 6)
 enemy_roll = random.randint(1, 6)
 enemy_attacks = random.randint(1, 5)
 
+
 class roles:       
     def __init__(self,job, lvl, xp, hp, mana):
         self.job = job
@@ -13,20 +14,21 @@ class roles:
         self.xp = xp
         self.hp = hp
         self.mana = mana
+        self.user_is_blocking = False
     
     def powershot(self):
         if self.mana > 0:
-            if current_enemy.block_attack == True:
-                current_enemy.block_attack = False
-                return "The enemy has blocked your attack"
+            if current_enemy.is_blocking == True:
+                current_enemy.is_blocking = False
+                return "You have used Powershot, but the enemy has blocked your attack"
             current_player.mana -= 30
             current_enemy.hp -= 30
             return "You have use Powershot! dealing 30 damage to the enemy"
         return "Insufficient Mana, you have passed a turn"
     def snipe(self):
         if self.mana > 0:
-            if current_enemy.block_attack == True:
-                current_enemy.block_attack = False
+            if current_enemy.is_blocking == True:
+                current_enemy.is_blocking = False
                 return "The enemy has blocked your attack"
             current_player.mana -= 50
             current_enemy.hp -= 50
@@ -34,8 +36,8 @@ class roles:
         return "Insufficient Mana, you have passed a turn"
     def direct_shot(self):
         if self.mana > 0:
-            if current_enemy.block_attack == True:
-                current_enemy.block_attack = False
+            if current_enemy.is_blocking == True:
+                current_enemy.is_blocking = False
                 return "The enemy has blocked your attack"
             current_player.mana -= 60
             current_enemy.hp -= 80
@@ -43,8 +45,8 @@ class roles:
         return "Insufficient Mana, you have passed a turn"
     def multishot(self):
         if self.mana > 0:
-            if current_enemy.block_attack == True:
-                current_enemy.block_attack = False
+            if current_enemy.is_blocking == True:
+                current_enemy.is_blocking = False
                 return "The enemy has blocked your attack"
             current_player.mana -= 100
             current_enemy.hp -= 100
@@ -127,14 +129,16 @@ class enemy:
         self.lvl = lvl
         self.hp = hp
         self.mana = mana
+        self.is_blocking = False
+        
     def __str__(self):
         return f"{self.name} LEVEL:{self.lvl}, HP:{self.hp}, MANA:{self.mana}"
     
     def swing(self):
         if current_enemy.mana > 0:
-            if current_player.user_block_attack == True:
+            if current_player.user_is_blocking == True:
                 current_player.user_is_blocking = False
-                return "The user has blocked your attack"
+                return "The user has blocked Swing! Dealing no damage"
             self.mana -= 50
             current_player.hp -= 30
             return "The enemy has used Swing! Dealing 30 damage to you"
@@ -142,9 +146,9 @@ class enemy:
     
     def bane(self):
         if current_enemy.mana > 0:
-            if current_player.user_block_attack == True:
+            if current_player.user_is_blocking == True:
                 current_player.user_is_blocking = False
-                return "The user has blocked your attack"
+                return "The user has Bane! Dealing no damage"
             self.mana -= 100
             current_player.hp -= 50
             return "The enemy has used Bane! Dealing 50 damage to you"
@@ -166,8 +170,6 @@ class enemy:
         return "The enemy has use block!"
     
 enemy1 = enemy("Dark Lord of Death", 50, 500, 1000)
-current_player = role1
-current_enemy = enemy1
 
 archer_skills = {"1" : role1.powershot,
                  "2" : role1.snipe,
@@ -210,18 +212,16 @@ class game_mechanics:
         return self.game
     def user_first(self):
         print("It is now your turn")
-        print(archer_skills[user_input.skill_use()]())
+        enemy_attacks = random.randint(1, 5)
         print("Enemy's Status: ",user_input.enemy_hp_update())
         game_design.divider()
         print("Enemy's turn")
-        enemy_attacks = random.randint(1, 5)
         print(enemy_skill[enemy_attacks]())
         print("Your status: ",user_input.hp_update())
         game_design.divider()
     def enemy_first(self):
         print("It is the enemy's turn")
         enemy_attacks = random.randint(1, 5)
-        print(enemy_skill[enemy_attacks]())
         print("Your status: ",user_input.hp_update())
         game_design.divider()
         print("It is now your turn, please choose a skill")
@@ -235,6 +235,8 @@ class design:
             
 game_design = design()
 user_input = game_mechanics()
+current_player = role1
+current_enemy = enemy1
 
 def game_start():
     if user_input.start_game() != "YES":
