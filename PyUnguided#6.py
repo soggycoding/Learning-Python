@@ -1,7 +1,8 @@
 #This project will be a turn base battle, there will be a player and an enemy. The enemy would be a bot that has RNG to make its decision
 #It will ask the user what their role would be and what they would like to be called.
 import random
-
+import time
+import sys
 player_roll = random.randint(1, 6)
 enemy_roll = random.randint(1, 6)
 enemy_attacks = random.randint(1, 5)
@@ -158,7 +159,7 @@ class enemy:
     def meditate(self):
         if self.mana != 0:
             self.mana -= 150
-            current_enemy.hp + 100
+            current_enemy.hp += 100
             return f"The enemy has use Meditate, regenerating health by 100! His health is now {current_enemy.hp}"
         return "The enemy has no mana, and has pass to attack"
         
@@ -199,10 +200,20 @@ class game_mechanics:
         self.use_skill = input("Please select a number from the skills to attack the enemy: ")
         return self.use_skill
     def start_game(self):
-        self.start = input("Would you like to start the game? ").upper()
+        self.start_dialogue = ("Would you like to start the game? ")
+        for char in self.start_dialogue:
+            sys.stdout.flush()
+            print(char, end="")
+            time.sleep(0.08)
+        self.start = input("").upper()
         return self.start
     def fight(self):
-        self.fight_enemy = input("You were wandering around the path to the mansion but suddenly you came across a monster, would you like to fight it? ").upper()
+        self.game_dialogue = ("You were wandering around the path to the mansion but suddenly you came across a monster, would you like to fight it? ")
+        for char in self.game_dialogue:
+            sys.stdout.flush()
+            print(char, end="")
+            time.sleep(0.08)
+        self.fight_enemy = input("").upper()
         return self.fight_enemy
     def user_role(self):
         self.role = input("Welcome, to a RNG turn base battle. Please select a role. (Archer/Barbarian/Wizard/Brute)\n").upper()
@@ -214,29 +225,50 @@ class game_mechanics:
         print("It is now your turn")
         enemy_attacks = random.randint(1, 5)
         if enemy_attacks != 5:
-            print(archer_skills[user_input.skill_use()]())
-            print("Enemy's Status: ",user_input.enemy_hp_update())
+            archer_attacks = archer_skills[user_input.skill_use()]()
+            for char in archer_attacks:
+                sys.stdout.flush()
+                print(char, end="")
+                time.sleep(0.08)
+            print("\nEnemy's Status: ",user_input.enemy_hp_update())
             game_design.divider()
             print("Enemy's turn")
-            print(enemy_skill[enemy_attacks]())
-            print("Your status: ",user_input.hp_update())
+            attack_enemy = enemy_skill[enemy_attacks]()
+            for char in attack_enemy:
+                sys.stdout.flush()
+                print(char, end="")
+                time.sleep(0.08)
+            print("\nYour status: ",user_input.hp_update())
             game_design.divider()
         else:
             enemy1.block_attack()
             print("The enemy has used Block!")
-            print(archer_skills[user_input.skill_use()]())
-            print("Enemy's Status: ",user_input.enemy_hp_update())
+            archer_attacks = archer_skills[user_input.skill_use()]()
+            for char in archer_attacks:
+                sys.stdout.flush()
+                print(char, end="")
+                time.sleep(0.08)
+            print("\nEnemy's Status: ",user_input.enemy_hp_update())
             game_design.divider()
+            
     def enemy_first(self):
         print("It is the enemy's turn")
         enemy_attacks = random.randint(1, 5)
-        print(enemy_skill[enemy_attacks]())
-        print("Enemy's Status: ",user_input.enemy_hp_update())
-        print("Your status: ",user_input.hp_update())
+        attack_enemy = enemy_skill[enemy_attacks]()
+        for char in attack_enemy:
+            sys.stdout.flush()
+            print(char, end="")
+            time.sleep(0.08)
+        print("\nEnemy's Status: ",user_input.enemy_hp_update())
+        print("\nYour status: ",user_input.hp_update())
         game_design.divider()
         print("It is now your turn, please choose a skill")
-        print(archer_skills[user_input.skill_use()]())
-        print("Enemy's Status: ",user_input.enemy_hp_update())
+        archer_attacks = archer_skills[user_input.skill_use()]()
+        for char in archer_attacks:
+            sys.stdout.flush()
+            print(char, end="")
+            time.sleep(0.08)
+        print("\nEnemy's Status: ",user_input.enemy_hp_update())
         game_design.divider()
           
 class design:
