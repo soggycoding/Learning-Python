@@ -4,7 +4,8 @@ import time
 
 with open('Documents/wiwiws.txt', mode='r', encoding="utf-8") as file:
     for line in file:
-        print(line.strip(), end = '\n')
-        sys.stdout.flush()
-        time.sleep(1)
-        
+        line.strip()
+        for char in line:
+            sys.stdout.flush()
+            print(char, end="")
+            time.sleep(0.08)
