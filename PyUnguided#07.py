@@ -1,4 +1,5 @@
 #New project, I will try to make a lyrics typing output where I will understand the time module and delays
+#Using File I/O
 import sys
 import time
 
