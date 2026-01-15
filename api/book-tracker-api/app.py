@@ -8,7 +8,7 @@ books = [{'id': 1, 'title': "Cooking with Roger", 'description': "A cooking book
 @app.route('/books', methods=['GET', 'POST'])
 def book_list():
     if request.method == 'GET':
-        return {"books": books}, 201
+        return {"books": books}, 200
 
     if request.method == "POST":
         data = request.get_json()
@@ -25,8 +25,8 @@ def id_books(id):
         for book in books: 
             if book['id'] == id:
                 return book
-            else:
-                return "Could not find anything"
+
+        return "Could not find anything"
     if request.method == 'PUT':
         for book in books:
             if book['id'] == id:
@@ -40,10 +40,8 @@ def id_books(id):
     if request.method == 'DELETE':
         for book in books:
             if book['id'] == id:
-                book.pop('id', None)
-                book.pop('description', None)
-                book.pop('title', None)
-                return book, 200
+                books.remove(book)
+                return "Removed succesfully\n", 200
         else:
             return{"error": "Book not found"}, 404
 def get_next_id():
