@@ -26,7 +26,7 @@ def id_books(id):
             if book['id'] == id:
                 return book
 
-        return "Could not find anything"
+        return {"error": "Book not found"}, 404
     if request.method == 'PUT':
         for book in books:
             if book['id'] == id:
