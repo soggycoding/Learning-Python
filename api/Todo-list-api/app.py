@@ -20,9 +20,9 @@ def todo_list():
     
     if request.method == 'POST':
         data = request.get_json()
-        status = data['Status']
+        user_status = data['Status']
         todo_task = data['Task']
-        test_status = {'Status': status, 'Task': todo_task, 'ID': id_gen()}
+        test_status = {'Status': user_status, 'Task': todo_task, 'ID': id_gen()}
         Todo.append(test_status)
         return test_status, 201
     
@@ -34,12 +34,14 @@ def task_id(id):
                 return task
         return {"Error": "Task not found"}, 404
     
-def update_task(id):
     if request.method == 'PUT':
         for task in Todo:
             if task['ID'] == id:
                 data = request.get_json()
-                updated_status = data('Status')
+                updated_status = data['Status']
+                Todo[id]['Status'] = updated_status
+                return task, 201
+                    
                 
 def id_gen():
     if not Todo:

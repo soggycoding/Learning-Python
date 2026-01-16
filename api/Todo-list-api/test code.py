@@ -1,15 +1,5 @@
+task = [{'id': 1,'test': "This is a test"}]
+updated_value = "this is not a test"
+task[0]["This is a test"] = updated_value
 
-def task_id(id):
-    for task in Todo:
-        if task['id'] == id:
-            return task
-def id_gen():
-    if not Todo:
-        return 1
-    else:
-        ids = [task['id'] for task in Todo]
-        return max(ids)+1
-    
-Todo = [{'Task': None, 'id': 0},{'Task': None, 'id': id_gen()},{'Task': None, 'id': id_gen()},{'Task': None, 'id': id_gen()},{'Task': None, 'id': id_gen()}]
-
-print(id_gen())
+print(task)
