@@ -11,49 +11,49 @@ It should also have a pending or complete on the update and on the main list whe
 from flask import Flask, request
 
 app = Flask(__name__)
-Todo = [{'Status': None, 'Task': None, 'ID': 0}]
+todo = []
 
-@app.route('/Todo', methods=['GET', 'POST'])
+@app.route('/todo', methods=['GET', 'POST'])
 def todo_list():
     if request.method == 'GET':
-        return {"To do list:": Todo}, 200
+        return {"To do list:": todo}, 200
     
     if request.method == 'POST':
         data = request.get_json()
-        user_status = data['Status']
-        todo_task = data['Task']
-        test_status = {'Status': user_status, 'Task': todo_task, 'ID': id_gen()}
-        Todo.append(test_status)
-        return test_status, 201
+        status = data['Status']
+        task_description = data['Task']
+        new_task = {'Status': status, 'Task': task_description, 'ID': id_gen()}
+        todo.append(new_task)
+        return new_task, 201
     
-@app.route('/Todo/<int:id>', methods=['GET', 'PUT', 'DELETE'])     
+@app.route('/todo/<int:id>', methods=['GET', 'PUT', 'DELETE'])     
 def task_id(id):
     if request.method == 'GET':
-        for task in Todo:
+        for task in todo:
             if task['ID'] == id:
                 return task
-        return {"Error": "Task not found"}, 404
+        return {"error": "Task not found"}, 404
     
     if request.method == 'PUT':
-        for task in Todo:
+        for task in todo:
             if task['ID'] == id:
                 data = request.get_json()
-                updated_status = data['Status']
-                Todo[id]['Status'] = updated_status
+                task['Status'] = data['Status']
+                task['Task'] = data['Task']
                 return task, 200
-    
+        return {"error": "Task not found"}, 404
     if request.method == 'DELETE':
-        for task in Todo:
+        for task in todo:
             if task['ID'] == id:
-                Todo.remove(task)
-                return f"Successfully removed the task: \n{Todo}", 200
-        return {"Error": "Task not found"}, 404
+                todo.remove(task)
+                return {"message": "Successfully removed the task"}, 200
+        return {"error": "Task not found"}, 404
                 
 def id_gen():
-    if not Todo:
+    if not todo:
         return 1
     else:
-        ids = [task['ID'] for task in Todo]
+        ids = [task['ID'] for task in todo]
         return max(ids)+1
 if __name__ == '__main__':
     app.run(debug=True)
