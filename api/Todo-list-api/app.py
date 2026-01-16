@@ -40,8 +40,14 @@ def task_id(id):
                 data = request.get_json()
                 updated_status = data['Status']
                 Todo[id]['Status'] = updated_status
-                return task, 201
-                    
+                return task, 200
+    
+    if request.method == 'DELETE':
+        for task in Todo:
+            if task['ID'] == id:
+                Todo.remove(task)
+                return f"Successfully removed the task: \n{Todo}", 200
+        return {"Error": "Task not found"}, 404
                 
 def id_gen():
     if not Todo:
