@@ -33,6 +33,14 @@ def task_id(id):
             if task['ID'] == id:
                 return task
         return {"Error": "Task not found"}, 404
+    
+def update_task(id):
+    if request.method == 'PUT':
+        for task in Todo:
+            if task['ID'] == id:
+                data = request.get_json()
+                updated_status = data('Status')
+                
 def id_gen():
     if not Todo:
         return 1
