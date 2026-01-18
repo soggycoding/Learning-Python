@@ -18,41 +18,42 @@
 from flask import Flask, request
 
 app = Flask(__name__)
-book = []
-author = []
-library = list(zip(book,author))
+books = []
+authors = []
+library = []
 
 @app.route('/library', methods=['GET', 'POST'])
-def library():
+def book_library():
     if request.method == 'GET':
-        return {"Library", library}, 200
+        library = [list(zip(authors,books))]
+        return {"Library": library}, 200
     
     if request.method == 'POST':
         data = request.get_json()
-        input_author = data['Author']
+        author = data['Author']
         country = data['Country']
-        new_author = {'ID': id_author(),'Author': input_author, 'Country': country}
-        author.append(new_author)
-        input_book = data['Title']
+        new_author = {'ID': id_author(),'Author': author, 'Country': country}
+        authors.append(new_author)
+        book = data['Title']
         new_description = data['Description']
         publication_date = data['Publication']
-        new_book = {'ID': id_book(), 'Title': input_book, 'Description': new_description, 'Publication': publication_date}
-        book.append(new_book)
-        return new_author, new_book, 200
+        new_book = {'ID': id_book(), 'Title': book, 'Description': new_description, 'Publication': publication_date}
+        books.append(new_book)
+
+        return [new_author,new_book], 200
     
 def id_book():
-    if not book:
+    if not books:
         return 1
     else:
-        ids = [books['ID'] for books in book]
+        ids = [book['ID'] for book in books]
         return max(ids)+1
     
 def id_author():
-    if not author:
+    if not authors:
         return 1
     else:
-        ids = [authors['ID'] for authors in author]
+        ids = [author['ID'] for author in authors]
         return max(ids)+1
-
 if __name__ == '__main__':
     app.run(debug=True)

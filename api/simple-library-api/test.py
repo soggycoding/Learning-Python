@@ -1,4 +1,5 @@
 #Testing grounds
+'''
 book = [{'book': "Test book", 'ID': 1}]
 author = [{'Author': "Bingbong", 'ID': 1}]
 user_book = input("INPUT BOOK: ")
@@ -31,3 +32,8 @@ if int_ask == 1:
     print(combine[0])
 elif int_ask == 2:
     print(combine[1])
+'''
+numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+# Filter for even numbers using a lambda function
+even_numbers = list(filter(lambda x: (x % 1 == 0), numbers))
+print(even_numbers)
