@@ -42,6 +42,14 @@ def book_library():
 
         return [new_author,new_book], 200
     
+@app.route('/library/<int:id>', methods=['GET', 'PUT', 'DELETE'])
+def sorted_book(id):
+    if request.method == 'GET':
+        for sort_book in library:
+            if sort_book['ID'] == id:
+                return library, 200
+        return {"error", "Book not found"}, 404
+    
 def id_book():
     if not books:
         return 1
