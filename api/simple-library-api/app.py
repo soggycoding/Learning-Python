@@ -45,10 +45,10 @@ def book_library():
 @app.route('/library/<int:id>', methods=['GET', 'PUT', 'DELETE'])
 def sorted_book(id):
     if request.method == 'GET':
-        for book in books:
-            if book['ID'] == id:
-                for author in authors:
-                    if author['ID'] == id:
+        for author in authors:
+            if author['ID'] == id:
+                for book in books:
+                    if books['ID'] == id:
                         return [author, book]
         return {"error": "Book not found"}, 404
     
@@ -58,17 +58,27 @@ def sorted_book(id):
                 data = request.get_json()
                 author['Author'] = data['Author']
                 author['Country'] = data['Country']
-                update_author = {'Author': author}
-                authors.append(update_author)
+                author = {'Author': author}
+                authors.append(author)
                 for book in books:
                     if book['ID'] == id:
                         data = request.get_json()
                         book['Title'] = data['Title']
                         book['Description'] = data['Description']
                         book['Publication'] = data['Publication']
-                        update_book = {'Book': book}
-                        books.append(update_book)
-                        return [update_author, update_book]
+                        book = {'Book': book}
+                        books.append(book)
+                        return [author, book]
+        return {"error": "Book not found"}, 404
+                
+    if request.method == 'DELETE':
+        for author in authors:
+            if author['ID'] == id:
+                authors.remove(author)
+                for book in books:
+                    if book['ID'] == id:
+                        books.remove(book)
+                        return "Success", 200
         return {"error": "Book not found"}, 404
                 
 def id_book():
