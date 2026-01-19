@@ -20,7 +20,7 @@ from flask import Flask, request
 app = Flask(__name__)
 books = []
 authors = []
-library = []
+library = [list(zip(authors,books))]
 
 @app.route('/library', methods=['GET', 'POST'])
 def book_library():
@@ -45,11 +45,32 @@ def book_library():
 @app.route('/library/<int:id>', methods=['GET', 'PUT', 'DELETE'])
 def sorted_book(id):
     if request.method == 'GET':
-        for sort_book in library:
-            if sort_book['ID'] == id:
-                return library, 200
-        return {"error", "Book not found"}, 404
+        for book in books:
+            if book['ID'] == id:
+                for author in authors:
+                    if author['ID'] == id:
+                        return [author, book]
+        return {"error": "Book not found"}, 404
     
+    if request.method == 'PUT':
+        for author in authors:
+            if author['ID'] == id:
+                data = request.get_json()
+                author['Author'] = data['Author']
+                author['Country'] = data['Country']
+                update_author = {'ID': id, 'Author': author, 'Country': author}
+                authors.append(update_author)
+                for book in books:
+                    if book['ID'] == id:
+                        data = request.get_json()
+                        book['Title'] = data['Title']
+                        book['Description'] = data['Description']
+                        book['Publication'] = data['Publication']
+                        update_book = {'ID': id, 'Title': book, 'Description': book, 'Publication' : book}
+                        books.append(update_book)
+                        return [update_author, update_book]
+        return {"error": "Book not found"}, 404
+                
 def id_book():
     if not books:
         return 1
