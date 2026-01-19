@@ -58,7 +58,7 @@ def sorted_book(id):
                 data = request.get_json()
                 author['Author'] = data['Author']
                 author['Country'] = data['Country']
-                update_author = {'ID': id, 'Author': author, 'Country': author}
+                update_author = {'Author': author}
                 authors.append(update_author)
                 for book in books:
                     if book['ID'] == id:
@@ -66,7 +66,7 @@ def sorted_book(id):
                         book['Title'] = data['Title']
                         book['Description'] = data['Description']
                         book['Publication'] = data['Publication']
-                        update_book = {'ID': id, 'Title': book, 'Description': book, 'Publication' : book}
+                        update_book = {'Book': book}
                         books.append(update_book)
                         return [update_author, update_book]
         return {"error": "Book not found"}, 404
