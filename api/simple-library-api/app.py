@@ -20,7 +20,7 @@ from flask import Flask, request
 app = Flask(__name__)
 books = []
 authors = []
-library = [list(zip(authors,books))]
+library = []
 
 @app.route('/library', methods=['GET', 'POST'])
 def book_library():
@@ -35,9 +35,9 @@ def book_library():
         new_author = {'ID': id_author(),'Author': author, 'Country': country}
         authors.append(new_author)
         book = data['Title']
-        new_description = data['Description']
-        publication_date = data['Publication']
-        new_book = {'ID': id_book(), 'Title': book, 'Description': new_description, 'Publication': publication_date}
+        description = data['Description']
+        publication = data['Publication']
+        new_book = {'ID': id_book(), 'Title': book, 'Description': description, 'Publication': publication}
         books.append(new_book)
 
         return [new_author,new_book], 200
@@ -55,18 +55,18 @@ def sorted_book(id):
     if request.method == 'PUT':
         for author in authors:
             if author['ID'] == id:
+                authors.remove(author)
                 data = request.get_json()
                 author['Author'] = data['Author']
                 author['Country'] = data['Country']
-                author = {'Author': author}
                 authors.append(author)
                 for book in books:
                     if book['ID'] == id:
+                        books.remove(book)
                         data = request.get_json()
                         book['Title'] = data['Title']
                         book['Description'] = data['Description']
                         book['Publication'] = data['Publication']
-                        book = {'Book': book}
                         books.append(book)
                         return [author, book]
         return {"error": "Book not found"}, 404
