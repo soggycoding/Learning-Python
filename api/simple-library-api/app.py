@@ -22,6 +22,7 @@ books = []
 authors = []
 library = []
 
+#GETS THE WHOLE LIST OF BOOKS AND AUTHORS, ADDS A NEW LIST OF AUTHOR AND THEIR BOOK
 @app.route('/library', methods=['GET', 'POST'])
 def book_library():
     if request.method == 'GET':
@@ -32,16 +33,26 @@ def book_library():
         data = request.get_json()
         author = data['Author']
         country = data['Country']
+        if author == "":
+            return {"error": "Contents not found"}, 404
+        elif country == "":
+            return {"error": "Contents not found"}, 404
         new_author = {'ID': id_author(),'Author': author, 'Country': country}
         authors.append(new_author)
         book = data['Title']
         description = data['Description']
         publication = data['Publication']
+        if book == "":
+            return {"error": "Contents not found"}, 404
+        elif description == "":
+            return {"error": "Contents not found"}, 404
+        elif publication == "":
+            return {"error": "Contents not found"}, 404
         new_book = {'ID': id_book(), 'Title': book, 'Description': description, 'Publication': publication}
         books.append(new_book)
 
         return [new_author,new_book], 200
-    
+#GET THE AUTHOR AND BOOK BY THEIR UNIQUE GENERATED ID, CAN UPDATE THEIR CONTENTS USING THEIR UNIQUE ID, CAN DELETE THEIR REQUESTED BOOK AND AUTHOR USING THEIR ID
 @app.route('/library/<int:id>', methods=['GET', 'PUT', 'DELETE'])
 def sorted_book(id):
     if request.method == 'GET':
@@ -50,7 +61,7 @@ def sorted_book(id):
                 for book in books:
                     if books['ID'] == id:
                         return [author, book]
-        return {"error": "Book not found"}, 404
+        return {"error": "Contents not found"}, 404
     
     if request.method == 'PUT':
         for author in authors:
@@ -59,6 +70,8 @@ def sorted_book(id):
                 data = request.get_json()
                 author['Author'] = data['Author']
                 author['Country'] = data['Country']
+                if author == "":
+                    return {"error": "Contents not found"}, 404
                 authors.append(author)
                 for book in books:
                     if book['ID'] == id:
@@ -67,9 +80,11 @@ def sorted_book(id):
                         book['Title'] = data['Title']
                         book['Description'] = data['Description']
                         book['Publication'] = data['Publication']
+                        if book == "":
+                            return {"error": "Contents not found"}, 404
                         books.append(book)
                         return [author, book]
-        return {"error": "Book not found"}, 404
+        return {"error": "Contents not found"}, 404
                 
     if request.method == 'DELETE':
         for author in authors:
@@ -79,7 +94,7 @@ def sorted_book(id):
                     if book['ID'] == id:
                         books.remove(book)
                         return "Success", 200
-        return {"error": "Book not found"}, 404
+        return {"error": "Contents not found"}, 404
                 
 def id_book():
     if not books:
