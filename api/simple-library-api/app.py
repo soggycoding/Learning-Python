@@ -22,20 +22,19 @@ books = []
 authors = []
 library = [list(zip(authors, books))]
 
-
 @app.route('/authors', methods=['GET', 'POST'])
 def author():
     if request.method == 'POST':
         data = request.get_json()
+        if 'Author' not in data or 'Country' not in data:
+            return {"error": "Missing required fields"}, 400
         name = data['Author']
         country = data['Country']
-        if name == "":
-            return {"error": "Content not found"}, 400
-        elif country == "":
-            return {"error": "Content not found"}, 400
+        if not name or not country:
+            return {"error": "Missing required fields"}, 400
         author = {'ID': id_author(), 'Author': name, 'Country': country}
         authors.append(author)
-        return author, 200
+        return author, 201
     if request.method == 'GET':
         return {"Authors": authors}, 200
     
@@ -45,6 +44,26 @@ def author_id(id):
         for author in authors:
             if author['ID'] == id:
                 return author, 200
+        return{"error": "Content not found"}, 404
+    
+    if request.method == 'PUT':
+        for author in authors:
+            if author['ID'] == id:
+                data = request.get_json()
+                if 'Author' not in data or 'Country' not in data:
+                    return {"error": "Missing required fields"}, 400
+                if not data['Author'] or not data['Country']:
+                    return {"error": "Missing required fields"}, 400
+                author['Author'] = data['Author']
+                author['Country'] = data['Country']
+                return author, 200
+        return{"error": "Content not found"}, 404
+    
+    if request.method == 'DELETE':
+        for author in authors:
+            if author['ID'] == id:
+                authors.remove(author)
+                return {"message": "Author deleted successfully"}, 200
         return{"error": "Content not found"}, 404
 '''           
 def id():
