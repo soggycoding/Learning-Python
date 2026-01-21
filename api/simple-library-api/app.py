@@ -32,7 +32,7 @@ def author():
         country = data['Country']
         if not name or not country:
             return {"error": "Missing required fields"}, 400
-        author = {'ID': id_author(), 'Author': name, 'Country': country}
+        author = {'authorID': id_author(), 'Author': name, 'Country': country}
         authors.append(author)
         return author, 201
     
@@ -43,13 +43,13 @@ def author():
 def author_id(id):
     if request.method == 'GET':
         for author in authors:
-            if author['ID'] == id:
+            if author['authorID'] == id:
                 return author, 200
         return{"error": "Content not found"}, 404
     
     if request.method == 'PUT':
         for author in authors:
-            if author['ID'] == id:
+            if author['authorID'] == id:
                 data = request.get_json()
                 if 'Author' not in data or 'Country' not in data:
                     return {"error": "Missing required fields"}, 400
@@ -79,10 +79,11 @@ def book():
         authorID = data['authorID']
         if not title or not description or not publication or not authorID:
             return {"error": "Missing required fields"}, 400
-        if authorID['authorID'] == authors:
-            book = {'ID': id_books(), 'Title': title, 'Description': description, 'publication_date': publication, 'authorID': authorID}
-            books.append(book)
-            return book, 201 
+        for author in authors:
+            if author['authorID'] == int(authorID):
+                book = {'bookID': id_books(), 'Title': title, 'Description': description, 'publication_date': publication, 'Author': author}
+                books.append(book)
+                return book, 201 
         return {"error": "Content not found"}, 404
     
     if request.method == 'GET':
@@ -92,13 +93,13 @@ def book():
 def book_id(id):
     if request.method == 'GET':
         for book in books:
-            if book['ID'] == id:
+            if book['bookID'] == id:
                 return book, 200
         return {"error": "Content not found"}, 404
 
     if request.method == 'PUT':
         for book in books:
-            if book['ID'] == id:
+            if book['bookID'] == id:
                 data = request.get_json()
                 if 'Title' not in data or 'Description' not in data or 'publication_date' not in data or 'authorID' not in data:
                     return {"error": "Missing required fields"}, 400
@@ -113,7 +114,7 @@ def book_id(id):
     
     if request.method == 'DELETE':
         for book in books:
-            if book['ID'] == id:
+            if book['bookID'] == id:
                 books.remove(book)
                 return {"message": "Book deleted successfully"}, 200
         return {"error": "Content not found"}, 404
@@ -121,14 +122,14 @@ def id_books():
     if not books:
         return 1
     else:
-        ids = [book['ID'] for book in books]
+        ids = [book['bookID'] for book in books]
         return max(ids)+1
 
 def id_author():
     if not authors:
         return 1
     else:
-        ids = [author['ID'] for author in authors]
+        ids = [author['authorID'] for author in authors]
         return max(ids)+1
 
 if __name__ == '__main__':
