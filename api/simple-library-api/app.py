@@ -94,10 +94,11 @@ def book_id(id):
     if request.method == 'GET':
         for book in books:
             if book['id'] == id:
+                no_author = {'id': None, 'author': None, 'country': None}
                 for author in authors:
-                    if author['id'] != book['author_id']:
-                        return  [book], 200
-                return [author,book], 200
+                    if author['id'] == book['author_id']:
+                        return [author,book], 200
+                return [no_author, book], 200
         return {"error": "Content not found"}, 404
 
     if request.method == 'PUT':
