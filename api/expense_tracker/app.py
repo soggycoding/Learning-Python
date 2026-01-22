@@ -36,7 +36,10 @@ def category(id):
                 categories.remove(category)
                 return{"message": "Successfully deleted"}, 200
         return {"error": "Content not found"}, 404
-            
+@app.route('/expense', methods=['POST', 'GET'])
+def expenses():
+    if request.method == 'POST':
+        data = request.get_json()
 def category_id():
     if not categories:
         return 1
