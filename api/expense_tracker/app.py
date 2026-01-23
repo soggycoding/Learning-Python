@@ -4,32 +4,37 @@ from flask import Flask, request
 app = Flask(__name__)
 categories = []
 expenses = []
-@app.route('/category', methods=['POST', 'GET'])
+@app.route('/categories', methods=['POST', 'GET'])
 def expense_category():
     if request.method == 'POST':
         data = request.get_json()
+        if 'category' not in data:
+            return {"error": "Missing required fields"}, 400
         expense_category = data['category']
-        if expense_category == '':
+        if not expense_category:
             return {"error": "Missing required fields"}, 400
         category = {'id': category_id_gen(), 'category': expense_category}
         categories.append(category)
         return category, 201
     
     if request.method == 'GET':
-        return {'category':categories}, 200
-@app.route('/category/<int:id>', methods=['PUT', 'GET', 'DELETE'])
-def category(id):
+        return {'categories':categories}, 200
+@app.route('/categories/<int:id>', methods=['PUT', 'GET', 'DELETE'])
+def get_category_by_id(id):
     if request.method == 'PUT':
         for category in categories:
             if category['id'] == id:
                 data = request.get_json()
-                category['category'] = data['']
+                category['category'] = data['category']
                 return category, 200
         return {"error": "Content not found"}, 404
     if request.method == 'GET':
         for category in categories:
             if category['id'] == id:
-                return category, 200
+                for expense in expenses:
+                    if expense['category_id'] == category['id']:
+                        return [expense, category], 200
+            return category, 200
         return {"error": "Content not found"}, 404
     if request.method == 'DELETE':
         for category in categories:
@@ -37,7 +42,7 @@ def category(id):
                 categories.remove(category)
                 return{"message": "Successfully deleted"}, 200
         return {"error": "Content not found"}, 404
-@app.route('/expense', methods=['POST', 'GET'])
+@app.route('/expenses', methods=['POST', 'GET'])
 def user_expense():
     if request.method == 'POST':
         data = request.get_json()
@@ -58,23 +63,30 @@ def user_expense():
     
     if request.method == 'GET':
         return {'expenses': expenses}, 200
-@app.route('/expense/<int:id>', methods=['PUT', 'GET', 'DELETE'])
+@app.route('/expenses/<int:id>', methods=['PUT', 'GET', 'DELETE'])
 def expense_id(id):
     if request.method == 'GET':
         for expense in expenses:
             if expense['id'] == id:
-                return expense, 200
+                for category in categories:
+                    if category['id'] == expense['category_id']:
+                        return [category, expense], 200
+            return expense, 200
         return {"error": "Content not found"}, 404
             
     if request.method == 'PUT':
         for expense in expenses:
             if expense['id'] == id:
                 data = request.get_json()
+                if 'description' not in data or 'cost' not in data or 'date' not in data or 'category_id' not in data:
+                    return {'error': 'Missing required fields'}, 400
                 expense['description'] = data['description']
                 expense['cost'] = data['cost']
                 expense['date'] = data['date']
                 expense['category_id'] = data['category_id']
-                return expense, 201
+                if not expense['description'] or not expense['cost'] or not expense['date'] or not expense['category_id']:
+                    return {'error': 'Missing required fields'}, 400 
+                return expense, 200
         return {"error": "Content not found"}, 404
     
     if request.method == 'DELETE':
