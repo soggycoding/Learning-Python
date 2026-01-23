@@ -8,15 +8,15 @@ expenses = []
 def expense_category():
     if request.method == 'POST':
         data = request.get_json()
-        expense_category = data['']
+        expense_category = data['category']
         if expense_category == '':
             return {"error": "Missing required fields"}, 400
-        category = {'id': category_id(), 'category': expense_category}
+        category = {'id': category_id_gen(), 'category': expense_category}
         categories.append(category)
         return category, 201
     
     if request.method == 'GET':
-        return categories, 200
+        return {'category':categories}, 200
 @app.route('/category/<int:id>', methods=['PUT', 'GET', 'DELETE'])
 def category(id):
     if request.method == 'PUT':
@@ -38,22 +38,52 @@ def category(id):
                 return{"message": "Successfully deleted"}, 200
         return {"error": "Content not found"}, 404
 @app.route('/expense', methods=['POST', 'GET'])
-def expense():
+def user_expense():
     if request.method == 'POST':
         data = request.get_json()
-        description = data['']
-        cost = data['']
-        date = data['']
-        if description == "":
-            return {"error": "Missing required fields"}, 400
-        if cost == "":
-            return {"error": "Missing required fields"}, 400
-        if date == "":
-            return {"error": "Missing required fields"}, 400
-        user_expense = {'id': expenses_id(), 'description': description, 'cost': cost, 'date': date}
-        expenses.append(user_expense)
-        return user_expense, 201
-def category_id():
+        if 'description' not in data or 'cost' not in data or 'date' not in data or 'category_id' not in data:
+            return {'error': 'Missing required fields'}, 400
+        description = data['description']
+        cost = data['cost']
+        date = data['date']
+        category_id = data['category_id']
+        if not description or not cost or not date or not category_id:
+            return {'error': 'Missing required fields'}, 400 
+        expense = {'id': expenses_id(), 'description': description, 'cost': cost, 'date': date, 'category_id': category_id}
+        for category in categories:
+            if category['id'] == category_id:
+                expenses.append(expense)
+                return expense, 201
+        return {"error": "Content not found"}, 404
+    
+    if request.method == 'GET':
+        return {'expenses': expenses}, 200
+@app.route('/expense/<int:id>', methods=['PUT', 'GET', 'DELETE'])
+def expense_id(id):
+    if request.method == 'GET':
+        for expense in expenses:
+            if expense['id'] == id:
+                return expense, 200
+        return {"error": "Content not found"}, 404
+            
+    if request.method == 'PUT':
+        for expense in expenses:
+            if expense['id'] == id:
+                data = request.get_json()
+                expense['description'] = data['description']
+                expense['cost'] = data['cost']
+                expense['date'] = data['date']
+                expense['category_id'] = data['category_id']
+                return expense, 201
+        return {"error": "Content not found"}, 404
+    
+    if request.method == 'DELETE':
+        for expense in expenses:
+            if expense['id'] == id:
+                expenses.remove(expense)
+                return {"message":"Expense removed successfully"}, 200
+        return{"error": "Content not found"}, 404
+def category_id_gen():
     if not categories:
         return 1
     else:
