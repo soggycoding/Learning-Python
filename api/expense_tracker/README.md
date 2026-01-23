@@ -42,5 +42,5 @@ With this project, it should help me with:
 ## PROJECT STATUS:
 
 - [x] Phase 1: Categories in CRUD
-- [] Phase 2: Expenses CRUD with validation
+- [x] Phase 2: Expenses CRUD with validation
 - [] Phase 3: Enhanced responses with full category details
