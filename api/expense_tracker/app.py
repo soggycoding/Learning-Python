@@ -3,6 +3,7 @@ from flask import Flask, request
 
 app = Flask(__name__)
 categories = []
+expenses = []
 @app.route('/category', methods=['POST', 'GET'])
 def expense_category():
     if request.method == 'POST':
@@ -37,14 +38,32 @@ def category(id):
                 return{"message": "Successfully deleted"}, 200
         return {"error": "Content not found"}, 404
 @app.route('/expense', methods=['POST', 'GET'])
-def expenses():
+def expense():
     if request.method == 'POST':
         data = request.get_json()
+        description = data['']
+        cost = data['']
+        date = data['']
+        if description == "":
+            return {"error": "Missing required fields"}, 400
+        if cost == "":
+            return {"error": "Missing required fields"}, 400
+        if date == "":
+            return {"error": "Missing required fields"}, 400
+        user_expense = {'id': expenses_id(), 'description': description, 'cost': cost, 'date': date}
+        expenses.append(user_expense)
+        return user_expense, 201
 def category_id():
     if not categories:
         return 1
     else:
         ids = [category['id'] for category in categories]
+        return max(ids)+1
+def expenses_id():
+    if not expenses:
+        return 1
+    else: 
+        ids = [expense['id'] for expense in expenses]
         return max(ids)+1
 if __name__ == '__main__':
     app.run(debug=True)
