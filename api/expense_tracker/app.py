@@ -19,6 +19,7 @@ def expense_category():
     
     if request.method == 'GET':
         return {'categories':categories}, 200
+    
 @app.route('/categories/<int:id>', methods=['PUT', 'GET', 'DELETE'])
 def get_category_by_id(id):
     if request.method == 'PUT':
@@ -64,11 +65,15 @@ def user_expense():
 def expense_id(id):
     if request.method == 'GET':
         for expense in expenses:
-            for category in categories:
-                if expense['id'] == id and expense['category_id'] == category['id']:
-                    return (list([expense,category]))
-                else:
-                    return expense, 200
+            if expense['id'] == id:
+                expense_id = expense
+                break
+
+    if expense_id:
+        for category in categories:
+            if expense_id['category_id'] == category['id']:
+                return [expense_id,category], 200
+    else:
         return {"error": "Content not found"}, 404
             
     if request.method == 'PUT':
