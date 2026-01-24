@@ -31,10 +31,7 @@ def get_category_by_id(id):
     if request.method == 'GET':
         for category in categories:
             if category['id'] == id:
-                for expense in expenses:
-                    if expense['category_id'] == category['id']:
-                        return [expense, category], 200
-            return category, 200
+                return category, 200
         return {"error": "Content not found"}, 404
     if request.method == 'DELETE':
         for category in categories:
@@ -67,11 +64,11 @@ def user_expense():
 def expense_id(id):
     if request.method == 'GET':
         for expense in expenses:
-            if expense['id'] == id:
-                for category in categories:
-                    if category['id'] == expense['category_id']:
-                        return [category, expense], 200
-            return expense, 200
+            for category in categories:
+                if expense['id'] == id and expense['category_id'] == category['id']:
+                    return (list([expense,category]))
+                else:
+                    return expense, 200
         return {"error": "Content not found"}, 404
             
     if request.method == 'PUT':
@@ -84,9 +81,9 @@ def expense_id(id):
                 expense['cost'] = data['cost']
                 expense['date'] = data['date']
                 expense['category_id'] = data['category_id']
-                if not expense['description'] or not expense['cost'] or not expense['date'] or not expense['category_id']:
-                    return {'error': 'Missing required fields'}, 400 
-                return expense, 200
+                for category in categories:
+                    if category['id'] == expense['category_id']:
+                        return expense, 200
         return {"error": "Content not found"}, 404
     
     if request.method == 'DELETE':
