@@ -66,13 +66,13 @@ def expense_id(id):
     if request.method == 'GET':
         for expense in expenses:
             if expense['id'] == id:
-                expense_id = expense
+                found_expense = expense
                 break
 
-    if expense_id:
+    if found_expense:
         for category in categories:
-            if expense_id['category_id'] == category['id']:
-                return [expense_id,category], 200
+            if found_expense['category_id'] == category['id']:
+                return [found_expense,category], 200
     else:
         return {"error": "Content not found"}, 404
             
