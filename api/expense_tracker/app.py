@@ -97,6 +97,28 @@ def expense_id(id):
                 expenses.remove(expense)
                 return {"message":"Expense removed successfully"}, 200
         return{"error": "Content not found"}, 404
+
+@app.route('/expenses/total', methods=['GET'])
+def expenses_total():
+    category_id = request.args.get('category_id')
+    accumulator = 0
+    expense_names = []
+    if category_id is not None:
+        int_category_id = int(category_id)
+    for category in categories:
+        if category['id'] == int_category_id:
+            category_name = category
+        else:
+            for expense in expenses:
+                accumulator += expense['cost']
+                return {"expenses": expenses, "total": accumulator}
+    for expense in expenses:
+        if expense['category_id'] == int_category_id:
+            accumulator += expense['cost']
+            expense_names.append(expense)
+    return {'category': category_name, 'expenses': expense_names, 'total': accumulator}
+    
+
 def category_id_gen():
     if not categories:
         return 1
