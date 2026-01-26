@@ -39,8 +39,12 @@ With this project, it should help me with:
 - `GET /expenses/<int:id>` Retrieve a specific expense
 - `DELETE /expenses/<int:id>` Delete a specific expense
 
+### TOTAL:
+- `GET /expenses/total` Gets the total for all category or for specific categories
+
 ## PROJECT STATUS:
 
 - [x] Phase 1: Categories in CRUD
 - [x] Phase 2: Expenses CRUD with validation
-- [] Phase 3: Enhanced responses with full category details
+- [x] Phase 3: Enhanced responses with full category details
+- [x] Phase 4: Having a total of the expenses for each category
