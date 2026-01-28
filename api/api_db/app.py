@@ -12,13 +12,13 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
 # Define a simple model (like a blueprint for a table)
-class User(db.Model):
+class todo(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(80), nullable=False)
-    email = db.Column(db.String(120), unique=True, nullable=False)
+    status = db.Column(db.String(10), nullable=False)
+    description = db.Column(db.String(120), nullable=False)
     
     def __repr__(self):
-        return f'<User {self.name}>'
+        return f'<Tasks:{self.description}>'
 
 # This is where you'll experiment
 if __name__ == '__main__':
@@ -29,29 +29,37 @@ if __name__ == '__main__':
         # EXPERIMENT HERE - Try these one at a time:
         
         # 1. Create a new user
-        new_user = User(name='Bingbing', email='balingbing@gmail.com')
-        db.session.add(new_user)
-        db.session.commit()
-        print(f"Created: {new_user}")
+        #new_task = todo(status='Pending', description='Mag otab')
+        #db.session.add(new_task)
+        #db.session.commit()
+        #print(f"Added {new_task}")
         
-        # 2. Query all users
-        users = User.query.all()
-        #emails = User.query.get(id)
-        print(f"All users: {users}")
-        #print(f"All emails: {emails}")
+        # 2. Query all tasks
+        tasks = todo.query.all()
+        print(f"All task: {tasks}")
         
-        # 3. Find a specific user
-        #user = User.query.filter_by(name='Bingbing').first()
-        #print(f"Found: {user}")
+         #2.1 Query for a specific task using their ID and displaying their details such as their status and description (hardcoded style)
+        #for task in tasks:
+            #if task.id == 1:
+                #print(f"ID: {task.id}")
+                #print(f"STATUS: {task.status}")
+                #print(f"DESCRIPTION: {task.description}")
+        
+        # 3. Find a task
+        task = todo.query.filter_by(id=1).first()
+        print(f"Found: {task}")
+        for task in tasks:
+            print(f"DESCRIPTION: {task.description}")
+            print(f"STATUS: {task.status}")
         
         # 4. Update a user
-        #user = User.query.filter_by(name='Bingbong').first()
-        #user.email = 'Bingbong@gmail.com'
+        #user = User.query.filter_by(email='balingbing@gmail.com').first()
+        #user.name = 'Bingbong'
         #db.session.commit()
-        #print(f"Updated: {user}")ss
+        #print(f"Updated: {user}")
         
         # 5. Delete a user
-        user = User.query.filter_by(name='Bingbing').first()
-        db.session.delete(user)
-        db.session.commit()
-        print("User deleted")
+        #tasks = todo.query.filter_by(id=1).first()
+        #db.session.delete(tasks)
+        #db.session.commit()
+        #print("Task deleted")
