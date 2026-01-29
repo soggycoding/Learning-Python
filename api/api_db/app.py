@@ -12,7 +12,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
 # Define a simple model (like a blueprint for a table)
-class todo(db.Model):
+class Todo(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     status = db.Column(db.String(10), nullable=False)
     description = db.Column(db.String(120), nullable=False)
@@ -28,15 +28,15 @@ if __name__ == '__main__':
         print("Database tables created!")
         # EXPERIMENT HERE - Try these one at a time:
         
-        # 1. Create a new user
-        #new_task = todo(status='Pending', description='Mag otab')
+        # 1. Create a new task
+        #new_task = Todo(status='Pending', description='Jogging')
         #db.session.add(new_task)
         #db.session.commit()
         #print(f"Added {new_task}")
         
         # 2. Query all tasks
-        tasks = todo.query.all()
-        print(f"All task: {tasks}")
+        #tasks = Todo.query.all()
+        #print(f"All task: {tasks}")
         
          #2.1 Query for a specific task using their ID and displaying their details such as their status and description (hardcoded style)
         #for task in tasks:
@@ -46,20 +46,21 @@ if __name__ == '__main__':
                 #print(f"DESCRIPTION: {task.description}")
         
         # 3. Find a task
-        task = todo.query.filter_by(id=1).first()
-        print(f"Found: {task}")
-        for task in tasks:
-            print(f"DESCRIPTION: {task.description}")
-            print(f"STATUS: {task.status}")
+        #task = Todo.query.filter_by(id=2).first()
+        #print(f"Found: {task}")
+        #print(f"DESCRIPTION: {task.description}")
+        #print(f"STATUS: {task.status}")
         
-        # 4. Update a user
-        #user = User.query.filter_by(email='balingbing@gmail.com').first()
-        #user.name = 'Bingbong'
-        #db.session.commit()
-        #print(f"Updated: {user}")
+        # 4. Update a task's status
+        task = Todo.query.filter_by(id=1).first()
+        task.status = "Completed"
+        print(f"Updated task: {task.description}")
+        print(f"Current status: {task.status}")
+        db.session.commit()
         
-        # 5. Delete a user
-        #tasks = todo.query.filter_by(id=1).first()
+        # 5. Delete a task
+        #tasks = Todo.query.filter_by(id=1).first()
         #db.session.delete(tasks)
         #db.session.commit()
         #print("Task deleted")
+        
