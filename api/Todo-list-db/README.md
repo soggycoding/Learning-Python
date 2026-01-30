@@ -29,5 +29,4 @@ Markdowns to remember:
 
 # PROJECT STATUS:
 - [x] PHASE 1: Create a CRUD with the implementation of DB
-- [] PHASE 2: Have a validator to make sure they have inputs
-- [] PHASE 3: 
+- [x] PHASE 2: Have a validator to make sure they have inputs
