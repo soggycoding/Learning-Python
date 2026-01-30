@@ -14,8 +14,7 @@ class Todo(db.Model):
      description = db.Column(db.String(80), nullable = False)
      
      def __repr__(self):
-         return f'<id: {self.id}, description: {self.description}>'
-task = Todo()
+         return f'<id={self.id}, status={self.status}, description={self.description}>'
 
 if __name__ == '__main__':
     with app.app_context():
@@ -35,49 +34,42 @@ def todo_list():
     
     if request.method == 'GET':
         tasks = Todo.query.all()
-        return f"all task: {tasks}", 200
-    '''
-    if request.method == 'POST':
-        data = request.get_json()
-        status = data['Status']
-        task_description = data['Task']
-        new_task = {'Status': status, 'Task': task_description, 'ID': id_gen()}
-        todo.append(new_task)
-        return new_task, 201
+        task_list = []
+        for task in tasks:
+            task = {'id': task.id, 'status': task.status, 'description': task.description}
+            task_list.append(task)
+        return {'tasks': task_list}, 200
 
     
-@app.route('/todo/<int:id>', methods=['GET', 'PUT', 'DELETE'])
-
-    
+@app.route('/todo/<int:id>', methods=['GET', 'PUT', 'DELETE'])   
 def task_id(id):
     if request.method == 'GET':
-        for task in todo:
-            if task['ID'] == id:
-                return task
-        return {"error": "Task not found"}, 404
-    
+        task = Todo.query.filter_by(id=id).first()
+        return {
+            'id': task.id,
+            'status': task.status,
+            'description': task.description
+        }, 200
+
     if request.method == 'PUT':
-        for task in todo:
-            if task['ID'] == id:
-                data = request.get_json()
-                task['Status'] = data['Status']
-                task['Task'] = data['Task']
-                return task, 200
-        return {"error": "Task not found"}, 404
+        task = Todo.query.filter_by(id=id).first()
+        data = request.get_json()
+        task.status = data['status']
+        task.description = data['description']
+        db.session.commit()
+        return {
+            'id': id,
+            'status': task.status,
+            'description': task.description
+        }, 200
+
     if request.method == 'DELETE':
-        for task in todo:
-            if task['ID'] == id:
-                todo.remove(task)
-                return {"message": "Successfully removed the task"}, 200
-        return {"error": "Task not found"}, 404
-                
-def id_gen():
-    if not todo:
-        return 1
-    else:
-        ids = [task['ID'] for task in todo]
-        return max(ids)+1
-'''
+        task = Todo.query.filter_by(id=id).first()
+        db.session.delete(task)
+        db.session.commit()
+        return {"message": "Successfully deleted the task"}, 200
+                     
+
 
 if __name__ == '__main__':
     app.run(debug=True)
