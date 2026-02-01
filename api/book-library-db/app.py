@@ -35,13 +35,22 @@ class Books(db.Model):
     def __repr__(self):
         return f'<Added: {self.title}>'
     
-    def to_dict(self):
-        return {
+    def to_dict(self, include_author=True):
+        data = {
             'id': self.id,
             'title': self.title,
             'description': self.description,
             'author_id': self.author_id
         }
+        
+        if include_author:
+            data['author'] =  {
+                'id': self.author.id,
+                'name': self.author.name,
+                'country': self.author.country
+            }
+            
+        return data
 '''
 if __name__ == '__main__':
     with app.app_context():
@@ -51,6 +60,7 @@ with app.app_context():
     db.drop_all()
     db.create_all()
 '''       
+
 @app.route('/books', methods=['POST', 'GET'])
 def add_books():
     if request.method == 'POST':
@@ -62,17 +72,19 @@ def add_books():
         new_book = Books(title=data['title'], description=data['description'], author_id=data['author_id'])
         db.session.add(new_book)
         db.session.commit()
-        return new_book.to_dict(), 201
+        return new_book.to_dict(include_author=False), 201
 
     if request.method == 'GET':
         books = Books.query.all()
-        book_list = [book.to_dict() for book in books]
+        book_list = [book.to_dict(include_author=False) for book in books]
         return {"books": book_list}
     
 @app.route('/books/<int:id>', methods=['PUT', 'GET', 'DELETE'])
 def book_id(id):
     if request.method == 'PUT':
         books = Books.query.filter_by(id=id).first()
+        if not books:
+            return {"error": "Content not found"}, 400
         data = request.get_json()
         if 'title' not in data or 'description' not in data:
             return {"error": "Missing required fields"}, 404
@@ -81,7 +93,7 @@ def book_id(id):
         books.title = data['title']
         books.description = data['description']
         db.session.commit()
-        return books.to_dict(), 200
+        return books.to_dict(include_author=False), 200
     
     if request.method == 'GET':
         books = Books.query.filter_by(id=id).first()
@@ -144,5 +156,6 @@ def author_id(id):
         db.session.delete(authors)
         db.session.commit()
         return {"message": "Successfully removed"}, 200
+    
 if __name__ == '__main__':
     app.run(debug=True)

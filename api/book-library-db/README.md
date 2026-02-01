@@ -38,7 +38,7 @@ Markdowns to remember:
 - 'DELETE /authors/<int:id>': Delete a specific author
 
 # PROJECT STATUS
-- [] PHASE 1: A CRUD for the books and author
-- [] PHASE 2: Validator
-- [] PHASE 3: Mapping both database to eachother
-- [] PHASE 4: 
+- [x] PHASE 1: A CRUD for the books and author
+- [x] PHASE 2: Validator
+- [x] PHASE 3: Mapping both database to eachother
+- [] PHASE 4:
