@@ -34,15 +34,15 @@ Markdowns to remember:
 - '/DELETE<int:id> categories : Delete a specific category'
 
 ## EXPENSES
-- '/POST expenses : Create a new expense'
-- '/GET expenses : Retrieves all the expenses'
-- '/PUT<int:id> expenses : Updates a specific expense'
-- '/GET<int:id> expenses : Retrieves a specific expense'
-- '/DELETE<int:id> expenses : Delete a specific expense'
+- '/POST/expenses' : Create a new expense
+- '/GET/expenses' : Retrieves all the expenses
+- '/PUT/expenses/int:id' : Updates a specific expense
+- '/GET/expenses/int:id' : Retrieves a specific expense
+- '/DELETE/expenses/int:id' : Delete a specific expense
 
 # PROJECT STATUS
 - [x] PHASE 1: CRUD for both categories and expenses
 - [x] PHASE 2: Validator for both categories and expenses
-- [] PHASE 3: Mapping the categories and expenses
+- [x] PHASE 3: Mapping the categories and expenses
 - [] PHASE 4: Getting the sum for each expenses within the category
 - [] PHASE 5: 

@@ -24,17 +24,19 @@ class Categories(db.Model):
         
 class Expenses(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    expense = db.Column(db.String(80), unique=True, nullable=False)
+    description = db.Column(db.String(80), unique=True, nullable=False)
+    cost = db.Column(db.Integer, nullable=False)
     date = db.Column(db.String(30), nullable=False)
     category_id = db.Column(db.Integer, db.ForeignKey('categories.id'), nullable=False)
     
     def __repr__(self):
-        return f'<Added: {self.expense}'
+        return f'<Added: {self.description}'
     
     def to_dict(self, show_category=True):
         data = {
             'id': self.id,
-            'expense': self.expense,
+            'description': self.description,
+            'cost': self.cost,
             'date': self.date,
             'category_id': self.category_id
             }
@@ -59,7 +61,7 @@ def post_category():
     if request.method == 'GET': 
         categories = Categories.query.all()
         category_list = [category.to_dict() for category in categories]
-        return {"Categories": category_list}, 200
+        return {"categories": category_list}, 200
 
 @app.route('/categories/<int:id>', methods=['PUT', 'GET', 'DELETE'])
 def category_id(id):
@@ -94,11 +96,14 @@ def category_id(id):
 def post_expense():
     if request.method == 'POST':
         data = request.get_json()
-        if 'expense' not in data or 'date' not in data or 'category_id' not in data:
+        if 'description' not in data or 'cost' not in data or 'date' not in data or 'category_id' not in data:
             return {"error": "Missing required fields"}, 400
-        if not data['expense'] or not data['date'] or not data['category_id']:
+        if not data['description'] or not data['cost'] or not data['date'] or not data['category_id']:
             return {"error": "Missing required fields"}, 400
-        new_expense = Expenses(expense=data['expense'], date=data['date'], category_id=data['category_id'])
+        category = Categories.query.get(data['category_id'])
+        if not category:
+            return {"error": "Category not found"}, 404
+        new_expense = Expenses(description=data['description'],cost=data['cost'], date=data['date'], category_id=data['category_id'])
         db.session.add(new_expense)
         db.session.commit()
         return new_expense.to_dict(show_category=False), 201
@@ -106,7 +111,7 @@ def post_expense():
     if request.method == 'GET':
         expenses = Expenses.query.all()
         expense_list = [expense.to_dict(show_category = False) for expense in expenses]
-        return {"expenses": expense_list}, 201
+        return {"expenses": expense_list}, 200
 
 @app.route('/expenses/<int:id>', methods=['PUT', 'GET', 'DELETE'])
 def expense_id(id):
@@ -115,11 +120,12 @@ def expense_id(id):
         if not expenses:
             return {"error": "Content not found"}, 404
         data = request.get_json()
-        if 'expense' not in data or 'date' not in data or 'category_id' not in data:
+        if 'description' not in data or 'cost' not in data or 'date' not in data or 'category_id' not in data:
             return {"error": "Missing required fields"}, 400
-        if not data['expense'] or not data['date'] or not data['category_id']:
+        if not data['description'] or not data['cost'] or not data['date'] or not data['category_id']:
             return {"error": "Missing required fields"}, 400
-        expenses.expense = data['expense']
+        expenses.description = data['description']
+        expenses.cost = data['cost']
         expenses.date = data['date']
         expenses.category_id = data['category_id']
         db.session.commit()
@@ -129,7 +135,7 @@ def expense_id(id):
         expenses = Expenses.query.filter_by(id=id).first()
         if not expenses:
             return {"error": "Content not found"}, 404
-        return {"expense": expenses.to_dict()}, 200
+        return expenses.to_dict(), 200
     
     if request.method == 'DELETE':
         expenses = Expenses.query.filter_by(id=id).first()
@@ -138,12 +144,12 @@ def expense_id(id):
         db.session.delete(expenses)
         db.session.commit()
         return {"message": "Successfully deleted"}, 200
-
-'''    
+'''
+@app.route('/expenses/total', methods=['GET'])
+def expenses_total():
+'''
 with app.app_context():
     db.drop_all()
     db.create_all()
-'''
-    
 if __name__ == '__main__':
     app.run(debug=True)
