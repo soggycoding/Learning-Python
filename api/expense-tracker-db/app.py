@@ -31,13 +31,17 @@ class Expenses(db.Model):
     def __repr__(self):
         return f'<Added: {self.expense}'
     
-    def to_dict(self, ):
-        return {
+    def to_dict(self, show_category=True):
+        data = {
             'id': self.id,
             'expense': self.expense,
             'date': self.date,
             'category_id': self.category_id
             }
+        if show_category:
+            data['category'] = {"category":self.category.category}
+            
+        return data
         
 @app.route('/categories', methods=['POST', 'GET'])
 def post_category():
@@ -83,6 +87,55 @@ def category_id(id):
         if not categories:
             return {"error": "Content not found"}, 404
         db.session.delete(categories)
+        db.session.commit()
+        return {"message": "Successfully deleted"}, 200
+
+@app.route('/expenses', methods=['POST', 'GET'])
+def post_expense():
+    if request.method == 'POST':
+        data = request.get_json()
+        if 'expense' not in data or 'date' not in data or 'category_id' not in data:
+            return {"error": "Missing required fields"}, 400
+        if not data['expense'] or not data['date'] or not data['category_id']:
+            return {"error": "Missing required fields"}, 400
+        new_expense = Expenses(expense=data['expense'], date=data['date'], category_id=data['category_id'])
+        db.session.add(new_expense)
+        db.session.commit()
+        return new_expense.to_dict(show_category=False), 201
+    
+    if request.method == 'GET':
+        expenses = Expenses.query.all()
+        expense_list = [expense.to_dict(show_category = False) for expense in expenses]
+        return {"expenses": expense_list}, 201
+
+@app.route('/expenses/<int:id>', methods=['PUT', 'GET', 'DELETE'])
+def expense_id(id):
+    if request.method == 'PUT':
+        expenses = Expenses.query.filter_by(id=id).first()
+        if not expenses:
+            return {"error": "Content not found"}, 404
+        data = request.get_json()
+        if 'expense' not in data or 'date' not in data or 'category_id' not in data:
+            return {"error": "Missing required fields"}, 400
+        if not data['expense'] or not data['date'] or not data['category_id']:
+            return {"error": "Missing required fields"}, 400
+        expenses.expense = data['expense']
+        expenses.date = data['date']
+        expenses.category_id = data['category_id']
+        db.session.commit()
+        return expenses.to_dict(show_category=False), 200
+
+    if request.method == 'GET':
+        expenses = Expenses.query.filter_by(id=id).first()
+        if not expenses:
+            return {"error": "Content not found"}, 404
+        return {"expense": expenses.to_dict()}, 200
+    
+    if request.method == 'DELETE':
+        expenses = Expenses.query.filter_by(id=id).first()
+        if not expenses:
+            return {"error": "Content not found"}, 404
+        db.session.delete(expenses)
         db.session.commit()
         return {"message": "Successfully deleted"}, 200
 
