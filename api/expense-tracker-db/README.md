@@ -41,8 +41,8 @@ Markdowns to remember:
 - '/DELETE<int:id> expenses : Delete a specific expense'
 
 # PROJECT STATUS
-- [] PHASE 1: CRUD for both categories and expenses
-- [] PHASE 2: Validator for both categories and expenses
+- [x] PHASE 1: CRUD for both categories and expenses
+- [x] PHASE 2: Validator for both categories and expenses
 - [] PHASE 3: Mapping the categories and expenses
 - [] PHASE 4: Getting the sum for each expenses within the category
 - [] PHASE 5: 
