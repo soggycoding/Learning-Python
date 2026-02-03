@@ -149,16 +149,17 @@ def expense_id(id):
 @app.route('/expenses/total', methods=['GET'])
 def expenses_total():
     category_id = request.args.get('category_id')
-    expenses = Expenses.query.filter_by(id=category_id).first()
-    if not expenses:
-        sum_all = select(func.sum(Expenses.cost).label("total_sum"))
-        total = db.session.execute(sum_all).scalar()
-        return {"Total:":total}
-    stmt = select(func.sum(expenses.cost).label("total_sum"))
-    result = db.session.execute(stmt).scalar()
-    return {"Total":result}, 200
+    if not category_id:
+        return {"error": "Content not found"}, 404
+    if category_id:
+        total = db.session.query(func.sum(Expenses.cost)).filter(Expenses.category_id == category_id)
+        result = db.session.execute(total).scalar()
+        return {"total":result or 0}, 200
+    else:
+        total = db.session.query(func.sum(Expenses.cost)).scalar()
+        return {"total":total or}, 200
     
-'''
+''' 
 with app.app_context():
     db.drop_all()
     db.create_all()

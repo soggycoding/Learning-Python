@@ -44,5 +44,5 @@ Markdowns to remember:
 - [x] PHASE 1: CRUD for both categories and expenses
 - [x] PHASE 2: Validator for both categories and expenses
 - [x] PHASE 3: Mapping the categories and expenses
-- [] PHASE 4: Getting the sum for each expenses within the category
+- [x] PHASE 4: Getting the sum for each expenses within the category
 - [] PHASE 5: 
