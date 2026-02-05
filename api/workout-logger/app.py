@@ -17,12 +17,12 @@ class Categories(db.Model):
     def __repr__(self):
         return f'<Added: {self.category}'
     
-    def to_dict(self, show_workouts=True):
-        data = {
+    def to_dict(self):
+        return {
             'id' : self.id,
             'category' : self.category
         }
-        return data
+        
 class Workouts(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     workouts = db.Column(db.String(80), unique = True, nullable = False)
@@ -51,13 +51,13 @@ with app.app_context():
 def add_workout():
     if request.method == 'POST':
         data = request.get_json()
-        if 'workouts' not in data or 'rep_set' not in data or 'status' not in data:
+        if 'workouts' not in data or 'rep_set' not in data or 'status' not in data or 'category_id' not in data:
             return {"error": "Missing required fields"}, 400
-        if not data['workouts'] or not data['rep_set'] or not data['status']:
+        if not data['workouts'] or not data['rep_set'] or not data['status'] or not data['category_id']:
             return {"error": "Missing required fields"}, 400
         category = Categories.query.get(data['category_id'])
         if not category:
-            return {"error": "Category not found"}
+            return {"error": "Category not found"}, 404
         workout = Workouts(workouts=data['workouts'], rep_set=data['rep_set'], status=data['status'], category_id=data['category_id'])
         db.session.add(workout)
         db.session.commit()
@@ -129,15 +129,17 @@ def category_id(id):
             return {"error": "Missing required fields"}, 400
         if not data['category']:
             return {"error": "Missing required fields"}, 400
-        categories.category = data['categories']
+        categories.category = data['category']
         db.session.commit()
         return categories.to_dict(), 200
     
     if request.method == 'GET':
-        categories = Categories.query.filter_by(id=id).first()
-        if not categories:
-            return {"error": "Content not found"}, 404
-        return categories.to_dict(), 200
+        category = Categories.query.filter_by(id=id).first()
+        if not category:
+            return {"error": "Category not found"}, 404
+        workouts = category.workout
+        workout_list = [w.to_dict() for w in workouts]
+        return {'category':category.to_dict(), 'workouts': workout_list}, 200
     
     if request.method == 'DELETE':
         categories = Categories.query.filter_by(id=id).first()
@@ -146,5 +148,6 @@ def category_id(id):
         db.session.delete(categories)
         db.session.commit()
         return {"message": "Successfully deleted"}, 200
+    
 if __name__ == '__main__':
     app.run(debug=True)

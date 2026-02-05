@@ -38,5 +38,5 @@ First API DATABASE project that will also be useful for me since I need to worko
 # PROJECT STATUS
 - [x] PHASE 1: Create a CRUD for workouts and categories
 - [x] PHASE 2: Have a validator for workouts and categories
-- [] PHASE 3: Use a mapper so it filters specific workouts per category
-- [] PHASE 4: Create a workout plan per category
+- [x] PHASE 3: Use a mapper so it filters specific workouts per category
+- [x] PHASE 4: Create a workout plan per category
