@@ -10,8 +10,8 @@ app.config['SQLALCHEMY_TRACK_MODIFICATION'] = False
 db = SQLAlchemy(app)
 
 SongPlaylist = db.Table('SongPlaylist',
-                        db.Column('song_id', db.Integer, db.ForeignKey('songs.id'), primary_key=True),
-                        db.Column('playlist_id', db.Integer, db.ForeignKey('playlists.id'), primary_key=True)
+                        db.Column('song_id', db.Integer, db.ForeignKey('songs.id')),
+                        db.Column('playlist_id', db.Integer, db.ForeignKey('playlists.id'))
                         )
     
 class Songs(db.Model):
@@ -32,8 +32,10 @@ class Songs(db.Model):
             'title' : self.title,
             'artist' : self.artist,
             'duration' : self.duration,
-            'genre' : self.genre
+            'genre' : self.genre,
+            'playlist_id' : self.playlist_ids
         }
+
 class Playlists(db.Model):
     __tablename__ = 'playlists'
     id = db.Column(db.Integer, primary_key=True)
@@ -67,6 +69,7 @@ def add_songs():
         songs = Songs(title=data['title'], artist=data['artist'], duration=data['duration'], genre=data['genre'])
         db.session.add(songs)
         db.session.commit()
+        
         return songs.to_dict(), 201
     
     if request.method == 'GET':
@@ -74,6 +77,11 @@ def add_songs():
         songs_list = [song.to_dict() for song in songs]
         return {"songs": songs_list}, 200
 
+@app.route('/playlists/<int:playlist_id/songs>', methods=['POST'])
+def add_song_to_playlist(playlist_id):
+    playlist = Playlists.query.filter_by(id=playlist_id).first()
+    songs = SongPlaylist.query.get('song_id')
+'''
 @app.route('/songs/<int:id>', methods=['PUT', 'GET', 'DELETE'])
 def songs_id(id):
     if request.method == 'PUT':
@@ -81,14 +89,15 @@ def songs_id(id):
         if not songs:
             return {"error": "Content not found"}, 404
         data = request.get_json()
-        if 'title' not in data or 'artist' not in data or 'duration' not in data or 'genre' not in data:
+        if 'title' not in data or 'artist' not in data or 'duration' not in data or 'genre' not in data or 'playlist_id' not in data:
             return {"error": "Missing required fields"}, 400
-        if not data['title'] or not data['artist'] or not data['duration'] or not data['genre']:
+        if not data['title'] or not data['artist'] or not data['duration'] or not data['genre'] or not data['playlist_id']:
             return {"error": "Missing required fields"}, 400
         songs.title = data['title']
         songs.artist = data['artist']
         songs.duration = data['duration']
         songs.genre = data['genre']
+        songs.playlist_ids = data['playlist_id']
         db.session.commit()
         return songs.to_dict(), 200
     
@@ -153,6 +162,7 @@ def playlist_id(id):
         db.session.delete(playlists)
         db.session.commit()
         return {"message": "Successfully deleted"}, 200
+'''
 if __name__ == '__main__':
     app.run(debug=True)
     
