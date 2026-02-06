@@ -38,7 +38,7 @@ Markdowns to remember:
 - ???
 
 # PROJECT STATUS
-- [] PHASE 1: Create a CRUD for both songs and playlists
-- [] PHASE 2: Create a validator for both songs and playlists
-- [] PHASE 3: Fgirue out how Junction table works
+- [x] PHASE 1: Create a CRUD for both songs and playlists
+- [x] PHASE 2: Create a validator for both songs and playlists
+- [x] PHASE 3: Figure out how Junction table works
 - [] PHASE 4: Connect the junction table with the songs and playlists 

@@ -1,6 +1,6 @@
 from flask import Flask, request
 from flask_sqlalchemy import SQLAlchemy
-
+from datetime import datetime
 
 app = Flask(__name__)
 
@@ -19,7 +19,8 @@ class Songs(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     title = db.Column(db.String(30), unique=True, nullable=False)
     artist = db.Column(db.String(30), nullable=False)
-    playlist_id = db.Column(db.Integer)
+    duration = db.Column(db.String(10), nullable=False)
+    genre = db.Column(db.String(30), nullable=False)
     playlists = db.relationship('Playlists', secondary=SongPlaylist, backref=db.backref('songs', lazy='dynamic'))
     
     def __repr__(self):
@@ -30,12 +31,15 @@ class Songs(db.Model):
             'id' : self.id,
             'title' : self.title,
             'artist' : self.artist,
-            'playlist_id' : self.playlist_id
+            'duration' : self.duration,
+            'genre' : self.genre
         }
 class Playlists(db.Model):
     __tablename__ = 'playlists'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), nullable=False)
+    description = db.Column(db.String(120), nullable=False)
+    created_date = datetime.now()
     
     def __repr__(self):
         return f"<Added: {self.name}>"
@@ -43,25 +47,24 @@ class Playlists(db.Model):
     def to_dict(self):
        return {
             'id' : self.id,
-            'name' : self.name
+            'name' : self.name,
+            'description' : self.description,
+            'created_date' : self.created_date
         }
-'''
+
 with app.app_context():
     db.drop_all()
     db.create_all()
-'''
+
 @app.route('/songs', methods=['POST', 'GET'])
 def add_songs():
     if request.method == 'POST':
         data = request.get_json()
-        if 'title' not in data or 'artist' not in data or 'playlist_id' not in data:
+        if 'title' not in data or 'artist' not in data or 'duration' not in data or 'genre' not in data:
             return {"error": "Missing required fields"}, 400
-        if not data['title'] or not data['artist'] or not data['playlist_id']:
+        if not data['title'] or not data['artist'] or not data['duration'] or not data['genre']:
             return {"error": "Missing required fields"}, 400
-        playlists = Playlists.query.get(data['playlist_id'])
-        if not playlists:
-            return {"error": "Playlist not found"}, 404
-        songs = Songs(title=data['title'], artist=data['artist'], playlist_id=data['playlist_id'])
+        songs = Songs(title=data['title'], artist=data['artist'], duration=data['duration'], genre=data['genre'])
         db.session.add(songs)
         db.session.commit()
         return songs.to_dict(), 201
@@ -78,16 +81,14 @@ def songs_id(id):
         if not songs:
             return {"error": "Content not found"}, 404
         data = request.get_json()
-        if 'title' not in data or 'artist' not in data or 'playlist_id' not in data:
+        if 'title' not in data or 'artist' not in data or 'duration' not in data or 'genre' not in data:
             return {"error": "Missing required fields"}, 400
-        if not data['title'] or not data['artist'] or not data['playlist_id']:
+        if not data['title'] or not data['artist'] or not data['duration'] or not data['genre']:
             return {"error": "Missing required fields"}, 400
-        playlists = Playlists.query.get(data['playlist_id'])
-        if not playlists:
-            return {"error": "Playlist not found"}, 404
         songs.title = data['title']
         songs.artist = data['artist']
-        songs.playlist_id = data['playlist_id']
+        songs.duration = data['duration']
+        songs.genre = data['genre']
         db.session.commit()
         return songs.to_dict(), 200
     
@@ -95,7 +96,7 @@ def songs_id(id):
         songs = Songs.query.filter_by(id=id).first()
         if not songs:
             return {"error": "Content not found"}, 404
-        return songs.to_dict(), 200
+        return {"song":songs.to_dict()}, 200
     
     if request.method == 'DELETE':
         songs = Songs.query.filter_by(id=id).first()
@@ -109,11 +110,11 @@ def songs_id(id):
 def add_playlist():
     if request.method == 'POST':
         data = request.get_json()
-        if 'name' not in data:
+        if 'name' not in data or 'description' not in data:
             return {"error": "Missing required fields"}, 400
-        if not data['name']:
+        if not data['name'] or not data['description']:
             return {"error": "Missing required fields"}, 400
-        playlists = Playlists(name=data['name'])
+        playlists = Playlists(name=data['name'], description=data['description'])
         db.session.add(playlists)
         db.session.commit()
         return playlists.to_dict(), 201
@@ -130,11 +131,12 @@ def playlist_id(id):
         if not playlists:
             return {"error": "Content not found"}, 404
         data = request.get_json()
-        if 'name' not in data:
+        if 'name' not in data or 'description' not in data:
             return {"error": "Missing required fields"}, 400
-        if not data['name']:
+        if not data['name'] or not data['description']:
             return {"error": "Missing required fields"}, 400
         playlists.name = data['name']
+        playlists.description = data['description']
         db.session.commit()
         return playlists.to_dict(), 200
     
@@ -142,7 +144,7 @@ def playlist_id(id):
         playlists = Playlists.query.filter_by(id=id).first()
         if not playlists:
             return {"error": "Content not found"}, 404
-        return playlists.to_dict(), 200
+        return {"playlist":playlists.to_dict()}, 200
     
     if request.method == 'DELETE':
         playlists = Playlists.query.filter_by(id=id).first()
