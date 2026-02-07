@@ -41,7 +41,7 @@ class Playlists(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), nullable=False)
     description = db.Column(db.String(120), nullable=False)
-    created_date = datetime.now()
+    created_date = db.Column(db.DateTime, default=datetime.now)
     
     def __repr__(self):
         return f"<Added: {self.name}>"
@@ -53,11 +53,11 @@ class Playlists(db.Model):
             'description' : self.description,
             'created_date' : self.created_date
         }
-'''
+
 with app.app_context():
     db.drop_all()
     db.create_all()
-'''
+
 @app.route('/songs', methods=['POST', 'GET'])
 def add_songs():
     if request.method == 'POST':
@@ -80,30 +80,29 @@ def add_songs():
 @app.route('/songs/<int:id>', methods=['PUT', 'GET', 'DELETE'])
 def songs_id(id):
     if request.method == 'PUT':
-        songs = Songs.query.filter_by(id=id).first()
+        songs = Songs.query.get(id)
         if not songs:
             return {"error": "Content not found"}, 404
         data = request.get_json()
-        if 'title' not in data or 'artist' not in data or 'duration' not in data or 'genre' not in data or 'playlist_id' not in data:
+        if 'title' not in data or 'artist' not in data or 'duration' not in data or 'genre' not in data:
             return {"error": "Missing required fields"}, 400
-        if not data['title'] or not data['artist'] or not data['duration'] or not data['genre'] or not data['playlist_id']:
+        if not data['title'] or not data['artist'] or not data['duration'] or not data['genre']:
             return {"error": "Missing required fields"}, 400
         songs.title = data['title']
         songs.artist = data['artist']
         songs.duration = data['duration']
         songs.genre = data['genre']
-        songs.playlist_ids = data['playlist_id']
         db.session.commit()
         return songs.to_dict(), 200
     
     if request.method == 'GET':
-        songs = Songs.query.filter_by(id=id).first()
+        songs = Songs.query.get(id)
         if not songs:
             return {"error": "Content not found"}, 404
         return {"song":songs.to_dict()}, 200
     
     if request.method == 'DELETE':
-        songs = Songs.query.filter_by(id=id).first()
+        songs = Songs.query.get(id)
         if not songs:
             return {"error": "Content not found"}, 404
         db.session.delete(songs)
@@ -131,7 +130,7 @@ def add_playlist():
 @app.route('/playlists/<int:id>', methods=['PUT', 'GET', 'DELETE'])
 def playlist_id(id):
     if request.method == 'PUT':
-        playlists = Playlists.query.filter_by(id=id).first()
+        playlists = Playlists.query.get(id)
         if not playlists:
             return {"error": "Content not found"}, 404
         data = request.get_json()
@@ -153,7 +152,7 @@ def playlist_id(id):
         return {"playlist": playlists.to_dict(), "songs": song_list}, 200
             
     if request.method == 'DELETE':
-        playlists = Playlists.query.filter_by(id=id).first()
+        playlists = Playlists.query.get(id)
         if not playlists:
             return {"error": "Content not found"}, 404
         db.session.delete(playlists)
@@ -176,6 +175,8 @@ def add_song_to_playlist(playlist_id):
     song = Songs.query.get(song_id)
     if not song:
         return {"error": "Song not found"}, 404
+    if song in playlist.songs:
+        return {"message": "Song already in playlist"}, 200
     
     playlist.songs.append(song)
     db.session.commit()
@@ -183,6 +184,24 @@ def add_song_to_playlist(playlist_id):
     return {
         'playlist':playlist.to_dict(), 
         'song_added': song.to_dict()}, 201
+
+@app.route('/playlists/<int:playlist_id>/songs/<song_id>', methods=['DELETE'])
+def delete_song_from_playlist(playlist_id, song_id):
+    playlist = Playlists.query.get(playlist_id)
+    if not playlist:
+        return {"error": "Playlist not found"}, 404
+    
+    song = Songs.query.get(song_id)
+    if not song:
+        return {"error": "Song not found"}, 404
+    if song not in playlist.songs:
+        return {"message": "Song is not in the playlist"}, 200
+    
+    playlist.songs.remove(song)
+    db.session.delete(song)
+    db.session.commit()
+    
+    return {"message": "Song removed from playlist successfully"}, 200
 
 if __name__ == '__main__':
     app.run(debug=True)
