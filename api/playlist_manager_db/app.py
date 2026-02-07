@@ -21,6 +21,7 @@ class Songs(db.Model):
     artist = db.Column(db.String(30), nullable=False)
     duration = db.Column(db.String(10), nullable=False)
     genre = db.Column(db.String(30), nullable=False)
+
     playlists = db.relationship('Playlists', secondary=SongPlaylist, backref=db.backref('songs', lazy='dynamic'))
     
     def __repr__(self):
@@ -33,7 +34,6 @@ class Songs(db.Model):
             'artist' : self.artist,
             'duration' : self.duration,
             'genre' : self.genre,
-            'playlist_id' : self.playlist_ids
         }
 
 class Playlists(db.Model):
@@ -53,11 +53,11 @@ class Playlists(db.Model):
             'description' : self.description,
             'created_date' : self.created_date
         }
-
+'''
 with app.app_context():
     db.drop_all()
     db.create_all()
-
+'''
 @app.route('/songs', methods=['POST', 'GET'])
 def add_songs():
     if request.method == 'POST':
@@ -76,12 +76,7 @@ def add_songs():
         songs = Songs.query.all()
         songs_list = [song.to_dict() for song in songs]
         return {"songs": songs_list}, 200
-
-@app.route('/playlists/<int:playlist_id/songs>', methods=['POST'])
-def add_song_to_playlist(playlist_id):
-    playlist = Playlists.query.filter_by(id=playlist_id).first()
-    songs = SongPlaylist.query.get('song_id')
-'''
+   
 @app.route('/songs/<int:id>', methods=['PUT', 'GET', 'DELETE'])
 def songs_id(id):
     if request.method == 'PUT':
@@ -114,7 +109,7 @@ def songs_id(id):
         db.session.delete(songs)
         db.session.commit()
         return {"message": "Successfully deleted"}, 200
-        
+      
 @app.route('/playlists', methods=['POST', 'GET'])
 def add_playlist():
     if request.method == 'POST':
@@ -150,11 +145,13 @@ def playlist_id(id):
         return playlists.to_dict(), 200
     
     if request.method == 'GET':
-        playlists = Playlists.query.filter_by(id=id).first()
+        playlists = Playlists.query.get(id)
         if not playlists:
             return {"error": "Content not found"}, 404
-        return {"playlist":playlists.to_dict()}, 200
-    
+        
+        song_list = [songs.to_dict() for songs in playlists.songs]
+        return {"playlist": playlists.to_dict(), "songs": song_list}, 200
+            
     if request.method == 'DELETE':
         playlists = Playlists.query.filter_by(id=id).first()
         if not playlists:
@@ -162,7 +159,31 @@ def playlist_id(id):
         db.session.delete(playlists)
         db.session.commit()
         return {"message": "Successfully deleted"}, 200
-'''
+
+@app.route('/playlists/<int:playlist_id>/songs', methods=['POST'])
+def add_song_to_playlist(playlist_id):
+    playlist = Playlists.query.get(playlist_id)
+    if not playlist:
+        return {"error": "Playlist not found"}, 404
+    
+    data = request.get_json()
+    if 'song_id' not in data:
+        return {"error": "Missing required fields"}, 400
+    if not data['song_id']:
+        return {"error": "Missing required fields"}, 400
+    song_id = data['song_id']
+    
+    song = Songs.query.get(song_id)
+    if not song:
+        return {"error": "Song not found"}, 404
+    
+    playlist.songs.append(song)
+    db.session.commit()
+    
+    return {
+        'playlist':playlist.to_dict(), 
+        'song_added': song.to_dict()}, 201
+
 if __name__ == '__main__':
     app.run(debug=True)
     

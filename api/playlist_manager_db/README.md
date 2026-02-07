@@ -33,12 +33,10 @@ Markdowns to remember:
 - PUT /playlists/<int:id> Updates a specific playlist
 - GET /playlists/<int:id> Retrieves a specific playlist
 - DELETE /playlist/<int:id> Delete a specific playlist
-
-## JUNCTION TABLE
-- ???
+- POST /playlist/<int:playlist_id>/songs Adds a song to a playlist
 
 # PROJECT STATUS
 - [x] PHASE 1: Create a CRUD for both songs and playlists
-- [] PHASE 2: Create a validator for both songs and playlists
-- [] PHASE 3: Figure out how Junction table works
-- [] PHASE 4: Connect the junction table with the songs and playlists 
+- [x] PHASE 2: Create a validator for both songs and playlists
+- [x] PHASE 3: Figure out how Junction table works
+- [x] PHASE 4: Connect the junction table with the songs and playlists 
