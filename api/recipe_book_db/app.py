@@ -15,7 +15,7 @@ IngredientRecipe = db.Table('IngredientRecipe',
 class Ingredients(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     ingredient_name = db.Column(db.String(80), nullable=False)
-    recipe = db.relationship('Recipes', secondary=IngredientRecipe, backref=db.backref('ingredient', lazy='dynamic'))
+    recipe = db.relationship('Recipe', secondary=IngredientRecipe, backref=db.backref('ingredient', lazy='dynamic'))
     
     def __repr__(self):
         return f'<Added {self.ingredient_name}>'
@@ -86,7 +86,9 @@ def ingredient_id(id):
         ingredient = Ingredients.query.filter_by(id=id).first()
         if not ingredient:
             return {"error" : "Ingredient not found"}, 404
-        return {"ingredient": ingredient.to_dict()}, 200
+        recipe_list = [recipe.to_dict() for recipe in ingredient.recipe]
+        return {"ingredient": ingredient.to_dict(),
+                'recipes': recipe_list}, 200
     
     if request.method == 'DELETE':
         ingredient = Ingredients.query.filter_by(id=id).first()
@@ -177,6 +179,23 @@ def add_ingredients_to_recipe(recipe_id):
         'recipe': recipe.to_dict(),
         'ingredient_added' : ingredient.to_dict()
     }, 201
+
+@app.route('/recipes/<int:recipe_id>/ingredients/<int:ingredient_id>', methods=['DELETE'])
+def delete_ingredient_from_recipe(recipe_id, ingredient_id):
+    recipe = Recipes.query.get(recipe_id)
+    ingredient = Ingredients.query.get(ingredient_id)
+    if not recipe:
+        return {"error": "Recipe not found"}, 404
+    if not ingredient:
+        return {"error": "Ingredient not found"}, 404
+    if ingredient not in recipe.ingredient:
+        return {"error" : "Ingredient not in recipe"}, 404
+    
+    recipe.ingredient.remove(ingredient)
+    db.session.commit()
+    
+    return {"message" : "Successfully removed from recipe"}, 200
+    
     
 if __name__ == '__main__':
     app.run(debug=True)

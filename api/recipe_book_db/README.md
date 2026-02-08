@@ -53,4 +53,4 @@ Markdowns to remember:
 - [x] CRUD for recipe and ingredients
 - [x] Validator for recipe and ingredients
 - [x] Junction Table
-- [ ] Measurements for ingredients
+- [ ] Measurements for ingredients (Can't be done due to limitations)
