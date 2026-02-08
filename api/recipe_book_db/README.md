@@ -7,11 +7,11 @@ Markdowns to remember:
 '[]' for incomplete checkboxes
 
 # 🍲 Recipe Book Database
-> A brief one-sentence description of what this project does (e.g., "A RESTful API for managing family recipes and ingredient inventory").
+- A RESTful API that stores the recipes with the ingredients needed
 
 ## 🚀 Getting Started
 ### Prerequisites
-* List what's needed (e.g., Node.js, PostgreSQL, Python 3.x)
+* Python, Flask, SQLAlchemy
 
 ### Installation
 1. Clone the repo: `git clone ...`
@@ -24,10 +24,12 @@ Markdowns to remember:
 
 ## 📊 Database Schema
 *Optional but highly recommended for a DB project.*
-* Briefly describe the relationship (e.g., "One Recipe has Many Ingredients").
+* One recipe has many ingredients
+* An ingredient can be found in many recipes
 * [Link to an ER Diagram image if you have one]
 
 ## 🛣 API Endpoints
+
 ### Recipes
 - `GET /recipes` - Fetch all recipes
 - `POST /recipes` - Create a new recipe
@@ -45,9 +47,10 @@ Markdowns to remember:
 ## 📝 Project Overview & Features
 * **Feature 1:** Search recipes by ingredient.
 * **Feature 2:** Automatic unit conversion (oz to grams).
-* **Things to Consider:** Mention any specific logic here (e.g., "Handles dietary restrictions via tags").
+* **Things to Consider:** Mention any specific logic here.
 
 ## 🚦 Project Status
-- [ ] Database Schema Design
-- [ ] Authentication System
-- [ ] Frontend Integration
+- [x] CRUD for recipe and ingredients
+- [x] Validator for recipe and ingredients
+- [x] Junction Table
+- [ ] Measurements for ingredients
