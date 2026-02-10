@@ -7,15 +7,22 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATION'] = False
 
 db = SQLAlchemy(app)
-CartsItems = db.Table('CartsItems',
-                      db.Column('item_id', db.Integer, db.ForeignKey('items.id')),
-                                db.Column('cart_id', db.Integer, db.ForeignKey('carts.id')))
-              
+#CartsItems = db.Table('CartsItems', 
+#                      db.Column('item_id', db.Integer, db.ForeignKey('items.id')), 
+#                      db.Column('cart_id', db.Integer, db.ForeignKey('carts.id')))
+
+class CartsItems(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    item_id = db.Column('item_id', db.Integer, db.ForeignKey('items.id'))
+    cart_id = db.Column('cart_id', db.Integer, db.ForeignKey('carts.id'))
+    quantity = db.Column(db.Integer)
+    
+    item = db.relationship('Items', back_populates='carts')
+    cart = db.relationship('Carts', back_populates='items')
 class Items(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     item_name = db.Column(db.String(80), nullable=False)
-    quantity = db.Column(db.Integer, nullable=False)
-    cart = db.relationship('Carts', secondary=CartsItems, backref=db.backref('item', lazy='dynamic'))
+    carts = db.relationship('CartsItems', back_populates='item')
     
     def __repr__(self):
         return f'<Added {self.item_name}>'
@@ -24,12 +31,13 @@ class Items(db.Model):
         return {
             'id' : self.id,
             'item' : self.item_name,
-            'quantity' : self.quantity
         }
 
 class Carts(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    cart_user = db.Column(db.Integer, primary_key=True)
+    cart_user = db.Column(db.String(60), nullable=False)
+    items = db.relationship('CartsItems', back_populates='cart')
+    
     
     def __repr__(self):
         return f"<Added {self.cart_user}>"
@@ -39,20 +47,20 @@ class Carts(db.Model):
             'id' : self.id,
             'cart_user' : self.cart_user
         }
-'''
+
 with app.app_context():
     db.drop_all()
     db.create_all()
-'''
+
 @app.route('/items', methods=['POST', 'GET'])
 def add_items():
     if request.method == 'POST':
         data = request.get_json()
-        if 'item' not in data or 'quantity' not in data:
+        if 'item' not in data:
             return {"error": "Missing required fields"}, 400
-        if not data['item'] or not data['quantity']:
+        if not data['item']:
             return {"error": "Missing required fields"}, 400
-        item = Items(item_name=data['item'], quantity=data['quantity'])
+        item = Items(item_name=data['item'])
         db.session.add(item)
         db.session.commit()
         return item.to_dict(), 201
@@ -69,12 +77,11 @@ def item_id(id):
         if not item:
             return {"error": "Item not found"}, 404
         data = request.get_json()
-        if 'item' not in data or 'quantity' not in data:
+        if 'item' not in data:
             return {"error" : "Missing required fields"}, 400
-        if not data['item'] or not data['quantity']:
+        if not data['item']:
             return {"error" : "Missing required fields"}, 400
         item.item_name = data['item']
-        item.quantity = data['quantity']
         db.session.commit()
         return item.to_dict(), 200
     
