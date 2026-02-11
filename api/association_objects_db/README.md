@@ -30,6 +30,10 @@ Markdowns to remember:
 - `GET /ITEMS/<int:id>` : Retrieve a specific item including showing the cart it is in
 - `DELETE /ITEMS/<int:id>` : Delete a specific item
 
+### CHECKOUT
+- `POST /checkout` : Adds an item to a cart, including its quantity and brand
+- `GET /checkout` : Retrieve all the items in carts and their quantities and brands
+
 ### ADD_ITEMS
 
 ## PROJECT OVERVIEW & FEATURES
@@ -38,8 +42,8 @@ Markdowns to remember:
 - Should display the quantity of the item each cart when requesting a specific item
 
 ## PROJECT STATUS
-- [] PHASE 1 :CRUD for carts and items
-- [] PHASE 2 :Validator for carts and items
-- [] PHASE 3 :Junction table that connects both 
-- [] PHASE 4 :Implementing association objects
+- [x] PHASE 1 :CRUD for carts and items
+- [x] PHASE 2 :Validator for carts and items
+- [x] PHASE 3 :Junction table that connects both 
+- [x] PHASE 4 :Implementing association objects
 - [] PHASE 5 :Finish project
