@@ -75,11 +75,11 @@ class Checkout(db.Model):
             'quantity' : self.quantity,
             'brand' : self.brand
         }
-'''
+
 with app.app_context():
     db.drop_all()
     db.create_all()
-'''
+
 @app.route('/items', methods=['POST', 'GET'])
 def add_items():
     if request.method == 'POST':
@@ -183,9 +183,44 @@ def check_items_in_cart():
         checkout_list = [check.to_dict() for check in checkout]
         return {"checkout": checkout_list}, 200
     
-@app.route('/checkout/<int:id>', methods=['PUT', 'GET', 'DELETE'])
+@app.route('/checkout/<int:id>', methods=['PUT', 'GET'])
 def checkout_id(id):
     if request.method == 'PUT':
-        
+        checkout = Checkout.query.filter_by(id=id).first()
+        if not checkout:
+            return {"error", "Cart not found"}, 404
+        data = request.get_json()
+        if "item_id" not in data or "cart_id" not in data or "quantity" not in data or "brand" not in data:
+            return {"error": "Missing required fields"}, 400
+        if not data['item_id'] or not data['cart_id'] or not data['quantity'] or not data['brand']:
+            return {"error": "Missing required fields"}, 400
+        checkout.item_id = data['item_id']
+        checkout.cart_id = data['cart_id']
+        checkout.quantity = data['quantity']
+        checkout.brand = data['brand']
+        db.session.commit()
+        return checkout.to_dict(), 200
+    
+    if request.method == 'GET':
+        checkout = Checkout.query.filter_by(id=id).first()
+        if not checkout:
+            return {"error", "Cart not found"}, 404
+        return {"checkout":checkout.to_dict()}, 200
+
+@app.route('/checkout/<int:cart_id>/items/<int:item_id>', methods=['DELETE'])
+def remove_item_in_cart(cart_id, item_id):
+    item = Items.query.get(item_id)
+    item_to_remove = None
+    for cart in item.checkout:
+        if cart.item_id == item_id:
+            item_to_remove = cart
+            break
+    
+    if not item_to_remove:
+        return {"error": "Item not found in cart"}, 404
+    
+    db.session.delete(item_to_remove)
+    db.session.commit()
+    return {"message": "Successfully removed item from cart"}, 200
 if __name__ == '__main__':
     app.run(debug=True)
