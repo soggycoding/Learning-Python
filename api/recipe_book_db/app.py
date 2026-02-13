@@ -8,15 +8,12 @@ app.config['SQLALCHEMY_TRACK_MODIFICATION'] = False
 
 db = SQLAlchemy(app)
 
-IngredientRecipe = db.Table('IngredientRecipe',
-                            db.Column('ingredient_id', db.Integer, db.ForeignKey('ingredients.id')),
-                            db.Column('recipe_id', db.Integer, db.ForeignKey('recipes.id'))
-                            )
 class Ingredients(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     ingredient_name = db.Column(db.String(80), nullable=False)
-    recipe = db.relationship('Recipe', secondary=IngredientRecipe, backref=db.backref('ingredient', lazy='dynamic'))
-    
+    recipeingredient = db.relationship('RecipeIngredient', back_populates='ingredient',
+                                       cascade='all, delete-orphan')
+
     def __repr__(self):
         return f'<Added {self.ingredient_name}>'
     
@@ -25,6 +22,13 @@ class Ingredients(db.Model):
             'id' : self.id,
             'ingredient' : self.ingredient_name,
         }
+    
+    def to_dict_with_recipe(self):
+        return {
+            'id' : self.id,
+            'ingredient' : self.ingredient_name,
+            'recipes' : [r.to_dict() for r in self.recipeingredient]
+        }
 
 class Recipes(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -32,6 +36,8 @@ class Recipes(db.Model):
     description = db.Column(db.String(120), nullable=False)
     prep_time = db.Column(db.Integer, nullable=False)
     cook_time = db.Column(db.Integer, nullable=False)
+    recipeingredient = db.relationship('RecipeIngredient', back_populates='recipe',
+                                       cascade='all, delete-orphan')
     
     def __repr__(self):
         return f'<Added {self.recipe_name}>'
@@ -44,7 +50,35 @@ class Recipes(db.Model):
             'prep_time' : self.prep_time,
             'cook_time' : self.cook_time
         }
-'''       
+    
+    def to_dict_with_ingredient(self):
+        return {
+            'id': self.id,
+            'recipe_name': self.recipe_name,
+            'description': self.description,
+            'prep_time': self.prep_time,
+            'cook_time': self.cook_time,
+            'ingredient' : [i.to_dict() for i in self.recipeingredient]
+        }
+        
+class RecipeIngredient(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    ingredient_id = db.Column('ingredient_id', db.Integer, db.ForeignKey('ingredients.id'))
+    recipe_id = db.Column('recipe_id', db.Integer, db.ForeignKey('recipes.id'))
+    measurement = db.Column(db.String(20), nullable=False)
+    
+    ingredient = db.relationship('Ingredients', back_populates='recipeingredient')
+    recipe = db.relationship('Recipes', back_populates='recipeingredient')
+    
+    def to_dict(self):
+        return {
+            'ingredient_id' : self.ingredient_id,
+            'recipe_id' : self.recipe_id,
+            'ingredient': self.ingredient.ingredient_name,
+            'recipe': self.recipe.recipe_name,
+            'measurement': self.measurement
+        }
+'''
 with app.app_context():
     db.drop_all()
     db.create_all()
@@ -74,9 +108,9 @@ def ingredient_id(id):
         if not ingredient:
             return {"error": "Ingredient not found"}, 404
         data = request.get_json()
-        if 'ingredient' not in data or 'measurement' not in data:
+        if 'ingredient' not in data:
             return {"error": "Missing required fields"}, 400
-        if not data['ingredient'] or not data['measurement']:
+        if not data['ingredient']:
             return {"error": "Missing required fields"}, 400
         ingredient.ingredient_name = data['ingredient']
         db.session.commit()
@@ -86,7 +120,7 @@ def ingredient_id(id):
         ingredient = Ingredients.query.filter_by(id=id).first()
         if not ingredient:
             return {"error" : "Ingredient not found"}, 404
-        recipe_list = [recipe.to_dict() for recipe in ingredient.recipe]
+        recipe_list = [recipe.to_dict() for recipe in ingredient.recipeingredient]
         return {"ingredient": ingredient.to_dict(),
                 'recipes': recipe_list}, 200
     
@@ -139,7 +173,7 @@ def recipe_id(id):
         if not recipe:
             return {"error": "Content not found"}, 404
         
-        ingredient_list = [ingredient.to_dict() for ingredient in recipe.ingredient]
+        ingredient_list = [ingredient.to_dict() for ingredient in recipe.recipeingredient]
         return {
             "ingredient": ingredient_list,
             "recipe": recipe.to_dict(),
@@ -153,49 +187,77 @@ def recipe_id(id):
         db.session.commit()
         return {"message": "Successfully deleted"}, 200
         
-@app.route('/recipes/<int:recipe_id>/ingredients', methods=['POST'])
-def add_ingredients_to_recipe(recipe_id):
-    recipe = Recipes.query.get(recipe_id)
-    if not recipe:
-        return {"error": "Recipe not found"}, 404
+@app.route('/recipeingredient', methods=['POST', 'GET'])
+def add_ingredient_in_recipe():
+    if request.method == 'POST':
+        data = request.get_json()
+        if 'ingredient_id' not in data or 'recipe_id' not in data or 'measurement' not in data:
+            return {"error": "Missing required fields"}, 400
+        if not data['ingredient_id'] or not data['recipe_id'] or not data['measurement']:
+            return {"error": "Missing required fields"}, 400
+        ingredient = Ingredients.query.get_or_404(data['ingredient_id'])
+        recipe = Recipes.query.get_or_404(data['recipe_id'])
+        existing = RecipeIngredient.query.filter_by(
+            ingredient_id=data['ingredient_id'],
+            recipe_id=data['recipe_id']
+        ).first()
+        
+        if existing:
+            return {"error": "Ingredients already have measurements"}, 400
+        
+        recipeingredient = RecipeIngredient(
+            ingredient_id=data['ingredient_id'],
+            recipe_id=data['recipe_id'],
+            measurement=data['measurement']
+        )
+        db.session.add(recipeingredient)
+        db.session.commit()
+        
+        return recipeingredient.to_dict(), 201
     
-    data = request.get_json()
-    if 'ingredient_id' not in data:
-        return {"error" : "Missing required fields"}, 400
-    if not data['ingredient_id']:
-        return {"error" : "Missing required fields"}, 400
-    ingredient_id = data['ingredient_id']
+    if request.method == 'GET':
+        recipeingredient = RecipeIngredient.query.all()
+        recipeingredient_list = [r.to_dict() for r in recipeingredient]
+        return {"information": recipeingredient_list}, 200
     
-    ingredient = Ingredients.query.get(ingredient_id)
-    if not ingredient:
-        return {"error" : "Ingredient not found"}, 404
-    if ingredient in recipe.ingredient:
-        return {"message" : "Ingredient already in recipe"}, 200
+@app.route('/recipeingredient/<int:id>', methods=['PUT', 'GET'])
+def recipe_ingredient_id(id):
+    if request.method == 'PUT':
+        recipeingredient = RecipeIngredient.query.filter_by(id=id).first()
+        if not recipeingredient:
+            return {"error": "RecipeIngredient not found"}, 404
+        data = request.get_json()
+        if "ingredient_id" not in data or "recipe_id" not in data or "measurement" not in data:
+            return {"error": "Missing required fields"}, 400
+        if not data['ingredient_id'] or not data['recipe_id'] or not data['measurement']:
+            return {"error": "Missing required fields"}, 400
+        recipeingredient.ingredient_id = data['ingredient_id']
+        recipeingredient.recipe_id = data['recipe_id']
+        recipeingredient.measurement = data['measurement']
+        db.session.commit()
+        return recipeingredient.to_dict(), 200
     
-    recipe.ingredient.append(ingredient)
-    db.session.commit()
-    
-    return {
-        'recipe': recipe.to_dict(),
-        'ingredient_added' : ingredient.to_dict()
-    }, 201
+    if request.method == 'GET':
+        recipeingredient = RecipeIngredient.query.filter_by(id=id).first()
+        if not recipeingredient:
+            return {"error": "RecipeIngredient not found"}, 404
+        return {"RecipeIngredient": recipeingredient.to_dict()}, 200
 
-@app.route('/recipes/<int:recipe_id>/ingredients/<int:ingredient_id>', methods=['DELETE'])
-def delete_ingredient_from_recipe(recipe_id, ingredient_id):
-    recipe = Recipes.query.get(recipe_id)
+@app.route('/recipeingredient/<int:recipe_id>/ingredient/<int:ingredient_id>', methods=['DELETE'])
+def delete_ingredient(recipe_id, ingredient_id):
     ingredient = Ingredients.query.get(ingredient_id)
-    if not recipe:
-        return {"error": "Recipe not found"}, 404
-    if not ingredient:
-        return {"error": "Ingredient not found"}, 404
-    if ingredient not in recipe.ingredient:
-        return {"error" : "Ingredient not in recipe"}, 404
+    ingredient_to_remove = None
+    for ingredient_name in ingredient.recipeingredient:
+        if ingredient_name.ingredient_id == ingredient_id:
+            ingredient_to_remove = ingredient_name
+            break
     
-    recipe.ingredient.remove(ingredient)
+    if not ingredient_to_remove:
+        return {"error": "Ingredient not found in recipe"}, 404
+    
+    db.session.delete(ingredient_to_remove)
     db.session.commit()
-    
-    return {"message" : "Successfully removed from recipe"}, 200
-    
-    
+    return {"message": "Successfully removed ingredient from recipe"}, 200
+
 if __name__ == '__main__':
     app.run(debug=True)
