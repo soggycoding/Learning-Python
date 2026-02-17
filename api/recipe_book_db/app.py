@@ -81,7 +81,7 @@ class RecipeIngredient(db.Model):
 '''
 with app.app_context():
     db.drop_all()
-    db.create_all()
+  db.create_all()
 '''
 @app.route('/ingredients', methods=['POST', 'GET'])
 def add_ingredients():
@@ -187,7 +187,7 @@ def recipe_id(id):
         db.session.commit()
         return {"message": "Successfully deleted"}, 200
         
-@app.route('/recipeingredient', methods=['POST', 'GET'])
+@app.route('/recipe_ingredient', methods=['POST', 'GET'])
 def add_ingredient_in_recipe():
     if request.method == 'POST':
         data = request.get_json()
@@ -195,8 +195,6 @@ def add_ingredient_in_recipe():
             return {"error": "Missing required fields"}, 400
         if not data['ingredient_id'] or not data['recipe_id'] or not data['measurement']:
             return {"error": "Missing required fields"}, 400
-        ingredient = Ingredients.query.get_or_404(data['ingredient_id'])
-        recipe = Recipes.query.get_or_404(data['recipe_id'])
         existing = RecipeIngredient.query.filter_by(
             ingredient_id=data['ingredient_id'],
             recipe_id=data['recipe_id']
@@ -220,7 +218,7 @@ def add_ingredient_in_recipe():
         recipeingredient_list = [r.to_dict() for r in recipeingredient]
         return {"information": recipeingredient_list}, 200
     
-@app.route('/recipeingredient/<int:id>', methods=['PUT', 'GET'])
+@app.route('/recipe_ingredient/<int:id>', methods=['PUT', 'GET', 'DELETE'])
 def recipe_ingredient_id(id):
     if request.method == 'PUT':
         recipeingredient = RecipeIngredient.query.filter_by(id=id).first()
@@ -231,6 +229,12 @@ def recipe_ingredient_id(id):
             return {"error": "Missing required fields"}, 400
         if not data['ingredient_id'] or not data['recipe_id'] or not data['measurement']:
             return {"error": "Missing required fields"}, 400
+        ingredient = Ingredients.query.get(data['ingredient_id'])
+        if not ingredient:
+            return {"error" : "Ingredient not found"}, 404
+        recipe = Recipes.query.get(data['recipe_id'])
+        if not recipe:
+            return {"error": "Recipe not found"}, 404
         recipeingredient.ingredient_id = data['ingredient_id']
         recipeingredient.recipe_id = data['recipe_id']
         recipeingredient.measurement = data['measurement']
@@ -242,15 +246,23 @@ def recipe_ingredient_id(id):
         if not recipeingredient:
             return {"error": "RecipeIngredient not found"}, 404
         return {"RecipeIngredient": recipeingredient.to_dict()}, 200
+    
+    if request.method == 'DELETE': 
+        recipeingredient = RecipeIngredient.query.filter_by(id=id).first()
+        
 
-@app.route('/recipeingredient/<int:recipe_id>/ingredient/<int:ingredient_id>', methods=['DELETE'])
+@app.route('/recipe_ingredient/<int:recipe_id>/ingredient/<int:ingredient_id>', methods=['DELETE'])
 def delete_ingredient(recipe_id, ingredient_id):
-    ingredient = Ingredients.query.get(ingredient_id)
-    ingredient_to_remove = None
-    for ingredient_name in ingredient.recipeingredient:
-        if ingredient_name.ingredient_id == ingredient_id:
-            ingredient_to_remove = ingredient_name
-            break
+    ingredient = Ingredients.query.filter_by(id=ingredient_id)
+    if not ingredient:
+        return {"error": "Ingredient not found"}, 404
+    recipe = Recipes.query.filter_by(id=recipe_id)
+    if not recipe:
+        return {"error": "Recipe not found"}, 404
+    ingredient_to_remove = RecipeIngredient.query.filter_by(
+        recipe_id=recipe_id,
+        ingredient_id=ingredient_id
+    ).first()
     
     if not ingredient_to_remove:
         return {"error": "Ingredient not found in recipe"}, 404
