@@ -8,12 +8,15 @@ app.config['SQLALCHEMY_TRACK_MODIFICATION'] = False
 
 db = SQLAlchemy(app)
 
+# One-To-Many (Movies & Reviews)
 class Movies(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(120), nullable=False)
     description = db.Column(db.String(120), nullable=False)
-    reviews = db.relationship('Reviews', backref='movie', lazy=True)
     
+    reviews = db.relationship('Reviews', backref='movie', lazy=True)
+    tags = db.relationship('Tags', bakc_populates='movie',
+                           cascade='all, delete-orphan')
     def to_dict(self):
         return {
             "title" : self.title,
@@ -39,19 +42,27 @@ class Reviews(db.Model):
             "review": self.review,
             "movie_id": self.movie_id
         }
+        
+# Junction Table(Tags to Movie)
 class Tags(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     tag = db.Column(db.String(30), unique=True,nullable=False)
+    movie_id = db.Column('movie_id', db.Integer, db.ForeignKey('movie.id'))
+    
+    movie = db.relationship('Movies', back_populates='tags')
     
     def to_dict(self):
         return {
             "id": self.id,
-            "tag" : self.tag
+            "tag" : self.tag,
+            "movie_id" : self.movie_id,
+            "movie" : self.movie.title
         }
-        
+'''       
 with app.app_context():
     db.drop_all()
     db.create_all()
+'''
 @app.route('/movies', methods=['POST', 'GET'])
 def add_movie():
     if request.method == 'POST':
@@ -90,7 +101,7 @@ def movie_id(id):
         movies = Movies.query.filter_by(id=id).first()
         if not movies:
             return {"error": "Movie not found"}, 404
-        return {"Movie": movies.to_dict}
+        return {"Movie": movies.to_dict_with_reviews()}, 200
     
     if request.method == 'DELETE':
         movies = Movies.query.filter_by(id=id).first()
