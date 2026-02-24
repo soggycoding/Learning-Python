@@ -50,9 +50,9 @@ Markdowns to remember:
 - Connects one-to-many relationship and many-to-many relationship
 
 ## PROJECT STATUS
-[] PHASE 1: CRUD for Reviews and Tags
-[] PHASE 2: Validator
-[] PHASE 3: One-to-Many relationship
-[] PHASE 4: Many-to-Many relationship
-[] PHASE 5: 
+[x] PHASE 1: CRUD for Reviews and Tags
+[x] PHASE 2: Validator
+[x] PHASE 3: One-to-Many relationship
+[x] PHASE 4: Many-to-Many relationship
+[x] PHASE 5: Junction table for movies and tags
 [] PHASE 6:

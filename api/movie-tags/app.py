@@ -256,5 +256,25 @@ def movie_genre(movie_id):
         return {
             'movie': movie.to_dict_with_tags()
         }, 200
+
+@app.route('/movies/<int:movie_id>/tags/<int:tag_id>', methods=['DELETE'])
+def update_movie_genre(movie_id, tag_id):
+    if request.method == 'DELETE':
+       movie = Movies.query.filter_by(id=movie_id).first()
+       if not movie:
+            return {"error" : "Movie not found"}, 404
+       tag = Tags.query.filter_by(id=tag_id).first()     
+       data = request.get_json()
+       if 'tag_id' not in data:
+            return {"error": "Missing required fields"}, 400
+       if not data['tag_id']:
+           return {"error": "Missing required fields"}, 400
+       tag.tag_id = data['tag_id']
+       db.session.commit()
+            
+       return {
+           'movie': movie.to_dict_with_tags()
+           }, 200
+        
 if __name__ == '__main__':
     app.run(debug=True)
