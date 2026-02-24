@@ -8,6 +8,11 @@ app.config['SQLALCHEMY_TRACK_MODIFICATION'] = False
 
 db = SQLAlchemy(app)
 
+# Junction table
+MovieTags = db.Table('MovieTags',
+                     db.Column('movie_id', db.Integer, db.ForeignKey('movies.id')),
+                     db.Column('tag_id', db.Integer, db.ForeignKey('tags.id'))
+                     )
 # One-To-Many (Movies & Reviews)
 class Movies(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -15,8 +20,7 @@ class Movies(db.Model):
     description = db.Column(db.String(120), nullable=False)
     
     reviews = db.relationship('Reviews', backref='movie', lazy=True)
-    tags = db.relationship('Tags', bakc_populates='movie',
-                           cascade='all, delete-orphan')
+
     def to_dict(self):
         return {
             "title" : self.title,
@@ -28,6 +32,13 @@ class Movies(db.Model):
             "title" : self.title,
             "description" : self.description,
             "reviews" : [review.to_dict() for review in self.reviews]
+        }
+    
+    def to_dict_with_tags(self):
+        return {
+            "title" : self.title,
+            "description" : self.description,
+            "tags" : [tag.to_dict() for tag in self.tags]
         }
          
 
@@ -42,14 +53,6 @@ class Reviews(db.Model):
             "review": self.review,
             "movie_id": self.movie_id
         }
-        
-# Junction Table(Tags to Movie)
-class Tags(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    tag = db.Column(db.String(30), unique=True,nullable=False)
-    movie_id = db.Column('movie_id', db.Integer, db.ForeignKey('movie.id'))
-    
-    movie = db.relationship('Movies', back_populates='tags')
     
     def to_dict(self):
         return {
@@ -58,7 +61,19 @@ class Tags(db.Model):
             "movie_id" : self.movie_id,
             "movie" : self.movie.title
         }
-'''       
+
+class Tags(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    tag = db.Column(db.String(30), unique=True,nullable=False)
+    
+    movie = db.relationship('Movies', secondary=MovieTags, backref=db.backref('tags', lazy='dynamic'))
+    
+    def to_dict(self):
+        return {
+            "id" : self.id,
+            "tag" : self.tag,
+        }
+'''   
 with app.app_context():
     db.drop_all()
     db.create_all()
@@ -101,7 +116,7 @@ def movie_id(id):
         movies = Movies.query.filter_by(id=id).first()
         if not movies:
             return {"error": "Movie not found"}, 404
-        return {"Movie": movies.to_dict_with_reviews()}, 200
+        return {"Movie": movies.to_dict()}, 200
     
     if request.method == 'DELETE':
         movies = Movies.query.filter_by(id=id).first()
@@ -177,7 +192,7 @@ def add_tags():
         return {"Tags": tag_list}, 200
 
 @app.route('/tags/<int:id>', methods=['PUT', 'GET', 'DELETE'])
-def tag_id(id):
+def tags_id(id):
     if request.method == 'PUT':
         tags = Tags.query.filter_by(id=id).first()
         if not tags:
@@ -205,6 +220,41 @@ def tag_id(id):
         db.session.commit()
         return {"message": "Tag successfully deleted"}, 200
     
- 
+@app.route('/movies/<int:movie_id>/tags', methods=['POST', 'GET'])
+def movie_genre(movie_id):
+    if request.method == 'POST':
+        movie = Movies.query.filter_by(id=movie_id).first()
+        if not movie:
+            return {"error" : "Movie not found"}, 404
+        
+        data = request.get_json()
+        if 'tag_id' not in data:
+            return {"error" : "Missing required fields"}, 400
+        if not data['tag_id']:
+            return {"error" : "Missing required fields"}, 400
+        tag_id = data['tag_id']
+        
+        tag = Tags.query.get(tag_id)
+        if not tag:
+            return {"error" : "Tag not found"}, 404
+        if tag in movie.tags:
+            return {"error" : "Tag already in the movie"}, 200
+        
+        movie.tags.append(tag)
+        db.session.commit()
+        
+        return {
+            'movie': movie.to_dict(),
+            'tags': tag.to_dict()
+        }, 201
+
+    if request.method == 'GET':
+        movie = Movies.query.filter_by(id=movie_id).first()
+        if not movie:
+            return {"error" : "Movie not found"}, 404
+        
+        return {
+            'movie': movie.to_dict_with_tags()
+        }, 200
 if __name__ == '__main__':
     app.run(debug=True)
