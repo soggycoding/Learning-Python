@@ -55,4 +55,4 @@ Markdowns to remember:
 [x] PHASE 3: One-to-Many relationship
 [x] PHASE 4: Many-to-Many relationship
 [x] PHASE 5: Junction table for movies and tags
-[] PHASE 6:
+[x] PHASE 6: Optimization

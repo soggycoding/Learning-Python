@@ -44,22 +44,16 @@ class Movies(db.Model):
 
 class Reviews(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    rating = db.Column(db.Integer, db.CheckConstraint('rating <= 100', name='rating_range_checker'))
     review = db.Column(db.String(80), unique=True, nullable=False)
     movie_id = db.Column(db.Integer, db.ForeignKey('movies.id'), nullable=False)
     
     def to_dict(self):
         return {
             "id": self.id,
+            "rating" : self.rating,
             "review": self.review,
             "movie_id": self.movie_id
-        }
-    
-    def to_dict(self):
-        return {
-            "id": self.id,
-            "tag" : self.tag,
-            "movie_id" : self.movie_id,
-            "movie" : self.movie.title
         }
 
 class Tags(db.Model):
@@ -73,10 +67,10 @@ class Tags(db.Model):
             "id" : self.id,
             "tag" : self.tag,
         }
-'''   
+'''
 with app.app_context():
     db.drop_all()
-    db.create_all()
+   db.create_all()
 '''
 @app.route('/movies', methods=['POST', 'GET'])
 def add_movie():
@@ -130,11 +124,11 @@ def movie_id(id):
 def add_review():
     if request.method == 'POST':
         data = request.get_json()
-        if 'review' not in data or 'movie_id' not in data:
+        if 'review' not in data or 'rating' not in data or 'movie_id' not in data:
             return {"error": "Missing required fields"}, 400
-        if not data['review'] or not data['movie_id']:
+        if not data['review'] or not data['rating'] or not data['movie_id']:
             return {"error": "Missing required fields"}, 400
-        reviews = Reviews(review=data['review'], movie_id=data['movie_id'])
+        reviews = Reviews(rating=data['rating'], review=data['review'], movie_id=data['movie_id'])
         db.session.add(reviews)
         db.session.commit()
         return reviews.to_dict(), 201
@@ -151,11 +145,13 @@ def review_id(id):
         if not reviews:
             return {"error": "Review not found"}, 404
         data = request.get_json()
-        if 'review' not in data or 'movie_id' not in data:
-            return{"error": "Missing required fields"}, 400
-        if not data['review'] or not data['movie_id']:
-            return{"error": "Missing required fields"}, 400
+        if 'review' not in data or 'rating' not in data or 'movie_id' not in data:
+            return {"error": "Missing required fields"}, 400
+        if not data['review'] or not data['rating'] or not data['movie_id']:
+            return {"error": "Missing required fields"}, 400
         reviews.review = data['review']
+        reviews.movie_id = data['movie_id']
+        reviews.rating = data['rating']
         db.session.commit()
         return reviews.to_dict(), 200
     
@@ -264,17 +260,50 @@ def update_movie_genre(movie_id, tag_id):
        if not movie:
             return {"error" : "Movie not found"}, 404
        tag = Tags.query.filter_by(id=tag_id).first()     
-       data = request.get_json()
-       if 'tag_id' not in data:
-            return {"error": "Missing required fields"}, 400
-       if not data['tag_id']:
-           return {"error": "Missing required fields"}, 400
-       tag.tag_id = data['tag_id']
+       if not tag:
+           return {"error" : "Tag not found"}, 404
+       if tag not in movie.tags:
+           return {"message" : "Tag not in movie"}, 200
+       
+       movie.tags.remove(tag)
        db.session.commit()
             
-       return {
-           'movie': movie.to_dict_with_tags()
-           }, 200
+       return {"message" : "Tag from movie removed successfully"}, 200
+
+@app.route('/movies/<int:movie_id>/reviews', methods=['POST', 'GET'])
+def movie_reviews(movie_id):
+    if request.method == 'POST':
+        movie = Movies.query.filter_by(id=movie_id).first()
+        if not movie:
+            return {"error" : "Movie not found"}, 404
+        data = request.get_json()
+        if "review_id" not in data:
+            return {"error" : "Missing required fields"}, 400
+        if not data['review_id']:
+            return {"error" : "Missing required fields"}, 400
+        review_id = data['review_id']
         
+        review = Reviews.query.get(review_id)
+        if not review:
+            return {"error": "Review not found"}, 404
+        if review not in movie.reviews:
+            return {"error" : "Review already in movie"}, 400
+        
+        movie.reviews.append(review)
+        db.session.commit()
+         
+        return {
+            "movie" : movie.to_dict(),
+            "review" : review.to_dict()
+        }, 201
+    
+    if request.method == 'GET':
+        movie = Movies.query.filter_by(id=movie_id).first()
+        if not movie:
+            return {"error" : "Movie not found"}, 404
+        
+        return {
+            "movie" : movie.to_dict_with_reviews()
+        }, 200
 if __name__ == '__main__':
     app.run(debug=True)
