@@ -40,11 +40,19 @@ class Movies(db.Model):
             "description" : self.description,
             "tags" : [tag.to_dict() for tag in self.tags]
         }
+    
+    def to_dict_with_reviews_tags(self):
+        return {
+            "title" : self.title,
+            "description" : self.description,
+            "reviews" : [review.to_dict() for review in self.reviews],
+            "tags" : [tag.to_dict() for tag in self.tags]
+        }
          
 
 class Reviews(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    rating = db.Column(db.Integer, db.CheckConstraint('rating <= 100', name='rating_range_checker'))
+    rating = db.Column(db.Integer, db.CheckConstraint('rating >= 0 AND rating <= 100', name='rating_range_checker'))
     review = db.Column(db.String(80), unique=True, nullable=False)
     movie_id = db.Column(db.Integer, db.ForeignKey('movies.id'), nullable=False)
     
@@ -99,7 +107,7 @@ def movie_id(id):
         data = request.get_json()
         if 'title' not in data or 'description' not in data:
             return {"error": "Missing required fields"}, 400
-        if not data['title'] or not data['description'] not in data:
+        if not data['title'] or not data['description']:
             return {"error": "Missing required fields"}, 400
         movies.title = data['title']
         movies.description = data['description']
@@ -110,7 +118,7 @@ def movie_id(id):
         movies = Movies.query.filter_by(id=id).first()
         if not movies:
             return {"error": "Movie not found"}, 404
-        return {"Movie": movies.to_dict()}, 200
+        return {"Movie": movies.to_dict_with_reviews_tags()}, 200
     
     if request.method == 'DELETE':
         movies = Movies.query.filter_by(id=id).first()
@@ -128,6 +136,9 @@ def add_review():
             return {"error": "Missing required fields"}, 400
         if not data['review'] or not data['rating'] or not data['movie_id']:
             return {"error": "Missing required fields"}, 400
+        rating_validator = data['rating']
+        if rating_validator < 0 or rating_validator > 100:
+            return {"error" : "Rating should be between 0 and 100"}, 400
         reviews = Reviews(rating=data['rating'], review=data['review'], movie_id=data['movie_id'])
         db.session.add(reviews)
         db.session.commit()
@@ -149,6 +160,9 @@ def review_id(id):
             return {"error": "Missing required fields"}, 400
         if not data['review'] or not data['rating'] or not data['movie_id']:
             return {"error": "Missing required fields"}, 400
+        rating_validator = data['rating']
+        if rating_validator < 0 or rating_validator > 100:
+            return {"error" : "Rating should be between 0 and 100"}, 400
         reviews.review = data['review']
         reviews.movie_id = data['movie_id']
         reviews.rating = data['rating']
@@ -164,7 +178,7 @@ def review_id(id):
     if request.method == 'DELETE':
         reviews = Reviews.query.filter_by(id=id).first()
         if not reviews:
-            return {"errror": "Review not found"}, 404
+            return {"error": "Review not found"}, 404
         db.session.delete(reviews)
         db.session.commit()
         return {"message" : "Review deleted successfully"}, 200
@@ -211,7 +225,7 @@ def tags_id(id):
     if request.method == 'DELETE':
         tags = Tags.query.filter_by(id=id).first()
         if not tags:
-            {"error": "Tag not found"}, 404
+            return {"error": "Tag not found"}, 404
         db.session.delete(tags)
         db.session.commit()
         return {"message": "Tag successfully deleted"}, 200
@@ -234,7 +248,7 @@ def movie_genre(movie_id):
         if not tag:
             return {"error" : "Tag not found"}, 404
         if tag in movie.tags:
-            return {"error" : "Tag already in the movie"}, 200
+            return {"message" : "Tag already in the movie"}, 200
         
         movie.tags.append(tag)
         db.session.commit()
@@ -254,7 +268,7 @@ def movie_genre(movie_id):
         }, 200
 
 @app.route('/movies/<int:movie_id>/tags/<int:tag_id>', methods=['DELETE'])
-def update_movie_genre(movie_id, tag_id):
+def remove_movie_genre(movie_id, tag_id):
     if request.method == 'DELETE':
        movie = Movies.query.filter_by(id=movie_id).first()
        if not movie:
@@ -270,9 +284,18 @@ def update_movie_genre(movie_id, tag_id):
             
        return {"message" : "Tag from movie removed successfully"}, 200
 
-@app.route('/movies/<int:movie_id>/reviews', methods=['POST', 'GET'])
+@app.route('/movies/<int:movie_id>/reviews', methods=['GET', 'DELETE'])
 def movie_reviews(movie_id):
-    if request.method == 'POST':
+    if request.method == 'GET':
+        movie = Movies.query.filter_by(id=movie_id).first()
+        if not movie:
+            return {"error" : "Movie not found"}, 404
+        
+        return {
+            "movie" : movie.to_dict_with_reviews()
+        }, 200
+    
+    if request.method == 'DELETE':
         movie = Movies.query.filter_by(id=movie_id).first()
         if not movie:
             return {"error" : "Movie not found"}, 404
@@ -286,24 +309,10 @@ def movie_reviews(movie_id):
         review = Reviews.query.get(review_id)
         if not review:
             return {"error": "Review not found"}, 404
-        if review not in movie.reviews:
-            return {"error" : "Review already in movie"}, 400
         
-        movie.reviews.append(review)
+        db.session.delete(review)
         db.session.commit()
-         
-        return {
-            "movie" : movie.to_dict(),
-            "review" : review.to_dict()
-        }, 201
+        return {"message" : "Review from movie removed successfully"}, 200
     
-    if request.method == 'GET':
-        movie = Movies.query.filter_by(id=movie_id).first()
-        if not movie:
-            return {"error" : "Movie not found"}, 404
-        
-        return {
-            "movie" : movie.to_dict_with_reviews()
-        }, 200
 if __name__ == '__main__':
     app.run(debug=True)

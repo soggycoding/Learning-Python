@@ -6,6 +6,30 @@ Markdowns to remember:
 '[x]' for completed checkboxes 
 '[]' for incomplete checkboxes
 
+POST:
+
+[] Valid data - works?
+[] Missing required field - returns 400?
+[] Empty string - returns 400?
+[] Invalid foreign key (if applicable) - returns 404?
+[] Duplicate (if applicable) - returns appropriate error?
+
+# TESTING CHECKLIST
+
+## GET by ID:
+### Valid ID - returns data?
+[] Non-existent ID - returns 404?
+
+## PUT:
+### Valid update - works?
+[] Non-existent ID - returns 404?
+[] Missing fields - returns 400?
+[] Invalid foreign key - returns 404?
+
+## DELETE:
+### Valid ID - deletes?
+[] Non-existent ID - returns 404?
+
 # MOVIE TAGS DATABASE(MANY-TO-MANY, ONE-TO-MANY)
 - RESTFUL API Combines reviews, tags and rating suggestions
 
