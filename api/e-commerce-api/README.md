@@ -49,21 +49,39 @@ SQLAlchemy
 # DATABASE SCHEMA
 
 # API ENDPOINTS
-### PRODUCTS
+<-> Many to Many
+-> One to many
+
+### PRODUCTS (Products <-> Categories)
+`POST /products` - Create a new product
+`GET /products` - Retrieves all the products
+`PUT /products/<int:id>` - Updates a specific product
+`GET /products/<int:id>` - Retrieves a specific product
+`DELETE /products/<int:id>` - Deletes a specific product
 
 ### CATEGORIES
+`POST /categories` - Create a new category
+`GET /categories` - Retrieves all the categories
+`PUT /categories/<int:id>` - Updates a specific category
+`GET /categories/<int:id>` - Retrieves a specific category
+`DELETE /categories/<int:id>` - Deletes a specific product
 
-### ORDERS
+### ORDERS - (Orders -> OrderItems)
+`POST /orders` - Create a new order
+`GET /orders` - Retrieves all orders
+`PUT /orders/<int:id>` - Updates a specific order
+`GET /orders/<int:id>` - Retrieves a specific order
+`DELETE /orders/<int:id>` - Delete a specific order
 
-### ORDERITEMS
+### ORDERITEMS - (OrderItems -> Products)
 
 # PROJECT OVERVIEW AND FEATURES
 This project will help me to understand all the relationships better and solidify my knowledge for each
 
 # PROJECT STATUS
-[] Phase 1:
-[] Phase 2:
-[] Phase 3:
-[] Phase 4:
-[] Phase 5:
+[] Phase 1: CRUD for products, categories, and orders
+[] Phase 2: Validator for all CRUDS and right placement of validators
+[] Phase 3: Junction table
+[] Phase 4: Many-to-many
+[] Phase 5: One-to-many
 [] Phase 6:
