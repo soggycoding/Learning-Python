@@ -9,6 +9,10 @@ app.config['SQLALCHEMY_TRACK_MODIFICATION'] = False
 
 db = SQLAlchemy(app)
 
+ProductCategory = db.Table('ProductCategory',
+                           db.Column('product_id', db.Integer, db.ForeignKey('products.id')),
+                           db.Column('category_id', db.Integer, db.ForeignKey('categories.id'))
+                           )
 class Products(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), nullable=False)
@@ -16,18 +20,20 @@ class Products(db.Model):
     price = db.Column(db.Integer, nullable=False)
     stock = db.Column(db.Integer, nullable=False)
     
+    
     def to_dict(self):
         return {
             "id" : self.id,
             "name" : self.name,
             "description" : self.description,
             "price" : self.price,
-            "stock" : self.stock 
+            "stock" : self.stock
         }
 class Categories(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(40), nullable=False)
     
+    product = db.relationship('Products', secondary=ProductCategory, backref=db.backref('tags', lazy='dynamic'))
     def to_dict(self):
         return {
             "id" : self.id,
@@ -49,28 +55,27 @@ class Orders(db.Model):
             "status" : self.status,
             "created_date" : self.created_date
         }
-'''       
+       
 class OrderItems(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     order_id = db.Column('order_id', db.Integer, db.ForeignKey('orders.id'))
     product_id = db.Column('product_id', db.Integer, db.ForeignKey('products.id'))
     quantity = db.Column(db.Integer, nullable=False)
-    price_at_purchase = db.Columm(db.Integer, nullable=False)
+    price_at_purchase = db.Column(db.Integer, nullable=False)
     
     def to_dict(self):
         return {
             "id" : self.id,
-            "order_id" : self.order_id,z
+            "order_id" : self.order_id,
             "product_id" : self.product_id,
             "quantity" : self.quantity,
             "price_at_purchase" : self.price_at_purchase
         }
-'''
-'''
+
 with app.app_context():
     db.drop_all()
     db.create_all()
-'''
+
 @app.route('/products', methods=['POST', 'GET'])
 def add_products():
     if request.method == 'POST':
@@ -215,6 +220,34 @@ def order_id(id):
             return {"error" : "Order not found"}, 404
         db.session.delete(order)
         db.session.commit()
-        return {"message" : "Order deleted successfully"}, 200
+        return {"message" : "Order deleted successfully"}
+    
+@app.route('/products/<int:product_id>/categories', methods=['POST', 'GET'])
+def add_category_to_products(product_id):
+    if request.method == 'POST':
+        product = Products.query.filter_by(id=product_id).first()
+        if not product:
+            return {"error" : "Product not found"}, 404
+        
+        data = request.get_json()
+        if 'category_id' not in data:
+            return {"error" : "Missing required fields"}, 404
+        if not data['category_id']:
+            return {"error" : "Missing required fields"}, 404
+        category_id = data['category_id']
+        
+        category = Categories.query.get(category_id)
+        if not category:
+            return {"error" : "Category not found"}, 404
+        if category in product.categories:
+            return {"message" : "Category already in product"}, 200
+        
+        product.categories.append(category)
+        db.session.commit()
+        
+        return {
+            'product' : product.to_dict(),
+            'category' : category.to_dict()
+        }, 201
 if __name__ == '__main__':
     app.run(debug=True)
