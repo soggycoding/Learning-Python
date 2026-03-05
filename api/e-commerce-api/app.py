@@ -20,6 +20,7 @@ class Products(db.Model):
     price = db.Column(db.Integer, nullable=False)
     stock = db.Column(db.Integer, nullable=False)
     
+    categories = db.relationship('Categories', secondary=ProductCategory, backref=db.backref('products', lazy='dynamic'))
     
     def to_dict(self):
         return {
@@ -29,11 +30,20 @@ class Products(db.Model):
             "price" : self.price,
             "stock" : self.stock
         }
+    
+    def to_dict_with_categories(self):
+        return {
+            "id" : self.id,
+            "name" : self.name,
+            "description" : self.description,
+            "price" : self.price,
+            "stock" : self.stock,
+            "category" : [category.to_dict() for category in self.categories]
+        }
 class Categories(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(40), nullable=False)
     
-    product = db.relationship('Products', secondary=ProductCategory, backref=db.backref('tags', lazy='dynamic'))
     def to_dict(self):
         return {
             "id" : self.id,
@@ -71,11 +81,11 @@ class OrderItems(db.Model):
             "quantity" : self.quantity,
             "price_at_purchase" : self.price_at_purchase
         }
-
+'''
 with app.app_context():
     db.drop_all()
     db.create_all()
-
+'''
 @app.route('/products', methods=['POST', 'GET'])
 def add_products():
     if request.method == 'POST':
@@ -116,7 +126,7 @@ def products_id(id):
         product = Products.query.filter_by(id=id).first()
         if not product:
             return {"error" : "Product not found"}, 404
-        return {"product" : product.to_dict()}, 200
+        return {"product" : product.to_dict_with_categories()}, 200
     
     if request.method == 'DELETE':
         product = Products.query.filter_by(id=id).first()
@@ -249,5 +259,24 @@ def add_category_to_products(product_id):
             'product' : product.to_dict(),
             'category' : category.to_dict()
         }, 201
+
+@app.route('/products/<int:product_id>/categories/<int:category_id>', methods=['DELETE'])
+def remove_category_from_products(product_id, category_id):
+    if request.method == 'DELETE':
+        product = Products.query.filter_by(id=product_id).first()
+        if not product:
+            return {"error" : "Product not found"}, 404
+        
+        category = Categories.query.get(category_id)
+        if not category:
+            return {"error" : "Category not found"}, 404
+        if category not in product.categories:
+            return {"message" : "Category not in product"}, 200
+        
+        product.categories.remove(category)
+        db.session.delete(category)
+        db.session.commit()
+        
+        return {"message" : "Category removed from product"}, 200
 if __name__ == '__main__':
     app.run(debug=True)
