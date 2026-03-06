@@ -278,5 +278,33 @@ def remove_category_from_products(product_id, category_id):
         db.session.commit()
         
         return {"message" : "Category removed from product"}, 200
+    
+@app.route('/order_items', methods=['POST', 'GET'])
+def add_number_of_items_in_orders():
+    if request.method == 'POST':
+        data = request.get_json()
+        if 'order_id' not in data or 'product_id' not in data or  'quantity' not in data or 'price_at_purchase' not in data:
+            return {'error' : "Missing required fields"}, 400
+        if not data['order_id'] or not data['product_id'] or not data['quantity'] or not data['price_at_purchase']:
+            return {"error" : "Missing required fields"}, 400
+        existing = OrderItems.query.filter_by(
+            order_id=data['order_id'],
+            product_id=data['product_id']
+        ).first()
+        
+        if existing:
+            return {"error" : "Product already settled the quantity"}, 400
+        
+        orderitems = OrderItems(
+            order_id=data['order_id'],
+            product_id=data['product_id'],
+            quantity=data['quantity'],
+            price_at_purchase=data['price_at_purchase']
+        )
+        
+        db.session.add(orderitems)
+        db.session.commit()
+        
+        return orderitems.to_dict(), 201
 if __name__ == '__main__':
     app.run(debug=True)
