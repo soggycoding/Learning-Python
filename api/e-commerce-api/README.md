@@ -76,12 +76,12 @@ SQLAlchemy
 ### ORDERITEMS - (OrderItems -> Products)
 
 # PROJECT OVERVIEW AND FEATURES
-This project will help me to understand all the relationships better and solidify my knowledge for each
+This project will help me to understand all the relationships better and solidify my knowledge for each relationships
 
 # PROJECT STATUS
-[] Phase 1: CRUD for products, categories, and orders
-[] Phase 2: Validator for all CRUDS and right placement of validators
-[] Phase 3: Junction table
+[x] Phase 1: CRUD for products, categories, and orders
+[x] Phase 2: Validator for all CRUDS and right placement of validators
+[x] Phase 3: Junction table
 [] Phase 4: Many-to-many
 [] Phase 5: One-to-many
 [] Phase 6:

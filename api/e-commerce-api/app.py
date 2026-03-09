@@ -1,5 +1,6 @@
 from flask import Flask, request
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.orm import validates
 from datetime import datetime
 
 app = Flask(__name__)
@@ -21,6 +22,8 @@ class Products(db.Model):
     stock = db.Column(db.Integer, nullable=False)
     
     categories = db.relationship('Categories', secondary=ProductCategory, backref=db.backref('products', lazy='dynamic'))
+    orderproducts = db.relationship('OrderProducts', back_populates='products',
+                                    cascade='all, delete-orphan')
     
     def to_dict(self):
         return {
@@ -57,6 +60,9 @@ class Orders(db.Model):
     status = db.Column(db.String(50), nullable=False)
     created_date = db.Column(db.DateTime, default=datetime.now)
     
+    orderproducts = db.relationship('OrderProducts', back_populates='orders',
+                                    cascade='all, delete-orphan')
+    
     def to_dict(self):
         return {
             "id" : self.id,
@@ -66,12 +72,14 @@ class Orders(db.Model):
             "created_date" : self.created_date
         }
        
-class OrderItems(db.Model):
+class OrderProducts(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     order_id = db.Column('order_id', db.Integer, db.ForeignKey('orders.id'))
     product_id = db.Column('product_id', db.Integer, db.ForeignKey('products.id'))
     quantity = db.Column(db.Integer, nullable=False)
-    price_at_purchase = db.Column(db.Integer, nullable=False)
+    
+    order = db.relationship('Orders', back_populates='orderproducts')
+    product = db.relationship('Products', back_populates='orderproducts')
     
     def to_dict(self):
         return {
@@ -81,11 +89,22 @@ class OrderItems(db.Model):
             "quantity" : self.quantity,
             "price_at_purchase" : self.price_at_purchase
         }
-'''
+        
+    def to_dict_with_order_and_product(self):
+        return {
+            "id" : self.id,
+            "order_id" : self.order_id,
+            "product_id" : self.product_id,
+            "quantity" : self.quantity,
+            "price_at_purchase" : self.price_at_purchase,
+            "order" : [o.to_dict() for o in self.order],
+            "product" : [p.to_dict() for p in self.product]
+        }
+
 with app.app_context():
     db.drop_all()
     db.create_all()
-'''
+
 @app.route('/products', methods=['POST', 'GET'])
 def add_products():
     if request.method == 'POST':
@@ -279,7 +298,7 @@ def remove_category_from_products(product_id, category_id):
         
         return {"message" : "Category removed from product"}, 200
     
-@app.route('/order_items', methods=['POST', 'GET'])
+@app.route('/orderproducts', methods=['POST', 'GET'])
 def add_number_of_items_in_orders():
     if request.method == 'POST':
         data = request.get_json()
@@ -287,7 +306,7 @@ def add_number_of_items_in_orders():
             return {'error' : "Missing required fields"}, 400
         if not data['order_id'] or not data['product_id'] or not data['quantity'] or not data['price_at_purchase']:
             return {"error" : "Missing required fields"}, 400
-        existing = OrderItems.query.filter_by(
+        existing = OrderProducts.query.filter_by(
             order_id=data['order_id'],
             product_id=data['product_id']
         ).first()
@@ -295,16 +314,45 @@ def add_number_of_items_in_orders():
         if existing:
             return {"error" : "Product already settled the quantity"}, 400
         
-        orderitems = OrderItems(
+        orderproducts = OrderProducts(
             order_id=data['order_id'],
             product_id=data['product_id'],
             quantity=data['quantity'],
             price_at_purchase=data['price_at_purchase']
         )
         
-        db.session.add(orderitems)
+        db.session.add(orderproducts)
         db.session.commit()
         
-        return orderitems.to_dict(), 201
+        return orderproducts.to_dict(), 201
+    
+    if request.method == 'GET':
+        orderproducts = OrderProducts.query.all()
+        orderproducts_list = [r.to_dict() for r in orderproducts]
+        return {"Orders": orderproducts_list}, 200
+    
+@app.route('/orderproducts/<int:id>', methods=['PUT', 'GET', 'DELETE'])
+def orderproducts_id(id):
+    if request.method == 'PUT':
+        orderproducts = OrderProducts.query.filter_by(id=id).first()
+        if not orderproducts:
+            return {"error" : "Order not found"}, 404
+        data = request.get_json()
+        if 'order_id' not in data or 'product_id' not in data or  'quantity' not in data or 'price_at_purchase' not in data:
+            return {'error' : "Missing required fields"}, 400
+        if not data['order_id'] or not data['product_id'] or not data['quantity'] or not data['price_at_purchase']:
+            return {"error" : "Missing required fields"}, 400
+        orderproducts.order_id = data['order_id']
+        orderproducts.product_id = data['product_id']
+        orderproducts.quantity = data['quantity']
+        orderproducts.price_at_purchase = data['price_at_purchase']
+        db.session.commit()
+        return orderproducts.to_dict(), 200
+    
+    if request.method == 'GET':
+        orderproducts = OrderProducts.query.filter_by(id=id).first()
+        if not orderproducts:
+            return {"error" : "Order not found"}, 404
+        return orderproducts.to_dict_with_order_and_product(), 200
 if __name__ == '__main__':
     app.run(debug=True)
