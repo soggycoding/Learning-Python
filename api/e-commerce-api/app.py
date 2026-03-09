@@ -1,6 +1,5 @@
 from flask import Flask, request
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.orm import validates
 from datetime import datetime
 
 app = Flask(__name__)
@@ -22,7 +21,7 @@ class Products(db.Model):
     stock = db.Column(db.Integer, nullable=False)
     
     categories = db.relationship('Categories', secondary=ProductCategory, backref=db.backref('products', lazy='dynamic'))
-    orderproducts = db.relationship('OrderProducts', back_populates='products',
+    orderproducts = db.relationship('OrderProducts', back_populates='product',
                                     cascade='all, delete-orphan')
     
     def to_dict(self):
@@ -60,7 +59,7 @@ class Orders(db.Model):
     status = db.Column(db.String(50), nullable=False)
     created_date = db.Column(db.DateTime, default=datetime.now)
     
-    orderproducts = db.relationship('OrderProducts', back_populates='orders',
+    orderproducts = db.relationship('OrderProducts', back_populates='order',
                                     cascade='all, delete-orphan')
     
     def to_dict(self):
@@ -71,13 +70,24 @@ class Orders(db.Model):
             "status" : self.status,
             "created_date" : self.created_date
         }
+    
+    def to_dict_with_product_and_information(self):
+        return {
+            "id" : self.id,
+            "customer_name" : self.customer_name,
+            "total" : self.total,
+            "status" : self.status,
+            "created_date" : self.created_date,
+            "product" : [p.to_dict() for p in self.products],
+            "orderproduct" : [o.to_dict() for o in self.orderproducts]
+        }
        
 class OrderProducts(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     order_id = db.Column('order_id', db.Integer, db.ForeignKey('orders.id'))
     product_id = db.Column('product_id', db.Integer, db.ForeignKey('products.id'))
     quantity = db.Column(db.Integer, nullable=False)
-    
+    price_at_purchase = db.Column(db.Integer, nullable=False)
     order = db.relationship('Orders', back_populates='orderproducts')
     product = db.relationship('Products', back_populates='orderproducts')
     
@@ -89,22 +99,11 @@ class OrderProducts(db.Model):
             "quantity" : self.quantity,
             "price_at_purchase" : self.price_at_purchase
         }
-        
-    def to_dict_with_order_and_product(self):
-        return {
-            "id" : self.id,
-            "order_id" : self.order_id,
-            "product_id" : self.product_id,
-            "quantity" : self.quantity,
-            "price_at_purchase" : self.price_at_purchase,
-            "order" : [o.to_dict() for o in self.order],
-            "product" : [p.to_dict() for p in self.product]
-        }
-
+'''
 with app.app_context():
     db.drop_all()
     db.create_all()
-
+'''
 @app.route('/products', methods=['POST', 'GET'])
 def add_products():
     if request.method == 'POST':
@@ -241,7 +240,7 @@ def order_id(id):
         order = Orders.query.filter_by(id=id).first()
         if not order:
             return {"error" : "Order not found"}, 404
-        return {"order" : order.to_dict()}, 200
+        return {"order" : order.to_dict_with_product_and_information()}, 200
     
     if request.method == 'DELETE':
         order = Orders.query.filter_by(id=id).first()
