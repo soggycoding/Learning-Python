@@ -78,7 +78,6 @@ class Orders(db.Model):
             "total" : self.total,
             "status" : self.status,
             "created_date" : self.created_date,
-            "product" : [p.to_dict() for p in self.products],
             "orderproduct" : [o.to_dict() for o in self.orderproducts]
         }
        
@@ -99,11 +98,11 @@ class OrderProducts(db.Model):
             "quantity" : self.quantity,
             "price_at_purchase" : self.price_at_purchase
         }
-'''
+
 with app.app_context():
     db.drop_all()
     db.create_all()
-'''
+
 @app.route('/products', methods=['POST', 'GET'])
 def add_products():
     if request.method == 'POST':
@@ -350,8 +349,18 @@ def orderproducts_id(id):
     
     if request.method == 'GET':
         orderproducts = OrderProducts.query.filter_by(id=id).first()
+        order = Orders.query.filter_by(id=orderproducts.order_id).first()
+        product = Products.query.filter_by(id=orderproducts.product_id).first()
         if not orderproducts:
+            return {"error" : "Orderproduct not found"}, 404
+        if not order:
             return {"error" : "Order not found"}, 404
-        return orderproducts.to_dict_with_order_and_product(), 200
+        if not product:
+            return {"error" : "Product not found"}, 404
+        return {
+            "Orderproduct" : orderproducts.to_dict(),
+            "Order" : order.to_dict(),
+            "Product" :  product.to_dict_with_categories()
+        }, 200
 if __name__ == '__main__':
     app.run(debug=True)
