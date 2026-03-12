@@ -362,5 +362,13 @@ def orderproducts_id(id):
             "Order" : order.to_dict(),
             "Product" :  product.to_dict_with_categories()
         }, 200
+        
+    if request.method == 'DELETE':
+        orderproducts = OrderProducts.query.filter_by(id=id).first()
+        if not orderproducts:
+            return {"error" : "Order not found"}, 404
+        db.session.delete(orderproducts)
+        db.session.commit()
+        return {"message" : "Orderproduct deleted successfully"}, 200
 if __name__ == '__main__':
     app.run(debug=True)
