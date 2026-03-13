@@ -73,7 +73,12 @@ SQLAlchemy
 `GET /orders/<int:id>` - Retrieves a specific order
 `DELETE /orders/<int:id>` - Delete a specific order
 
-### ORDERITEMS - (OrderItems -> Products)
+### ORDERPRODUCTS - (OrderProducts -> Products)
+`POST /orderproducts` - Create a new orderproducts with quantity
+`GET /orderproducts` - Retrieves all the orderproducts
+`PUT /orderproducts<int:id>` - Updates a specific orderproduct
+`GET /orderproducts/<int:id>` - Retrieve a specific orderproduct
+`DELETE /orderproducts/<int:id>` - Delete a specific orderproduct
 
 # PROJECT OVERVIEW AND FEATURES
 This project will help me to understand all the relationships better and solidify my knowledge for each relationships

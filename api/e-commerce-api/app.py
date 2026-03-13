@@ -1,6 +1,7 @@
 from flask import Flask, request
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
+from sqlalchemy import func, select
 
 app = Flask(__name__)
 
@@ -55,7 +56,6 @@ class Categories(db.Model):
 class Orders(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     customer_name = db.Column(db.String, nullable=False)
-    total = db.Column(db.Integer, nullable=False)
     status = db.Column(db.String(50), nullable=False)
     created_date = db.Column(db.DateTime, default=datetime.now)
     
@@ -66,7 +66,6 @@ class Orders(db.Model):
         return {
             "id" : self.id,
             "customer_name" : self.customer_name,
-            "total" : self.total,
             "status" : self.status,
             "created_date" : self.created_date
         }
@@ -75,7 +74,6 @@ class Orders(db.Model):
         return {
             "id" : self.id,
             "customer_name" : self.customer_name,
-            "total" : self.total,
             "status" : self.status,
             "created_date" : self.created_date,
             "orderproduct" : [o.to_dict() for o in self.orderproducts]
@@ -87,6 +85,7 @@ class OrderProducts(db.Model):
     product_id = db.Column('product_id', db.Integer, db.ForeignKey('products.id'))
     quantity = db.Column(db.Integer, nullable=False)
     price_at_purchase = db.Column(db.Integer, nullable=False)
+    
     order = db.relationship('Orders', back_populates='orderproducts')
     product = db.relationship('Products', back_populates='orderproducts')
     
@@ -98,11 +97,11 @@ class OrderProducts(db.Model):
             "quantity" : self.quantity,
             "price_at_purchase" : self.price_at_purchase
         }
-
+'''
 with app.app_context():
     db.drop_all()
     db.create_all()
-
+'''
 @app.route('/products', methods=['POST', 'GET'])
 def add_products():
     if request.method == 'POST':
@@ -204,11 +203,11 @@ def category_id(id):
 def add_order():
     if request.method == 'POST':
         data = request.get_json()
-        if 'customer_name' not in data or 'total' not in data or 'status' not in data:
+        if 'customer_name' not in data or 'status' not in data:
             return {"error" : "Missing required fields"}, 400
-        if not data['customer_name'] or not data['total'] or not data['status']:
-            return {"error" : "MIssing required fields"}, 400
-        order = Orders(customer_name=data['customer_name'], total=data['total'], status=data['status'])
+        if not data['customer_name'] or not data['status']:
+            return {"error" : "Missing required fields"}, 400
+        order = Orders(customer_name=data['customer_name'], status=data['status'])
         db.session.add(order)
         db.session.commit()
         return order.to_dict(), 201
@@ -225,12 +224,11 @@ def order_id(id):
         if not order:
             return {"error" : "Order not found"}, 404
         data = request.get_json()
-        if 'customer_name' not in data or 'total' not in data or 'status' not in data:
+        if 'customer_name' not in data or 'status' not in data:
             return {"error" : "Missing required fields"}, 400
-        if not data['customer_name'] or not data['total'] or not data['status']:
-            return {"error" : "MIssing required fields"}, 400
+        if not data['customer_name'] or not data['status']:
+            return {"error" : "Missing required fields"}, 400
         order.customer_name = data['customer_name']
-        order.total = data['total']
         order.status = data['status']
         db.session.commit()
         return order.to_dict(), 200
@@ -291,7 +289,6 @@ def remove_category_from_products(product_id, category_id):
             return {"message" : "Category not in product"}, 200
         
         product.categories.remove(category)
-        db.session.delete(category)
         db.session.commit()
         
         return {"message" : "Category removed from product"}, 200
@@ -304,6 +301,9 @@ def add_number_of_items_in_orders():
             return {'error' : "Missing required fields"}, 400
         if not data['order_id'] or not data['product_id'] or not data['quantity'] or not data['price_at_purchase']:
             return {"error" : "Missing required fields"}, 400
+        product = Products.query.get(data['product_id'])
+        if product.stock < data['quantity']:
+            return {"error" : "Insufficient stock"}, 400
         existing = OrderProducts.query.filter_by(
             order_id=data['order_id'],
             product_id=data['product_id']
@@ -351,6 +351,7 @@ def orderproducts_id(id):
         orderproducts = OrderProducts.query.filter_by(id=id).first()
         order = Orders.query.filter_by(id=orderproducts.order_id).first()
         product = Products.query.filter_by(id=orderproducts.product_id).first()
+        total = db.session.query(func.sum(OrderProducts.quantity * OrderProducts.price_at_purchase)).scalar()
         if not orderproducts:
             return {"error" : "Orderproduct not found"}, 404
         if not order:
@@ -360,7 +361,8 @@ def orderproducts_id(id):
         return {
             "Orderproduct" : orderproducts.to_dict(),
             "Order" : order.to_dict(),
-            "Product" :  product.to_dict_with_categories()
+            "Product" :  product.to_dict_with_categories(),
+            "Total" : total
         }, 200
         
     if request.method == 'DELETE':
