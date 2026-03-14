@@ -349,11 +349,12 @@ def orderproducts_id(id):
     
     if request.method == 'GET':
         orderproducts = OrderProducts.query.filter_by(id=id).first()
-        order = Orders.query.filter_by(id=orderproducts.order_id).first()
-        product = Products.query.filter_by(id=orderproducts.product_id).first()
-        total = db.session.query(func.sum(OrderProducts.quantity * OrderProducts.price_at_purchase)).scalar()
         if not orderproducts:
             return {"error" : "Orderproduct not found"}, 404
+        order = Orders.query.filter_by(id=orderproducts.order_id).first()
+        product = Products.query.filter_by(id=orderproducts.product_id).first()
+        total = db.session.query(func.sum(OrderProducts.quantity * OrderProducts.price_at_purchase)).filter(id == OrderProducts.order_id)
+        result = db.session.execute(total).scalar()
         if not order:
             return {"error" : "Order not found"}, 404
         if not product:
@@ -362,7 +363,7 @@ def orderproducts_id(id):
             "Orderproduct" : orderproducts.to_dict(),
             "Order" : order.to_dict(),
             "Product" :  product.to_dict_with_categories(),
-            "Total" : total
+            "Total" : result
         }, 200
         
     if request.method == 'DELETE':
