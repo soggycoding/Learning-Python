@@ -97,11 +97,11 @@ class OrderProducts(db.Model):
             "quantity" : self.quantity,
             "price_at_purchase" : self.price_at_purchase
         }
-'''
+
 with app.app_context():
     db.drop_all()
     db.create_all()
-'''
+
 @app.route('/products', methods=['POST', 'GET'])
 def add_products():
     if request.method == 'POST':
@@ -110,6 +110,8 @@ def add_products():
             return {"error" : "Missing required fields"}, 400
         if not data['name'] or not data['description'] or not data['price'] or not data['stock']:
             return {"error" : "Missing required fields"}, 400
+        if data['price'] <= 0:
+            return {"error" : "Price has to be a positive number"}, 400
         product = Products(name=data['name'], description=data['description'], price=data['price'], stock=data['stock'])
         db.session.add(product)
         db.session.commit()
@@ -131,6 +133,8 @@ def products_id(id):
             return {"error" : "Missing required fields"}, 400
         if not data['name'] or not data['description'] or not data['price'] or not data['stock']:
             return {"error" : "Missing required fields"}, 400
+        if data['price'] <= 0:
+            return {"error" : "Price has to be a positive number"}, 400
         product.name = data['name']
         product.description = data['description']
         product.price = data['price']
@@ -256,9 +260,9 @@ def add_category_to_products(product_id):
         
         data = request.get_json()
         if 'category_id' not in data:
-            return {"error" : "Missing required fields"}, 404
+            return {"error" : "Missing required fields"}, 400
         if not data['category_id']:
-            return {"error" : "Missing required fields"}, 404
+            return {"error" : "Missing required fields"}, 400
         category_id = data['category_id']
         
         category = Categories.query.get(category_id)
@@ -297,13 +301,29 @@ def remove_category_from_products(product_id, category_id):
 def add_number_of_items_in_orders():
     if request.method == 'POST':
         data = request.get_json()
+        
         if 'order_id' not in data or 'product_id' not in data or  'quantity' not in data or 'price_at_purchase' not in data:
             return {'error' : "Missing required fields"}, 400
         if not data['order_id'] or not data['product_id'] or not data['quantity'] or not data['price_at_purchase']:
             return {"error" : "Missing required fields"}, 400
+        
+        if data['quantity'] <= 0:
+            return {"error" : "Quantity must be a positive number"}, 400
+        if data['price_at_purchase'] <= 0:
+            return {"error" : "Price at purchase must be a positive number"}, 400
+        
         product = Products.query.get(data['product_id'])
+        
+        if not product:
+            return {"error" : "Product not found"}, 404
         if product.stock < data['quantity']:
             return {"error" : "Insufficient stock"}, 400
+        
+        order = Orders.query.get(data['order_id'])
+        
+        if not order:
+            return {"error" : "Order not found"}, 404
+        
         existing = OrderProducts.query.filter_by(
             order_id=data['order_id'],
             product_id=data['product_id']
@@ -311,6 +331,8 @@ def add_number_of_items_in_orders():
         
         if existing:
             return {"error" : "Product already settled the quantity"}, 400
+        
+        product.stock -= data['quantity']
         
         orderproducts = OrderProducts(
             order_id=data['order_id'],
@@ -340,6 +362,16 @@ def orderproducts_id(id):
             return {'error' : "Missing required fields"}, 400
         if not data['order_id'] or not data['product_id'] or not data['quantity'] or not data['price_at_purchase']:
             return {"error" : "Missing required fields"}, 400
+        if data['quantity'] <= 0:
+            return {"error" : "Quantity must be a positive number"}, 400
+        if data['price_at_purchase'] <= 0:
+            return {"error" : "Price at purchase must be a positive number"}, 400
+        product = Products.query.get(data['product_id'])
+        if not product:
+            return {"error" : "Product not found"}, 404
+        order = Orders.query.get(data['order_id'])
+        if not order:
+            return {"error" : "Order not found"}, 404
         orderproducts.order_id = data['order_id']
         orderproducts.product_id = data['product_id']
         orderproducts.quantity = data['quantity']
@@ -351,18 +383,13 @@ def orderproducts_id(id):
         orderproducts = OrderProducts.query.filter_by(id=id).first()
         if not orderproducts:
             return {"error" : "Orderproduct not found"}, 404
-        order = Orders.query.filter_by(id=orderproducts.order_id).first()
-        product = Products.query.filter_by(id=orderproducts.product_id).first()
-        total = db.session.query(func.sum(OrderProducts.quantity * OrderProducts.price_at_purchase)).filter(id == OrderProducts.order_id)
+        order_id = orderproducts.order_id
+        total = db.session.query(func.sum(OrderProducts.quantity * OrderProducts.price_at_purchase)).filter(OrderProducts.order_id == order_id)
         result = db.session.execute(total).scalar()
-        if not order:
-            return {"error" : "Order not found"}, 404
-        if not product:
-            return {"error" : "Product not found"}, 404
         return {
             "Orderproduct" : orderproducts.to_dict(),
-            "Order" : order.to_dict(),
-            "Product" :  product.to_dict_with_categories(),
+            "Order" : orderproducts.order.to_dict(),
+            "Product" :  orderproducts.product.to_dict_with_categories(),
             "Total" : result
         }, 200
         
