@@ -89,4 +89,4 @@ This project will help me to understand all the relationships better and solidif
 [x] Phase 3: Junction table
 [x] Phase 4: Many-to-many
 [x] Phase 5: One-to-many
-[] Phase 6:
+[x] Phase 6: Finish

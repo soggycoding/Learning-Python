@@ -97,11 +97,11 @@ class OrderProducts(db.Model):
             "quantity" : self.quantity,
             "price_at_purchase" : self.price_at_purchase
         }
-
+'''
 with app.app_context():
     db.drop_all()
     db.create_all()
-
+'''
 @app.route('/products', methods=['POST', 'GET'])
 def add_products():
     if request.method == 'POST':
@@ -112,6 +112,8 @@ def add_products():
             return {"error" : "Missing required fields"}, 400
         if data['price'] <= 0:
             return {"error" : "Price has to be a positive number"}, 400
+        if data['stock'] < 0:
+            return {"error" : "Stock cannot be negative"}, 400
         product = Products(name=data['name'], description=data['description'], price=data['price'], stock=data['stock'])
         db.session.add(product)
         db.session.commit()
@@ -135,6 +137,8 @@ def products_id(id):
             return {"error" : "Missing required fields"}, 400
         if data['price'] <= 0:
             return {"error" : "Price has to be a positive number"}, 400
+        if data['stock'] < 0:
+            return {"error" : "Stock cannot be negative"}, 400
         product.name = data['name']
         product.description = data['description']
         product.price = data['price']
@@ -249,7 +253,7 @@ def order_id(id):
             return {"error" : "Order not found"}, 404
         db.session.delete(order)
         db.session.commit()
-        return {"message" : "Order deleted successfully"}
+        return {"message" : "Order deleted successfully"}, 200
     
 @app.route('/products/<int:product_id>/categories', methods=['POST', 'GET'])
 def add_category_to_products(product_id):
@@ -303,7 +307,7 @@ def add_number_of_items_in_orders():
         data = request.get_json()
         
         if 'order_id' not in data or 'product_id' not in data or  'quantity' not in data or 'price_at_purchase' not in data:
-            return {'error' : "Missing required fields"}, 400
+            return {"error": "Missing required fields"}, 400
         if not data['order_id'] or not data['product_id'] or not data['quantity'] or not data['price_at_purchase']:
             return {"error" : "Missing required fields"}, 400
         
@@ -351,34 +355,8 @@ def add_number_of_items_in_orders():
         orderproducts_list = [r.to_dict() for r in orderproducts]
         return {"Orders": orderproducts_list}, 200
     
-@app.route('/orderproducts/<int:id>', methods=['PUT', 'GET', 'DELETE'])
-def orderproducts_id(id):
-    if request.method == 'PUT':
-        orderproducts = OrderProducts.query.filter_by(id=id).first()
-        if not orderproducts:
-            return {"error" : "Order not found"}, 404
-        data = request.get_json()
-        if 'order_id' not in data or 'product_id' not in data or  'quantity' not in data or 'price_at_purchase' not in data:
-            return {'error' : "Missing required fields"}, 400
-        if not data['order_id'] or not data['product_id'] or not data['quantity'] or not data['price_at_purchase']:
-            return {"error" : "Missing required fields"}, 400
-        if data['quantity'] <= 0:
-            return {"error" : "Quantity must be a positive number"}, 400
-        if data['price_at_purchase'] <= 0:
-            return {"error" : "Price at purchase must be a positive number"}, 400
-        product = Products.query.get(data['product_id'])
-        if not product:
-            return {"error" : "Product not found"}, 404
-        order = Orders.query.get(data['order_id'])
-        if not order:
-            return {"error" : "Order not found"}, 404
-        orderproducts.order_id = data['order_id']
-        orderproducts.product_id = data['product_id']
-        orderproducts.quantity = data['quantity']
-        orderproducts.price_at_purchase = data['price_at_purchase']
-        db.session.commit()
-        return orderproducts.to_dict(), 200
-    
+@app.route('/orderproducts/<int:id>', methods=['GET', 'DELETE'])
+def orderproducts_id(id):   
     if request.method == 'GET':
         orderproducts = OrderProducts.query.filter_by(id=id).first()
         if not orderproducts:
@@ -397,6 +375,8 @@ def orderproducts_id(id):
         orderproducts = OrderProducts.query.filter_by(id=id).first()
         if not orderproducts:
             return {"error" : "Order not found"}, 404
+        product = Products.query.get(orderproducts.product_id)
+        product.stock += orderproducts.quantity
         db.session.delete(orderproducts)
         db.session.commit()
         return {"message" : "Orderproduct deleted successfully"}, 200
