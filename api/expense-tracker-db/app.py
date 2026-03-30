@@ -157,7 +157,7 @@ def expenses_total():
         return {"total":result or 0}, 200
     else:
         total = db.session.query(func.sum(Expenses.cost)).scalar()
-        return {"total":total or}, 200
+        return {"total":total or 0}, 200
     
 ''' 
 with app.app_context():

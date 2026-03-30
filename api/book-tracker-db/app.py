@@ -51,9 +51,9 @@ def book_update(id):
         if not books:
             return {"error": "Content not found"}, 404
         data = request.get_json()
-        if not data['title'] or not data['description']:
-            return {"error": "Missing required fields"}, 400
         if 'title' not in data or 'description' not in data:
+            return {"error": "Missing required fields"}, 400
+        if not data['title'] or not data['description']:
             return {"error": "Missing required fields"}, 400
         books.title = data['title']
         books.description = data['description']
