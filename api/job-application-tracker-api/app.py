@@ -30,15 +30,22 @@ class JobApplications(db.Model):
     applied_date = db.Column(db.DateTime, default=datetime.now)
     notes = db.Column(db.String(60), nullable=True)
     
-    company_id = db.Column(db.Integer, db.ForeignKey('companies.id'), nullable=False)
-    interview_id = db.Column(db.Integer, db.ForeignKey('interviews.id'), nullable=False)
-    
+    interview = db.relationship('Interviews', backref='jobapplication', lazy=True)
     def to_dict(self):
         return {
             "role" : self.role,
             "status" : self.status,
             "applied_date" : self.applied_date,
             "notes" : self.notes
+        }
+    
+    def to_dict_with_interview(self):
+        return {
+            "role" : self.role,
+            "status" : self.status,
+            "applied_date" : self.applied_date,
+            "notes" : self.notes,
+            "interview" : [interview.to_dict() for interview in self.interview]
         }
         
 class Interviews(db.Model):
@@ -47,8 +54,7 @@ class Interviews(db.Model):
     scheduled_date = db.Column(db.String(40), nullable=False)
     outcome = db.Column(db.String(20), nullable=False)
     
-    jobapplication = db.relationship('JobApplications', backref='interview', lazy=True)
-    
+    jobapplication_id = db.Column(db.Integer(), db.ForeignKey('jobapplication.id'), nullable=False)
     
     def to_dict(self):
         return {
@@ -56,15 +62,7 @@ class Interviews(db.Model):
             "scheduled_date" : self.scheduled_date,
             "outcome" : self.outcome
         }
-    
-    def to_dict_with_jobapplication(self):
-        return {
-            "round" : self.round,
-            "scheduled_date" : self.scheduled_date,
-            "outcome" : self.outcome,
-            "jobapplication" : [j.to_dict() for j in self.jobapplication]
-        }
-  
+        
 with app.app_context():
     db.drop_all()
     db.create_all()  
@@ -125,11 +123,13 @@ def update_company(id):
 def add_interview():
     if request.method == "POST":
         data = request.get_json()
-        if 'round' not in data or 'scheduled_date' not in data or 'outcome' not in data:
+        if 'round' not in data or 'scheduled_date' not in data or 'outcome' not in data or "jobapplication_id" not in data:
             return {"error" : "Missing required fields"}, 400
-        if not data['round'] or not data['scheduled_date'] or not data['outcome']:
+        if not data['round'] or not data['scheduled_date'] or not data['outcome'] or not data['jobapplication_id']:
             return {"error" : "Missing required fields"}, 400
-        interview = Interviews(round=data['round'], scheduled_date=data['scheduled_date'], outcome=data['outcome'])
+        if not JobApplications.query.filter_by(id=data['jobapplication_id']).first():
+            return {"error" : "Job Application not found"}, 404
+        interview = Interviews(round=data['round'], scheduled_date=data['scheduled_date'], outcome=data['outcome'], jobapplication_id=data['jobapplication_id'])
         db.session.add(interview)
         db.session.commit()
         return interview.to_dict(), 201
@@ -148,13 +148,16 @@ def update_interview(id):
         if not interview:
             return {"error" : "Interview not found"}, 404
         data = request.get_json()
-        if 'round' not in data or 'scheduled_date' not in data or 'outcome' not in data:
+        if 'round' not in data or 'scheduled_date' not in data or 'outcome' not in data or "jobapplication_id" not in data:
             return {"error" : "Missing required fields"}, 400
-        if not data['round'] or not data['scheduled_date'] or not data['outcome']:
+        if not data['round'] or not data['scheduled_date'] or not data['outcome'] or not data['jobapplication_id']:
             return {"error" : "Missing required fields"}, 400
+        if not JobApplications.query.filter_by(id=data['jobapplication_id']).first():
+            return {"error" : "Job Application not found"}, 404
         interview.round = data['round']
         interview.scheduled_date = data['scheduled_date']
         interview.outcome = data['outcome']
+        interview.jobapplication_id = data['jobapplication_id']
         db.session.commit()
         return interview.to_dict()
     
@@ -178,11 +181,13 @@ def update_interview(id):
 def add_jobapplication():
     if request.method == 'POST':
         data = request.get_json()
-        if "role" not in data or "status" not in data or "company_id" not in data or "interview_id" not in data:
+        if "role" not in data or "status" not in data or "company_id" not in data:
             return {"error" : "Missing required fields"}, 400
-        if not data['role'] or not data['status'] or not data['company_id'] or not data['interview_id']:
+        if not data['role'] or not data['status'] or not data['company_id']:
             return {"error" : "Missing required fields"}, 400
-        jobapplication = JobApplications(role=data['role'], status=data['status'], notes=data['notes'], company_id=data['company_id'], interview_id=data['interview_id'])
+        if not Companies.query.filter_by(id=data['company_id']).first():
+            return {"error" : "Company not found"}, 404
+        jobapplication = JobApplications(role=data['role'], status=data['status'], notes=data['notes'], company_id=data['company_id'])
         db.session.add(jobapplication)
         db.session.commit()
         return jobapplication.to_dict(), 201
@@ -199,22 +204,25 @@ def update_jobapplication(id):
         if not jobapplication:
             return {"error" : "Job Application not found"}, 404
         data = request.get_json()
-        if "role" not in data or "status" not in data or "company_id" not in data or "interview_id" not in data:
+        if "role" not in data or "status" not in data or "company_id" not in data:
             return {"error" : "Missing required fields"}, 400
-        if not data['role'] or not data['status'] or not data['company_id'] or not data['interview_id']:
+        if not data['role'] or not data['status'] or not data['company_id']:
             return {"error" : "Missing required fields"}, 400
+        if not Companies.query.filter_by(id=data['company_id']).first():
+            return {"error" : "Company not found"}, 404
         jobapplication.role = data['role']
         jobapplication.status = data['status']
         jobapplication.notes = data['notes']
         jobapplication.company_id = data['company_id']
-        jobapplication.interview_id = data['interview_id']
         db.session.commit()
         return jobapplication.to_dict(), 200
     
     if request.method == 'GET':
         jobapplication = JobApplications.query.filter_by(id=id).first()
         if not jobapplication:
-            return {"error" : "Job Application not found"}, 404
+            return {
+                "error" : "Job Application not found"
+                }, 404
         return {
             "Job Application" : jobapplication.to_dict()
             }, 200
@@ -222,10 +230,14 @@ def update_jobapplication(id):
     if request.method == 'DELETE':
         jobapplication = JobApplications.query.filter_by(id=id).first()
         if not jobapplication:
-            return {"error" : "Job Application not found"}, 404
+            return {
+                "error" : "Job Application not found"
+                }, 404
         db.session.delete(jobapplication)
         db.session.commit()
-        return {"message" : "Job Application deleted successfully"}
+        return {
+            "message" : "Job Application deleted successfully"
+            }
 
 if __name__ == '__main__':
     app.run(debug=True)
