@@ -30,7 +30,7 @@ class JobApplications(db.Model):
     applied_date = db.Column(db.DateTime, default=datetime.now)
     notes = db.Column(db.String(60), nullable=True)
     
-    interview = db.relationship('Interviews', backref='jobapplication', lazy=True)
+    interviews = db.relationship('Interviews', backref='jobapplication', lazy=True)
     def to_dict(self):
         return {
             "role" : self.role,
@@ -45,16 +45,16 @@ class JobApplications(db.Model):
             "status" : self.status,
             "applied_date" : self.applied_date,
             "notes" : self.notes,
-            "interview" : [interview.to_dict() for interview in self.interview]
+            "interview" : [interview.to_dict() for interview in self.interviews]
         }
-        
+
 class Interviews(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
     round = db.Column(db.Integer(), nullable=False)
     scheduled_date = db.Column(db.String(40), nullable=False)
     outcome = db.Column(db.String(20), nullable=False)
     
-    jobapplication_id = db.Column(db.Integer(), db.ForeignKey('jobapplication.id'), nullable=False)
+    jobapplication_id = db.Column(db.Integer(), db.ForeignKey('jobapplications.id'), nullable=False)
     
     def to_dict(self):
         return {
@@ -64,9 +64,8 @@ class Interviews(db.Model):
         }
         
 with app.app_context():
-    db.drop_all()
-    db.create_all()  
-   
+    db.drop_all() 
+    db.create_all()
 @app.route ('/companies', methods=['POST', 'GET'])
 def add_company():
     if request.method == "POST":
