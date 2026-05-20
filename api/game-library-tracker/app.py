@@ -31,6 +31,7 @@ class Genres(db.Model):
 class Games(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
     name = db.Column(db.String(40), nullable=False)
+    publisher = db.Column(db.String(), nullable=False)
     synopsis = db.Column(db.String(60), nullable=False)
     rating = db.Column(db.Integer(), nullable=False)
     
@@ -41,25 +42,20 @@ class Games(db.Model):
         return {
             "id" : self.id,
             "name" : self.name,
-            "synopsis" : self.synopsis,
-            "rating" : self.rating
-        }
-    
-    def to_dict_with_genre(self):
-        return {
-            "id" : self.id,
-            "name" : self.name,
+            "publisher" : self.publisher,
             "synopsis" : self.synopsis,
             "rating" : self.rating,
-            "genre" : [g.to_dict() for g in self.genre_id]
+            'genre_id' : self.genre_id
         }
 
     def to_dict_with_playthrough(self):
         return {
             "id" : self.id,
             "name" : self.name,
+            "publisher" : self.publisher,
             "synopsis" : self.synopsis,
             "rating" : self.rating,
+            "genre_id" : self.genre_id,
             "playthrough" : [p.to_dict() for p in self.playthrough]
         }
         
@@ -81,11 +77,11 @@ class Playthroughs(db.Model):
             "game" : [g.to_dict() for g in self.game_id]
         }
         
-'''
+
 with app.app_context():
     db.drop_all()
     db.create_all()
-'''
+
 
 @app.route('/genres', methods=['POST', 'GET'])
 def add_genre():
@@ -134,6 +130,61 @@ def update_genre(id):
         db.session.delete(genres)
         db.session.commit()
         return {"message" : "Genre deleted successfully"}, 200
- 
+    
+@app.route('/games', methods=['POST', 'GET'])
+def add_games():
+    if request.method == 'POST':
+        data = request.get_json()
+        if 'name' not in data or 'publisher' not in data or 'synopsis' not in data or 'rating' not in data or 'genre_id' not in data:
+            return {"error" : "Missing required fields"}, 400
+        if not data['name'] or not data['publisher'] or not data['synopsis'] or not data['rating'] or not data['genre_id']:
+            return {"error" : "Missing required fields"}, 400
+        game = Games(name=data['name'], publisher=data['publisher'], synopsis=data['synopsis'], rating=data['rating'], genre_id=data['genre_id'])
+        db.session.add(game)
+        db.session.commit()
+        
+        return game.to_dict(), 201
+    
+    if request.method == 'GET':
+        games = Games.query.all()
+        game_list = [game.to_dict() for game in games]
+        
+        return {"games" : game_list}, 200
+    
+@app.route('/games/<int:id>', methods=['PUT', 'GET', 'DELETE'])
+def update_games(id):
+    if request.method == 'PUT':
+        game = Games.query.filter_by(id=id).first()
+        if not game:
+            return {"error" : "Game not found"}, 404
+        data = request.get_json()
+        if 'name' not in data or 'publisher' not in data or 'synopsis' not in data or 'rating' not in data or 'genre_id' not in data:
+            return {"error" : "Missing required fields"}, 400
+        if not data['name'] or not data['publisher'] or not data['synopsis'] or not data['rating'] or not data['genre_id']:
+            return {"error" : "Missing required fields"}, 400
+        game.name = data['name']
+        game.publisher = data['publisher']
+        game.synopsis = data['synopsis']
+        game.rating = data['rating']
+        game.genre_id = data['genre_id']
+        db.session.commit()
+        
+        return game.to_dict(), 200
+    
+    if request.method == 'GET':
+        game = Games.query.filter_by(id=id).first()
+        if not game:
+            return {"error" : "Game not found"}, 404
+        return game.to_dict(), 200
+    
+    if request.method == 'DELETE':
+        game = Games.query.filter_by(id=id).first()
+        if not game:
+            return {"error" : "Game not found"}, 404
+        db.session.delete(game)
+        db.session.commit()
+        return {"message" : "Game deleted successfully"}, 200
+    
+    
 if __name__ == '__main__':
     app.run(debug=True)
