@@ -67,17 +67,17 @@ class Playthroughs(db.Model):
     def to_dict(self):
         return {
             "id" : self.id,
-            "progress" : self.progress
+            "progress" : self.progress,
+            "game_id" : self.game_id
         }
     
     def to_dict_with_game(self):
         return {
             "id" : self.id,
             "progress" : self.progress,
-            "game" : [g.to_dict() for g in self.game_id]
+            "game_id" : self.game_id
         }
-        
-
+       
 with app.app_context():
     db.drop_all()
     db.create_all()
@@ -121,7 +121,7 @@ def update_genre(id):
         genres = Genres.query.filter_by(id=id).first()
         if not genres:
             return {"error" : "Genre not found"}, 404
-        return {"genre" : genres.to_dict()}, 200
+        return {"genre" : genres.to_dict_with_games()}, 200
     
     if request.method == 'DELETE':
         genres = Genres.query.filter_by(id=id).first()
@@ -175,7 +175,7 @@ def update_games(id):
         game = Games.query.filter_by(id=id).first()
         if not game:
             return {"error" : "Game not found"}, 404
-        return game.to_dict(), 200
+        return game.to_dict_with_playthrough(), 200
     
     if request.method == 'DELETE':
         game = Games.query.filter_by(id=id).first()
@@ -184,7 +184,56 @@ def update_games(id):
         db.session.delete(game)
         db.session.commit()
         return {"message" : "Game deleted successfully"}, 200
+
+@app.route('/playthroughs', methods=["POST", "GET"])
+def add_playthrough():
+    if request.method == "POST":
+        data = request.get_json()
+        if "progress" not in data or "game_id" not in data:
+            return {"error" : "Missing required field"}, 400
+        if not data['progress'] or not data['game_id']:
+            return {"error" : "Missing required field"}, 400
+        playthrough = Playthroughs(progress=data['progress'], game_id=data['game_id'])
+        db.session.add(playthrough)
+        db.session.commit()
+        
+        return playthrough.to_dict(), 201
+
+    if request.method == "GET":
+        playthroughs = Playthroughs.query.all()
+        playthrough_list = [playthrough.to_dict() for playthrough in playthroughs]
+        return {"playthrough" : playthrough_list}, 200
     
+@app.route('/playthroughs/<int:id>', methods=["PUT", "GET", "DELETE"])
+def update_playthrough(id):
+    if request.method == "PUT":
+        playthrough = Playthroughs.query.filter_by(id=id).first()
+        if not playthrough:
+            return {"error" : "Playthrough not found"}, 404
+        data = request.get_json()
+        if "progress" not in data or "game_id" not in data:
+            return {"error" : "Missing required fields"}, 400
+        if not data["progress"] or not data["game_id"]:
+            return {"error" : "Missing required fields"}, 400
+        playthrough.progress = data['progress']
+        playthrough.game_id = data['game_id']
+        db.session.commit()
+        
+        return playthrough.to_dict(), 200
+    
+    if request.method == "GET":
+        playthrough = Playthroughs.query.filter_by(id=id).first()
+        if not playthrough:
+            return {"error" : "Playthrough not found"}, 404
+        return playthrough.to_dict_with_game(), 200
+    
+    if request.method == "DELETE":
+        playthrough = Playthroughs.query.filter_by(id=id).first()
+        if not playthrough:
+            return {"error" : "Playthrough not found"}, 404
+        db.session.delete(playthrough)
+        db.session.commit()
+        return {"message" : "Playthrough deleted successfully"}, 200
     
 if __name__ == '__main__':
     app.run(debug=True)
