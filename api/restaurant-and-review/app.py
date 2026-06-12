@@ -63,6 +63,49 @@ def add_restaurant():
         data = request.get_json()
         if "name" not in data or "location" not in data or "stars" not in data or "description" not in data:
             return {"error" : "Missing required fields"}, 400
+        if not data["name"] or not data["location"] or not data["stars"] or not data["description"]:
+            return {"error" : "Missing required fields"}, 400
+        restaurant = Restaurants(name=data['name'], location=data['location'], stars=data['stars'], description=data['description'])
+        db.session.add(restaurant)
+        db.session.commit()
+        return restaurant.to_dict(), 201
+    
+    if request.method == "GET":
+        restaurants = Restaurants.query.all()
+        restaurant_list = [restaurant.to_dict() for restaurant in restaurants]
+        return {"restaurant": restaurant_list}, 200
+
+@app.route('/restaurants/<int:id>', methods=['PUT', 'GET', 'DELETE'])
+def update_restaurant(id):
+    if request.method == "PUT":
+        restaurant = Restaurants.query.filter_by(id=id).first()
+        if not restaurant:
+            return {"error":"Restaurant not found"}, 404
+        data = request.get_json()
+        if "name" not in data or "location" not in data or "stars" not in data or "description" not in data:
+            return {"error" : "Missing required fields"}, 400
         if not data["name"] or not data["location"] or not data["stars"] or not data["descriptiom"]:
             return {"error" : "Missing required fields"}, 400
-        
+        restaurant.name = data['name']
+        restaurant.location = data['location']
+        restaurant.stars = data['stars']
+        restaurant.description = data['description']
+        db.session.commit()
+        return restaurant.to_dict(), 200
+    
+    if request.method == "GET":
+        restaurant = Restaurants.query.filter_by(id=id).first()
+        if not restaurant:
+            return {"error" : "Restaurant not found"}, 404
+        return {"restaurant": restaurant.to_dict()}, 200
+    
+    if request.method == "DELETE":
+        restaurant = Restaurants.query.filter_by(id=id).first()
+        if not restaurant:
+            return {"error" : "Restaurant not found"}, 404
+        db.session.delete(restaurant)
+        db.session.commit()
+        return {"message" : "Restaurant successfully deleted"}, 200
+
+if __name__ == '__main__':
+    app.run(debug=True)
