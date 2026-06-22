@@ -43,24 +43,24 @@ API ENDPOINTS
 two One-to-Many relationships for returning nested data
 
 ## Restaurant (restaurant -> MenuItem, Restaurant -> Review)
-POST /restaurant - Create a new restaurant
-GET /restaurant - Retrieves all the restaurants
-PUT /restaurant/<int:id> - Updates a specific restaurant
-GET /restaurant/<int:id> - Retrieves a specific restaurant
-DELETE /restaurant/<int:id> - Deletes a specific restaurant
+POST /restaurants - Create a new restaurant
+GET /restaurants - Retrieves all the restaurants
+PUT /restaurants/<int:id> - Updates a specific restaurant
+GET /restaurants/<int:id> - Retrieves a specific restaurant
+DELETE /restaurants/<int:id> - Deletes a specific restaurant
 
 ## Review (Restaurant -> Review)
-POST /review - Create a new review
-GET /review - Retrieves all the reviews
-PUT /review/<int:id> - Updates a specific review 
-GET /review/<int:id> - Retrieves a specific review
-DELETE /review/<int:id> - Deletes a specific review
+POST /reviews - Create a new review
+GET /reviews - Retrieves all the reviews
+PUT /reviews/<int:id> - Updates a specific review 
+GET /reviews/<int:id> - Retrieves a specific review
+DELETE /reviews/<int:id> - Deletes a specific review
 
 # PROJECT OVERVIEW AND FEATURES
 This project is just a refresher to understand how API's work again while learning something new.
 
 # PROJECT STATUS
-[] Phase 1: CRUD for Restaurant and Reviews
+[x] Phase 1: CRUD for Restaurant and Reviews
 [] Phase 2: Validator for restaurant and reviews
 [] Phase 3: Filtering the reviews for each restaurant
 [] Phase 4: Finish

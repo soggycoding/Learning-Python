@@ -48,9 +48,10 @@ class Reviews(db.Model):
     def to_dict(self):
         return {
             "id" : self.id,
-            "name" : self.name,
+            "user" : self.user,
             "rating" : self.rating,
-            "comment" : self.comment
+            "comment" : self.comment,
+            "restaurant_id" : self.restaurant_id
         }
 
 with app.app_context():
@@ -107,5 +108,55 @@ def update_restaurant(id):
         db.session.commit()
         return {"message" : "Restaurant successfully deleted"}, 200
 
+@app.route('/reviews', methods=['POST', 'GET'])
+def add_reviews():
+    if request.method == "POST":
+        data = request.get_json()
+        if "user" not in data or "rating" not in data or "comment" not in data or "restaurant_id" not in data:
+            return {"error" : "Missing required fields"}, 400
+        if not data['user'] or not data['rating'] or not data['comment'] or not data['restaurant_id']:
+            return {"error" : "Missing required fields"}, 400
+        review = Reviews(user=data['user'], rating=data['rating'], comment=data['comment'], restaurant_id=data["restaurant_id"])
+        db.session.add(review)
+        db.session.commit()
+        return review.to_dict(), 201
+    
+    if request.method == "GET":
+        reviews = Reviews.query.all()
+        review_list = [review.to_dict() for review in reviews]
+        return {"reviews" : review_list}, 200
+
+@app.route('/reviews/<int:id>', methods=['PUT', 'GET', "DELETE"])
+def update_reviews(id):
+    if request.method == "PUT":
+        review = Reviews.query.filter_by(id=id).first()
+        if not review:
+            return  {"error" : "Review not found"}, 404
+        data = request.get_json()
+        if "user" not in data or "rating" not in data or "comment" not in data or "restaurant_id" not in data:
+            return {"error" : "Missing required fields"}, 400
+        if not data['user'] or not data['rating'] or not data['comment'] or not data['restaurant_id']:
+            return {"error" : "Missing required fields"}, 400
+        review.user = data['user']
+        review.rating = data['rating']
+        review.comment = data['comment']
+        review.restaurant_id = data['restaurant_id']
+        db.session.commit()
+        return review.to_dict(), 200
+    
+    if request.method == "GET":
+        review = Reviews.query.filter_by(id=id).first()
+        if not review:
+            return {"error" : "Review not found"}, 404
+        return review.to_dict(), 200
+    
+    if request.method == "DELETE":
+        review = Reviews.query.filter_by(id=id).first()
+        if not review:
+            return {"error" : "Review not found"}, 404
+        db.session.delete(review)
+        db.session.commit()
+        return {"message" : "Review successfully deleted"}, 200
+        
 if __name__ == '__main__':
     app.run(debug=True)
