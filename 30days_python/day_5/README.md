@@ -36,5 +36,17 @@ The clear() method empties the list:
 ## Copying a list
 It is possible to copy a list by reassigning it to a new variable in the following way: list2 = list1. Now, list2 is a reference of list1, any changes we make in list 2 will also be modify the original, list1. But there are lots of case in which we do not like to modify the original insteadwe like to have a different copy. One way of avoiding the problem above is using copy().
 
-# Joining Lists
+## Joining Lists
 there are several ways to join, or concatenate, two or more lists in python.
+
+## Counting items in a list
+The count() method returns the number of times an item appears in a list
+
+## Finding Index of an item
+The index() method returns the index of an item in the list
+
+## Reversing a list
+The reverse() method reverses the order of a list
+
+# Sorting list items
+To sort lists we can use sort() method or sorted() built-in functions. The sort() method reorders the list items in ascending order and modifies the original list. If an argument of sort() method reverse is equal to true, it will arrange the list in descending order.

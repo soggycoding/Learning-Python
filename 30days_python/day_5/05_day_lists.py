@@ -199,3 +199,48 @@ negative_numbers.extend(positive_number)
 print('Integers: ', negative_numbers)
 
 # Counting items in a list
+'''lst = ['item1', 'item2']
+lst.count(item)'''
+
+fruits = ['banana', 'orange', 'mango', 'lemon']
+print(fruits.count('orange'))
+ages = ['22', '19', '24', '25', '26',' 24', '25', '24']
+print(ages.count(24))
+
+# Finding index of an item
+'''lst = ['item1', 'item2']
+lst.index(item)'''
+
+print(fruits.index('orange'))
+print(ages.index(24))
+
+# Reversing a list
+'''lst = ['item1', 'item2']
+lst.reverse()'''
+
+fruits.reverse
+print(fruits)
+ages.reverse
+print(ages)
+
+# Sorting list items
+# sort() modifies the original list
+'''lst = ['item1', 'item2']
+lst.sort()
+lst.sort(reverse=True)'''
+
+fruits.sort()
+print(fruits)
+fruits.sort(reverse=True)
+print(fruits)
+
+ages.sort()
+print(ages)
+ages.sort(reverse=True)
+print(ages)
+
+# sorted() returns the ordered list without modifying the original list
+print(sorted(fruits))
+# reverse order
+fruits = sorted(fruits,reverse=True)
+print(fruits)
