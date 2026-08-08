@@ -40,16 +40,12 @@ player = {'name' : "soggy",
           'gender' : "Male"} # Dictionary
 
 # Finding the Euclidean Distance between (2, 3) and (10, 8)
-x1 = 2
-x2 = 3
-y1 = 10
-y2 = 8
 
-x = x2 - x1
-y = y2 - y1
+x = 2 - 3
+y = 10 - 8
 
-x3 = x * x
-y3 = y * y
+x2 = x * x
+y2 = y * y
 
-xy = x3 + y3
-print (xy)
+d = x2 + y2
+print (d)

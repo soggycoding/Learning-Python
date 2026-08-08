@@ -1,5 +1,5 @@
 # Exercise Day: 9
-
+'''
 ## Exercise Level 1:
 age = input("Enter your age: ")
 age = int(age)
@@ -9,19 +9,26 @@ elif age < 18:
     print("Wait for at least " + str(18 - age) + " years to learn to drive.")
 else:
     print("Invalid input")
-
+'''
 my_age = input("Input my age: ")
 your_age = input("Input your age: ")
 my_age = int(my_age)
 your_age = int(your_age)
+age_gap = abs(my_age - your_age)
 
-if my_age > your_age:
-    print("I am older than you by " + str(my_age - your_age) + " years.")
-elif my_age < your_age:
-    print("You are older than me by " + str(your_age - my_age) + " years.")
+if age_gap > 1:
+    if my_age > your_age:
+        print("I am older than you by " + str(age_gap) + " years.")
+    else:
+        print("You are older than me by " + str(age_gap) + " years.")
+elif age_gap == 1:
+    if my_age > your_age:
+        print("I am older than you by " + str(age_gap) + " year.")
+    else:
+        print("You are older than me by " + str(age_gap) + " year.")
 else:
     print("We are the same age. ")
-
+'''
 a = input("Assign the number for a: ")
 a = int(a)
 b = input("Assign the number for b: ")
@@ -97,3 +104,4 @@ if person_a['married'] == True and person_a['country'] == 'Tondo':
     print(person_a['name'] + ' is from ' + person_a['country'] + ' and is married.')
 else:
     print('debug time')
+'''

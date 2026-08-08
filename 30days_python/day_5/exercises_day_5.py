@@ -28,7 +28,8 @@ it_companies.reverse()
 print(it_companies)
 print(it_companies[3:9])
 print(it_companies[0:6])
-print(it_companies) # not figured out
+middle_index = len(it_companies) // 2
+print(it_companies[middle_index:middle_index + 1]) # Slices out the middle company ['Facebook']
 it_companies.remove("Oracle")
 print(it_companies)
 it_companies.remove("Facebook")
@@ -43,3 +44,6 @@ back_end = ['Node', 'Express', 'MongoDB']
 
 front_end.extend(back_end)
 print(front_end)
+
+full_stack = front_end + back_end
+print(full_stack)

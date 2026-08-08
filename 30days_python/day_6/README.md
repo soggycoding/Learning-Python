@@ -26,4 +26,4 @@ last_item = tpl[last_index]
 
 ## Slicing tuples - We can slice out a sub-tuple by specifying range of indexes where to start and where to end in a tuple, the return value will be a new tuple with the specified items.
 
-# Changing Tuples to lists - We can change tuples to list
+# Changing Tuples to lists - We can change tuples to list and list to tuples. Tuple is immutable if we want to modify a tuple we should change it to a list

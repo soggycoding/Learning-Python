@@ -1,5 +1,7 @@
 # Creating a tuple
 ## Empty tuple
+import types
+from _typeshed import _type_checker_internals
 empty_tuple =()
 empty_tuple = tuple()
 
@@ -55,3 +57,37 @@ all_fruits = fruits[-4:]
 middle_two_fruits = fruits[-3:-1]
 
 # Convert tuple to list
+tpl = ('item1', 'item2', 'item3', 'item4')
+lst = list(tpl)
+
+fruits = ('banana', 'orange', 'mango', 'lemon')
+fruits = list(fruits)
+fruits[0] = 'apple'
+print(fruits)
+fruits = tuple(fruits)
+print(fruits)
+
+# Checking an item in a tuple
+tpl = ('item1', 'item2', 'item3', 'item4')
+'item2' in tpl
+
+fruits = ('banana', 'orange', 'mango', 'lemon')
+print('orange' in fruits)
+print('apple' in fruits)
+fruits[0] = 'apple'
+
+# Joining Tuples
+tpl1 = ('item1', 'item2', 'item3')
+tpl2 = ('item4', 'item5', 'item6')
+tpl3 = tpl1 + tpl2
+
+fruits = ('banana', 'orange', 'mango', 'lemon')
+vegetables = ('Tomato', 'Potato', 'Cabbage', 'Onion', 'Carrot')
+fruits_and_vegetables = fruits + vegetables
+
+# Deleting Tuples
+tpl1 = ('item1', 'item2', 'item3')
+del tpl1
+
+fruits = ('banana', 'orange', 'mango', 'lemon')
+del fruits
