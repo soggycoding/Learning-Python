@@ -4,7 +4,6 @@ while condition:
     code goes here
 '''
 
-from _typeshed import _type_checker_internals
 count = 0
 while count < 5:
     print(count)

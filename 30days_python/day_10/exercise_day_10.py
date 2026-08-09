@@ -1,23 +1,48 @@
 # Exercise Day 10
 # 1. Write a loop that prints the numbers from 1 to 10.
+'''
 for i in range(1, 11):
     print(i)
+'''
 # 2. Write a loop that prints the square of numbers from 1 to 10.
+'''
 for i in range(1, 11):
     print(i*i)
+'''
 # 3. Write a loop that prints the cube of numbers from 1 to 10.
+'''
 for i in range(1,11):   
     print(i*i*i)
+'''
 # 4. Write a loop that prints the factorial of a number.
+'''
+factorial = 1
 for i in range(5,0,-1):
-    n = i
-    i = (n)*(i-1)^i
-    print(i)
+    factorial = factorial * i
+    print(factorial)
+'''
 # 5. Write a loop that prints the sum of numbers from 1 to 10.
-
+'''
+sum = 1
+for i in range(1,11):
+    sum = sum + i
+    print(sum)
+'''
 # 6. Write a loop that prints the average of numbers from 1 to 10.
-
+'''
+sum = 1
+for i in range(1,11):
+    sum = sum + i
+    count = 10
+avg = sum / count
+print(avg)
+'''
 # 7. Write a loop that prints the multiplication table of a number.
+input_num = input("Input a number: ")
+input_num = int(input_num)
+for i in range (1, 11):
+    multi = i * input_num
+    print(i, "x", input_num, "=", multi)
 
 # 8. Write a loop that prints the Fibonacci series up to a given number.
 
