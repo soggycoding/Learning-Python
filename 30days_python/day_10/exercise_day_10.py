@@ -38,14 +38,24 @@ avg = sum / count
 print(avg)
 '''
 # 7. Write a loop that prints the multiplication table of a number.
+'''
 input_num = input("Input a number: ")
 input_num = int(input_num)
 for i in range (1, 11):
     multi = i * input_num
     print(i, "x", input_num, "=", multi)
-
+'''
 # 8. Write a loop that prints the Fibonacci series up to a given number.
+fibonacci = 0
+sequence = fibonacci + 1
+given_num = input("Input the number: ")
+given_num = int(given_num)
 
+for i in range(given_num):
+    newfibo = fibonacci + sequence
+    print(i)
+    sequence = fibonacci
+    fibonacci = newfibo
 # 9. Write a loop that prints the prime numbers up to a given number.
 
 # 10. Write a loop that prints the sum of the digits of a number.
