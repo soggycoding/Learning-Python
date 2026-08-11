@@ -46,6 +46,7 @@ for i in range (1, 11):
     print(i, "x", input_num, "=", multi)
 '''
 # 8. Write a loop that prints the Fibonacci series up to a given number.
+'''
 fibonacci = 0
 sequence = fibonacci + 1
 given_num = input("Input the number: ")
@@ -53,17 +54,55 @@ given_num = int(given_num)
 
 for i in range(given_num):
     newfibo = fibonacci + sequence
-    print(i)
+    print(newfibo)
     sequence = fibonacci
     fibonacci = newfibo
+'''
 # 9. Write a loop that prints the prime numbers up to a given number.
+'''
+user_input = input("Input the number you want: ")
+input_num = int(user_input)
 
+for i in range(1, input_num):
+    if i <= 1:
+        pass
+    elif i == 2:
+        pass
+    elif i % 2 == 0:
+        pass
+    else:
+        print(i)
+'''
 # 10. Write a loop that prints the sum of the digits of a number.
+'''
+user_input = input("Input the number you want: ")
+convert_int = []
+for char in user_input:
+    char = int(char)
+    convert_int.append(char)
 
+print(sum(convert_int))
+'''
 # 11. Write a loop that prints the number of vowels in a string.
-
+'''
+user_input = input("Input a sentence: ")
+vowels = 0
+for char in user_input:
+    if char == 'a' or char == 'e' or char == 'i' or char == 'o' or char == 'u':
+        vowels = vowels + 1
+        print(vowels)
+print("The overall vowels in the sentence is: ", vowels)
+'''
 # 12. Write a loop that prints the number of consonants in a string.
-
+user_input = input("Input a sentence: ")
+cons_counter = 0
+user_input.upper()
+for cons in user_input:
+    if cons == 'B' or cons == 'C' or cons == 'D' or cons == 'F' or cons == 'G' or cons == 'H' or cons =='J' or cons =='K' or cons =='L' or cons == 'M' or cons == 'N' or cons == 'P' or cons == 'Q' or cons == 'R' or cons =='S' or cons =='T' or cons =='V' or cons =='W' or cons == 'X' or cons =='Y' or cons == 'Z':
+        cons_counter = cons_counter + 1
+        print(cons_counter)
+    else:
+        pass
 # 13. Write a loop that prints the number of words in a string.
 
 # 14. Write a loop that prints the number of uppercase letters in a string.
