@@ -94,16 +94,23 @@ for char in user_input:
 print("The overall vowels in the sentence is: ", vowels)
 '''
 # 12. Write a loop that prints the number of consonants in a string.
+'''
 user_input = input("Input a sentence: ")
 cons_counter = 0
-user_input.upper()
+user_input = user_input.upper()
+consonant = ['B', 'C', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'V', 'W', 'X', 'Y', 'Z'] #'B', 'C', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'V', 'W', 'X', 'Y', 'Z'
 for cons in user_input:
-    if cons == 'B' or cons == 'C' or cons == 'D' or cons == 'F' or cons == 'G' or cons == 'H' or cons =='J' or cons =='K' or cons =='L' or cons == 'M' or cons == 'N' or cons == 'P' or cons == 'Q' or cons == 'R' or cons =='S' or cons =='T' or cons =='V' or cons =='W' or cons == 'X' or cons =='Y' or cons == 'Z':
+    if cons in consonant:
         cons_counter = cons_counter + 1
         print(cons_counter)
-    else:
-        pass
+'''
 # 13. Write a loop that prints the number of words in a string.
+user_input = input("Input a sentence: ")
+# user_input = list(user_input)
+user_len = len(user_input)
+
+
+
 
 # 14. Write a loop that prints the number of uppercase letters in a string.
 
