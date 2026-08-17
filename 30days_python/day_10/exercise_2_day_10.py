@@ -2914,7 +2914,8 @@ language = [
     }
 ]
 eng_counter = 0
+masterlist_lang = []
 for lang in language:
-    if lang['languages'] == ["English"]:
-        eng_counter += 1
-        print(eng_counter)
+    for single_lang in lang['languages']:
+        masterlist_lang.append(single_lang)
+        print(masterlist_lang)
