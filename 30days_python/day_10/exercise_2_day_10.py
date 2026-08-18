@@ -293,7 +293,7 @@ fruit_list.reverse()
 for fruit in fruit_list:
     print(fruit)
 '''
-language = [
+country = [
     {
         "name": "Afghanistan",
         "capital": "Kabul",
@@ -2913,9 +2913,34 @@ language = [
         "currency": "Botswana pula"
     }
 ]
+'''
 eng_counter = 0
 masterlist_lang = []
-for lang in language:
-    for single_lang in lang['languages']:
+counts = {}
+
+# 1. Collect all languages from all countries into masterlist_lang
+for country in language:
+    for single_lang in country['languages']:
         masterlist_lang.append(single_lang)
-        print(masterlist_lang)
+
+# 2. Count the frequency of each language in masterlist_lang
+for lang in masterlist_lang:
+    if lang in counts:
+        counts[lang] += 1
+    else:
+        counts[lang] = 1
+
+# Total number of unique languages
+print("Total number of unique languages:", len(counts))
+
+# Find the 10 most spoken languages
+sorted_languages = sorted(counts.items(), key=lambda item: item[1], reverse=True)
+print("\nTop 10 most spoken languages:")
+for lang, count in sorted_languages[:10]:
+    print(f"{lang}: {count}")
+'''
+population_list = []
+for population in country:
+    for populate in population['population']:
+        population_list.append(populate)
+        print(population_list)
