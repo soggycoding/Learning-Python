@@ -62,4 +62,19 @@ def print_list(*items):
         print(elements)
 print_list('potato', 'banana', 'hotdog', 'bente', 'wiowiwi')
 '''
+'''
 def reverse_list(*items):
+    item_list = []
+    for item in items:
+        item_list.append(item)
+    item_list.reverse()
+    print(item_list)
+
+    items.sort(reverse=True)
+    print(items)
+    for item in item_list:
+        print(item)
+
+reverse_list('bing', 'bong', 'doot', 'bloop')
+'''
+
