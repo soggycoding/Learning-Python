@@ -1,80 +1,124 @@
-# Functions
+# Functions Exercises - Day 11
+
 '''
 def add_two_numbers(num1, num2):
     sum = num1 + num2
     return sum
-print(add_two_numbers(21,31))
+print(add_two_numbers(21, 31))
 
 def area_of_circle(r):
     PI = 3.14
-    area = PI * r ** r
+    area = PI * (r ** 2)
     return area
 print(area_of_circle(10))
 '''
+
 '''
-        def add_all_nums(*num):
-            total = 0
-            for nums in num:
-                if nums != int:
-                    print("Arguement is not equal to int")
-                total += nums 
-            return total
-        print(add_all_nums(23,24,26))
+def add_all_nums(*nums):
+    total = 0
+    for num in nums:
+        if not isinstance(num, (int, float)):
+            print(f"Argument {num} is not a valid number")
+            return None
+        total += num 
+    return total
+print(add_all_nums(23, 24, 26))
 '''
+
 '''
 def convert_celcius_to_fahrenheit(celc):
     fahrenheit = (celc * 9 / 5) + 32
     return fahrenheit
 print(convert_celcius_to_fahrenheit(24))
 '''
+
 '''
 def check_season(month):
+    month = month.capitalize()
     spring = ['March', 'April', 'May']
-    summer =['June', 'July', 'August'] 
+    summer = ['June', 'July', 'August'] 
     autumn = ['September', 'October', 'November']
-    winter =  ['December', 'January', 'February']
+    winter = ['December', 'January', 'February']
     if month in spring:
-        return print("The season is Spring")
+        return "Spring"
     if month in summer:
-        return print("The season is Summer")
+        return "Summer"
     if month in autumn:
-        return print("The season is Autumn")
+        return "Autumn"
     if month in winter:
-        return print("The season is Winter")
+        return "Winter"
+    return "Invalid month"
 
-check_season("February")
+print(check_season("February"))
 '''
+
 '''
 def calculate_slope(x1, x2, y1, y2):
     slope = (y2 - y1) / (x2 - x1)
-    return print(slope)
-calculate_slope(2, 5, 10, 1)
+    return slope
+print(calculate_slope(2, 5, 10, 1))
 '''
+
 '''
-        def solve_quadratic_eqn(a,b,c):
-            quadratic = a*1**2 + b*1 + c
-            return print(quadratic)
-        solve_quadratic_eqn(-2,2,1)
+import math
+
+def solve_quadratic_eqn(a, b, c):
+    # ax^2 + bx + c = 0 -> x = (-b ± sqrt(b^2 - 4ac)) / 2a
+    discriminant = b**2 - 4*a*c
+    if discriminant > 0:
+        x1 = (-b + math.sqrt(discriminant)) / (2*a)
+        x2 = (-b - math.sqrt(discriminant)) / (2*a)
+        return x1, x2
+    elif discriminant == 0:
+        x = -b / (2*a)
+        return x
+    else:
+        return "No real roots"
+
+print(solve_quadratic_eqn(1, -5, 6))
 '''
+
 '''
 def print_list(*items):
-    for elements in items:
-        print(elements)
+    for element in items:
+        print(element)
 print_list('potato', 'banana', 'hotdog', 'bente', 'wiowiwi')
 '''
+
 '''
 def reverse_list(*items):
     item_list = []
     for item in items:
         item_list.append(item)
     item_list.reverse()
-    print(item_list)
+    return item_list
 
-    items.sort(reverse=True)
-    print(items)
-    for item in item_list:
-        print(item)
-
-reverse_list('bing', 'bong', 'doot', 'bloop')
+print(reverse_list('bing', 'bong', 'doot', 'bloop'))
 '''
+
+'''
+def capitalize_list_items(*items):
+    #item_list = []
+    for item in items:
+        #item_upper = item.upper()
+        item = str(item)
+        item = item.upper()
+        print(item)
+capitalize_list_items('bing', 'bong', 'boop')
+'''
+
+'''
+def add_item(item_list, item):
+    item = str(item)
+    item_list.append(item)
+    return item_list
+item_list = ['Potato', 'Tomato', 'Brotato']
+print(add_item(item_list, 'Bed'))
+'''
+
+def remove_item(item_list, item):
+    item_list.remove(item)
+    return item_list
+print(remove_item(['Bing', 'Bong', 'Boop'], 'Bong'))
+
 

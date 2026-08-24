@@ -9,16 +9,16 @@ description: >-
 
 Use this skill to guide and mentor the user according to their structured learning roadmap in [ROADMAP.md](./ROADMAP.md).
 
-## The 3-Stage Progression Lifecycle
+## The 3-Stage Progression Lifecycle (Append & Preserve History)
 
-1. **Stage 1 (Exercise Review -> Auto-Create Alternative File)**:
-   - When reviewing `exercise_day_<XX>.py`, check correctness and edge cases.
-   - When satisfied, automatically create `day_<XX>/alternative_day<XX>_solution.py` populated with guidance for Pass 2 (alternative paradigms, comprehensions, slicing, or error stress tests).
+- **Preserve History**: Always keep past completed solutions commented out at the top of `alternative_day<XX>_solution.py` and `recall_day_<XX>.py` (without old instructions).
+- **Append New Challenges**: Place the new prompt/instructions and the fresh workspace at the bottom.
 
-2. **Stage 2 (Alternative Review -> Auto-Create Recall File)**:
-   - When reviewing `alternative_day<XX>_solution.py`, evaluate pros/cons and explain mechanics.
-   - When satisfied, automatically create `day_<XX>/recall_day_<XX>.py` with a prompt for pure recall testing.
+1. **Stage 1 (Exercise Review -> Append Alternative Prompt)**:
+   - Review `exercise_day_<XX>.py`. When satisfied, append Pass 2 directions to `alternative_day<XX>_solution.py` below previous commented code.
 
-3. **Stage 3 (Recall Review -> Completion & Next Topic)**:
-   - When reviewing `recall_day_<XX>.py`, verify the memory recreation.
-   - When satisfied, confirm concept mastery and prepare the next exercise/day.
+2. **Stage 2 (Alternative Review -> Append Recall Prompt)**:
+   - Review `alternative_day<XX>_solution.py`. When satisfied, comment out the alternative code and append the Recall challenge prompt to `recall_day_<XX>.py` below previous commented code.
+
+3. **Stage 3 (Recall Review -> Completion & Clean Setup)**:
+   - Review `recall_day_<XX>.py`. When satisfied, comment out the recall code and the corresponding exercise in `exercise_day_<XX>.py` so all files are clean and ready for the next problem.
