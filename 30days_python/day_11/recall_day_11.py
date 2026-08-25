@@ -20,3 +20,23 @@ def add_item(item_list, item):
 
 print(add_item(['iiting', 'biting'], 'wingwing'))
 '''
+
+'''
+def remove_item(item_list, item):
+    if item not in item_list:
+        return "Item not in list"
+    else:
+        item = str(item)
+        item_list.remove(item)
+        return item_list
+
+item_list = ['Banana', 'Apple', 'Mangga']
+print(remove_item(item_list, 'Mangga'))
+'''
+
+'''
+def sum_of_numbers(num):
+    return (num * (num + 1)) // 2
+
+print(sum_of_numbers(10))
+'''

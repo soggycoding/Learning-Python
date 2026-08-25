@@ -40,29 +40,6 @@ number_list = [ 3, 4, 5]
 print(add_number(number_list, 7))
 '''
 
-# =======================================================
-# DAY 11 - PASS 2: ALTERNATIVE EXPLORATION
-# Exercise: remove_item
-# =======================================================
-# Your Pass 1 baseline worked using .remove(item)!
-#
-# PASS 2 CHALLENGE & PYTHON MECHANICS:
-#
-# 1. The Missing Item Trap (ValueError):
-#    - What happens if you run: `remove_item(['Apple', 'Banana'], 'Orange')`?
-#    - Try wrapping your removal in `if item in item_list:` or `try/except ValueError`
-#      so your program doesn't crash!
-#
-# 2. Single Occurrence vs. All Occurrences:
-#    - `.remove()` only deletes the FIRST occurrence of an item.
-#    - How can you remove ALL matching items if duplicates exist?
-#      (Hint: List Comprehension -> `[x for x in item_list if x != item]`)
-#
-# 3. Removing by Index:
-#    - Explore `.pop(index)` or `del item_list[index]` if you knew the index position.
-#
-# Write your alternative implementation below:
-
 '''
 def remove_item(item_list, item):
     if item in item_list:
@@ -74,12 +51,41 @@ def remove_item(item_list, item):
 print(remove_item(['Bing', 'Bong', 'Bloop'], 'Bloop'))
 '''
 
-def remove_item(item_list, item):
-    for items in item_list:
-        if items != item:
-            item_list.remove(item)
-            return item_list
-        else:
-            item_list.remove(item)
-            return item_list
-print(remove_item(['Bing', 'Bong', 'Bloop', 'Bloop'], 'Bloop'))
+'''
+def sum_of_numbers(num):
+    num_plus = 0
+    for i in range(1, num + 1):
+        num_plus += i
+    return num_plus
+
+print(sum_of_numbers(5))
+'''
+
+# =======================================================
+# DAY 11 - PASS 2: ALTERNATIVE EXPLORATION
+# Exercise: sum_of_odds
+# =======================================================
+# Your Pass 1 baseline worked using modulo checking (i % 2)!
+#
+# PASS 2 CHALLENGE & RANGE POWER:
+#
+# 1. The Step Parameter in range():
+#    - `range(start, stop, step)` can skip even numbers entirely:
+#      `range(1, num + 1, 2)` -> yields 1, 3, 5, 7...
+#    - No `if / else` condition needed!
+#
+# 2. Pythonic sum() with range step:
+#    - `return sum(range(1, num + 1, 2))`
+#
+# 3. Direct Modulo Condition:
+#    - Instead of `if i % 2 == 0: pass else:`, write:
+#      `if i % 2 != 0: num_plus += i`
+#
+# Write your alternative implementation below:
+
+def sum_of_odds(num):
+    odd_sum = 0
+    for i in range(1, num + 1, 2):
+        print(i)
+        return i
+print(sum_of_odds(7))

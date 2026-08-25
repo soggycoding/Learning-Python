@@ -116,9 +116,33 @@ item_list = ['Potato', 'Tomato', 'Brotato']
 print(add_item(item_list, 'Bed'))
 '''
 
+'''
 def remove_item(item_list, item):
     item_list.remove(item)
     return item_list
 print(remove_item(['Bing', 'Bong', 'Boop'], 'Bong'))
+'''
+
+'''
+def sum_of_numbers(num):
+    num = int(num)
+    num_plus = 0
+    for i in range(0,num):
+        i = i + 1
+        num_plus = num_plus + i
+    return num_plus
+print(sum_of_numbers(10))
+'''
+
+def sum_of_odds(num):
+    num_plus = 0
+    for i in range(0,num + 1):
+        if i % 2 == 0: 
+            pass
+        else:
+            num_plus = num_plus + i
+    return num_plus
+print(sum_of_odds(5))
+
 
 
