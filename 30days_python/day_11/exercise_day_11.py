@@ -134,6 +134,7 @@ def sum_of_numbers(num):
 print(sum_of_numbers(10))
 '''
 
+'''
 def sum_of_odds(num):
     num_plus = 0
     for i in range(0,num + 1):
@@ -143,6 +144,15 @@ def sum_of_odds(num):
             num_plus = num_plus + i
     return num_plus
 print(sum_of_odds(5))
+'''
+
+'''
+def sum_of_even(num):
+    return sum(range(2, num + 1, 2))
+print(sum_of_even(5))
+'''
+
+# Exercise 2:
 
 
 

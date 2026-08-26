@@ -61,31 +61,16 @@ def sum_of_numbers(num):
 print(sum_of_numbers(5))
 '''
 
-# =======================================================
-# DAY 11 - PASS 2: ALTERNATIVE EXPLORATION
-# Exercise: sum_of_odds
-# =======================================================
-# Your Pass 1 baseline worked using modulo checking (i % 2)!
-#
-# PASS 2 CHALLENGE & RANGE POWER:
-#
-# 1. The Step Parameter in range():
-#    - `range(start, stop, step)` can skip even numbers entirely:
-#      `range(1, num + 1, 2)` -> yields 1, 3, 5, 7...
-#    - No `if / else` condition needed!
-#
-# 2. Pythonic sum() with range step:
-#    - `return sum(range(1, num + 1, 2))`
-#
-# 3. Direct Modulo Condition:
-#    - Instead of `if i % 2 == 0: pass else:`, write:
-#      `if i % 2 != 0: num_plus += i`
-#
-# Write your alternative implementation below:
-
+'''
 def sum_of_odds(num):
-    odd_sum = 0
-    for i in range(1, num + 1, 2):
-        print(i)
-        return i
-print(sum_of_odds(7))
+    return sum(range(1, num + 1, 2))
+
+print(sum_of_odds(5))
+'''
+
+'''
+def sum_of_even(num):
+    return sum(range(2, num + 1, 2))
+
+print(sum_of_even(5))
+'''

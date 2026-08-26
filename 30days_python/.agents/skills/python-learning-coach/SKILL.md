@@ -11,6 +11,7 @@ Use this skill to guide and mentor the user according to their structured learni
 
 ## The 3-Stage Progression Lifecycle (Append & Preserve History)
 
+- **Abstract Placeholders**: Never provide ready-to-copy code in hints. Use abstract variables (`x`, `val`, `n`, `arr`) so the user must actively connect and map the logic.
 - **Preserve History**: Always keep past completed solutions commented out at the top of `alternative_day<XX>_solution.py` and `recall_day_<XX>.py` (without old instructions).
 - **Append New Challenges**: Place the new prompt/instructions and the fresh workspace at the bottom.
 

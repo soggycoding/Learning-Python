@@ -40,3 +40,18 @@ def sum_of_numbers(num):
 
 print(sum_of_numbers(10))
 '''
+
+'''
+def sum_of_odds(num):
+    return sum(range(1, num + 1, 2))
+
+print(sum_of_odds(5))
+'''
+
+'''
+def sum_of_even(num):
+    k = num // 2
+    return k * (k + 1)
+
+print(sum_of_even(5))
+'''
