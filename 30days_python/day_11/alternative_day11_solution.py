@@ -74,3 +74,12 @@ def sum_of_even(num):
 
 print(sum_of_even(5))
 '''
+
+'''
+def evens_and_odds(num):
+    even_count = (num // 2) + 1
+    odd_count = (num + 1) // 2
+    return f"The number of even numbers are: {even_count}\nThe number of odd numbers are: {odd_count}"
+
+print(evens_and_odds(100))
+'''

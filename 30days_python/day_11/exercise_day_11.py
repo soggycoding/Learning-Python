@@ -154,5 +154,27 @@ print(sum_of_even(5))
 
 # Exercise 2:
 
+'''
+def evens_and_odds(num):
+    even = 0
+    odds = 0
+    for i in range (0, num + 1):
+        if i % 2 == 0:
+            even += 1
+        else:
+            odds += 1
+    result_even = "The number of even numbers are"
+    result_odds = "The number of odd numbers are"
+    return {result_even: even, 
+            result_odds: odds}
+print(evens_and_odds(100))
+'''
 
-
+def factorial(num):
+    number = num
+    for i in range(num, 0, -1):
+        number_times = i - 1
+        print(number_times)
+        mult = number * number_times
+    return mult
+print(factorial(4))

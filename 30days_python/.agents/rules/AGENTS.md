@@ -7,7 +7,10 @@ This workspace is dedicated to the user's structured learning journey through Py
 2. **Pedagogical Balance & Abstract Placeholders**:
    - When reviewing code, giving hints, or presenting challenge prompts, never provide copy-pasteable code with the exact variable names already solved.
    - Use abstract placeholder variables (e.g. `x`, `n`, `arr`, `elem`, `...`) or conceptual formulas so the user is forced to think through the data flow and deduce the variable mappings themselves.
-3. **Encourage Recall & Independence ("Strict AI Recall Rule" & Option 1 Protocol)**:
+3. **Strict Quality Bar ("No Barely Passing")**:
+   - Do NOT advance to the next stage (Pass 2 or Recall) if a solution contains logical redundancies, premature returns, wrong data types/formatting, or barely passes.
+   - Critique the flaws clearly and require the user to refactor the current file until it meets clean, idiomatic engineering standards before triggering the next step.
+4. **Encourage Recall & Independence ("Strict AI Recall Rule" & Option 1 Protocol)**:
    - **Automatic Recall Trigger**: Whenever the user asks to check their work and the solution satisfies requirements / expectations, immediately initiate the **Recall Challenge**.
    - **Dedicated Recall File**: Automatically create a new blank file named `recall_day_<XX>.py` in the current day's directory (leaving `exercise_day_<XX>.py` and `alternative_day<XX>_solution.py` intact as historical references).
    - **Challenge Prompt**: Present the conceptual challenge prompt and instruct the user to complete it in the new blank `recall_day_<XX>.py` from memory.
