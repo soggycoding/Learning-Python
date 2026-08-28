@@ -171,10 +171,9 @@ print(evens_and_odds(100))
 '''
 
 def factorial(num):
-    number = num
-    for i in range(num, 0, -1):
-        number_times = i - 1
-        print(number_times)
-        mult = number * number_times
-    return mult
-print(factorial(4))
+    fact = num
+    for i in range(num, 1, -1):
+        i = i - 1
+        fact = fact * i
+    return fact
+print(factorial(6))
