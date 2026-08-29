@@ -170,6 +170,7 @@ def evens_and_odds(num):
 print(evens_and_odds(100))
 '''
 
+'''
 def factorial(num):
     fact = num
     for i in range(num, 1, -1):
@@ -177,3 +178,26 @@ def factorial(num):
         fact = fact * i
     return fact
 print(factorial(6))
+'''
+
+'''
+def is_empty(param):
+    if len(param) == 0:
+        return "empty parameter"
+    else:
+        return "parameter has value"
+print(is_empty([]))
+'''
+
+def calculate_mean(*num):
+    acc = 0
+    for i in num:
+        acc += i
+    return acc // len(num)
+print(calculate_mean(25, 55, 35))
+
+def calculate_median(*num):
+    for i in num:
+        median_odd = (i + 1 / 2)*i
+    return median_odd
+print(calculate_median(6))

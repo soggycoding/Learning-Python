@@ -64,3 +64,23 @@ def evens_and_odds(num):
 
 print(evens_and_odds(100))
 '''
+
+'''
+def factorial(num):
+    acc = 1
+    for i in range(1, num + 1):
+        acc *= i
+    return acc
+
+print(factorial(6))
+'''
+
+'''
+def is_empty(param):
+    if param is None:
+        return True
+    else:
+        return len(param) == 0
+
+print(is_empty(''))
+'''

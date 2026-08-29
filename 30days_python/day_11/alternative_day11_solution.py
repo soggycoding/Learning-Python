@@ -84,27 +84,28 @@ def evens_and_odds(num):
 print(evens_and_odds(100))
 '''
 
-# =======================================================
-# DAY 11 - PASS 2: ALTERNATIVE EXPLORATION
-# Exercise: factorial
-# =======================================================
-# Your Pass 1 baseline worked by counting down and shifting i - 1!
-#
-# PASS 2 CHALLENGE: CLEAN ACCUMULATION & RECURSION
-#
-# Explore these two foundational programming paradigms:
-#
-# 1. Forward Accumulation (Clean & handles 0! = 1):
-#    - Initialize an accumulator to 1: `acc = 1`
-#    - Iterate forward from 1 to `n`: `for x in range(1, n + 1):`
-#    - Multiply in place: `acc *= x`
-#
-# 2. Recursion (Function calling itself):
-#    - Base case: If input is 0 or 1, return 1.
-#    - Recursive step: return input * function_name(input - 1)
-#    - e.g. f(6) = 6 * f(5) = 6 * 5 * f(4) ...
-#
-# 3. Edge Case Stress Test:
-#    - What does your function return for input = 0? (Mathematically 0! = 1).
-#
-# Write your alternative implementation below:
+'''
+def factorial(num):
+    acc = 1
+    for i in range(1, num + 1):
+        acc *= i
+    return acc
+
+print(factorial(6))
+print(factorial(0))
+'''
+
+'''
+def is_empty(param=None):
+    if param is None:
+        return True
+    return len(param) == 0
+
+# Pythonic Truthiness 1-liner:
+# def is_empty(param=None):
+#     return not bool(param)
+
+print(is_empty(None))
+print(is_empty([]))
+print(is_empty(['apple']))
+'''
