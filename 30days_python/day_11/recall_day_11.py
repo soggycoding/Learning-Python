@@ -84,3 +84,18 @@ def is_empty(param):
 
 print(is_empty(''))
 '''
+
+'''
+def calculate_mean(num):
+    return sum(num) / len(num)
+
+print(calculate_mean([25, 55, 35]))
+'''
+
+'''
+import statistics;
+def calculate_median_import(num):
+    return statistics.median(num)
+print(calculate_median_import([1,2,3,4]))
+'''
+    

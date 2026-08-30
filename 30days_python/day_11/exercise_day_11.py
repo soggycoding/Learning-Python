@@ -189,15 +189,29 @@ def is_empty(param):
 print(is_empty([]))
 '''
 
-def calculate_mean(*num):
+'''
+def calculate_mean(num):
+    sort_number = sorted(num)
     acc = 0
-    for i in num:
+    for i in sort_number:
         acc += i
-    return acc // len(num)
-print(calculate_mean(25, 55, 35))
+    return acc / len(sort_number)
+print(calculate_mean([1, 2]))
+'''
 
-def calculate_median(*num):
-    for i in num:
-        median_odd = (i + 1 / 2)*i
-    return median_odd
-print(calculate_median(6))
+
+'''
+def calculate_median(num):
+    sorted_num = sorted(num)
+    n = len(sorted_num)
+    if n % 2 != 0:
+        return sorted_num[n // 2]
+    else:
+        middle1 = sorted_num[(n // 2) - 1]
+        middle2 = sorted_num[n // 2]
+        return (middle1 + middle2) / 2
+print(calculate_median([1, 2, 3 ,4]))
+'''
+
+def calculate_mode(num):
+

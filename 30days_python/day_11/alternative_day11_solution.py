@@ -101,11 +101,32 @@ def is_empty(param=None):
         return True
     return len(param) == 0
 
-# Pythonic Truthiness 1-liner:
-# def is_empty(param=None):
-#     return not bool(param)
-
 print(is_empty(None))
 print(is_empty([]))
 print(is_empty(['apple']))
+'''
+
+'''
+def calculate_mean(num):
+    return sum(num) / len(num)
+
+print(calculate_mean([25, 55, 35]))
+'''
+
+'''
+# Pattern 1: Standard Library
+import statistics
+
+def calculate_median(arr):
+    return statistics.median(arr)
+
+# Pattern 2: Manual Ternary One-Liner
+def calculate_median_ternary(arr):
+    s = sorted(arr)
+    n = len(s)
+    mid = n // 2
+    return s[mid] if n % 2 != 0 else (s[mid - 1] + s[mid]) / 2
+
+print(calculate_median([1, 4, 2]))
+print(calculate_median_ternary([1, 2, 3, 4]))
 '''
