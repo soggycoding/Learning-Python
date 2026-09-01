@@ -93,9 +93,22 @@ print(calculate_mean([25, 55, 35]))
 '''
 
 '''
-import statistics;
+import statistics
+
 def calculate_median_import(num):
     return statistics.median(num)
-print(calculate_median_import([1,2,3,4]))
+
+print(calculate_median_import([1, 2, 3, 4]))
 '''
-    
+
+'''
+def calculate_range(nums):
+    if not nums:
+        return "Empty"
+    max_num = max(nums)
+    min_num = min(nums)
+    result = max_num - min_num
+    return result
+
+print(calculate_range([-10, 0, 15, 25]))
+'''

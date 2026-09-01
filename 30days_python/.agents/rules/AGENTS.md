@@ -10,10 +10,10 @@ This workspace is dedicated to the user's structured learning journey through Py
 3. **Strict Quality Bar ("No Barely Passing")**:
    - Do NOT advance to the next stage (Pass 2 or Recall) if a solution contains logical redundancies, premature returns, wrong data types/formatting, or barely passes.
    - Critique the flaws clearly and require the user to refactor the current file until it meets clean, idiomatic engineering standards before triggering the next step.
-4. **Encourage Recall & Independence ("Strict AI Recall Rule" & Option 1 Protocol)**:
-   - **Automatic Recall Trigger**: Whenever the user asks to check their work and the solution satisfies requirements / expectations, immediately initiate the **Recall Challenge**.
-   - **Dedicated Recall File**: Automatically create a new blank file named `recall_day_<XX>.py` in the current day's directory (leaving `exercise_day_<XX>.py` and `alternative_day<XX>_solution.py` intact as historical references).
-   - **Challenge Prompt**: Present the conceptual challenge prompt and instruct the user to complete it in the new blank `recall_day_<XX>.py` from memory.
+4. **Encourage Recall & Independence ("Spaced Batched Recall Protocol")**:
+   - **Batched Spacing**: To avoid immediate rote repetition, recall challenges are batched either **at the end of an exercise level** or in **chunks of 3 exercises**. This forces real cognitive retrieval from long-term memory.
+   - **Dedicated Recall File**: Maintain `recall_day_<XX>.py` in the current day's directory.
+   - **Batched Prompt**: When a level/chunk is completed, present the conceptual challenge prompts for all batched exercises at once, and instruct the user to complete them in `recall_day_<XX>.py` from memory.
 
 ## The 3-Stage Daily Learning Protocol
 

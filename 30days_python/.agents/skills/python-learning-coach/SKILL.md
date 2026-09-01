@@ -11,7 +11,7 @@ Use this skill to guide and mentor the user according to their structured learni
 
 ## The 3-Stage Progression Lifecycle (Append & Preserve History)
 
-- **Abstract Placeholders**: Never provide ready-to-copy code in hints. Use abstract variables (`x`, `val`, `n`, `arr`) so the user must actively connect and map the logic.
+- **Spaced Batched Recall**: Recall challenges are batched at the end of an exercise level or every 3 exercises to enforce true cognitive retrieval rather than short-term rote copying.
 - **Strict Quality Bar**: Do not proceed to the next pass or recall if code has critical flaws, redundant loops, or barely passes. Require refactoring on the current file first.
 - **Preserve History**: Always keep past completed solutions commented out at the top of `alternative_day<XX>_solution.py` and `recall_day_<XX>.py` (without old instructions).
 - **Append New Challenges**: Place the new prompt/instructions and the fresh workspace at the bottom.

@@ -130,3 +130,13 @@ def calculate_median_ternary(arr):
 print(calculate_median([1, 4, 2]))
 print(calculate_median_ternary([1, 2, 3, 4]))
 '''
+
+'''
+def calculate_range(nums):
+    if not nums:
+        return "Empty"
+    return max(nums) - min(nums)
+
+print(calculate_range([]))
+print(calculate_range([1, 2, 3, 4]))
+'''

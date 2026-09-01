@@ -213,5 +213,24 @@ def calculate_median(num):
 print(calculate_median([1, 2, 3 ,4]))
 '''
 
-def calculate_mode(num):
+import math
+
+def calculate_mode(nums):
+    d = {"item": None, "count": None}
+    count = 0
+    list_item = []
+    for num in nums:
+        print(num)
+        d["item"] = num
+        d["count"] = count + 1
+    return d
+print(calculate_mode([1, 2, 2, 3, 4]))
+
+
+'''
+def calculate_range(list_of_number):
+    number_range = max(list_of_number) - min(list_of_number)
+    return number_range
+print(calculate_range([1, 2, 3, 4]))
+'''
 
