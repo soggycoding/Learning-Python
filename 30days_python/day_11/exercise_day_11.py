@@ -213,17 +213,22 @@ def calculate_median(num):
 print(calculate_median([1, 2, 3 ,4]))
 '''
 
+
 import math
 
 def calculate_mode(nums):
-    d = {"item": None, "count": None}
+    d = {}
     count = 0
+    num_count = 0
     list_item = []
-    for num in nums:
-        print(num)
-        d["item"] = num
-        d["count"] = count + 1
-    return d
+    for i in nums:
+        d = ({"item" : i, "count" : count + 1})
+        count += 1
+        list_item.append(d)
+    for item in list_item:
+        if 4 in item.values():
+            num_count += 1
+    return num_count 
 print(calculate_mode([1, 2, 2, 3, 4]))
 
 
@@ -233,4 +238,13 @@ def calculate_range(list_of_number):
     return number_range
 print(calculate_range([1, 2, 3, 4]))
 '''
-
+'''
+def calculate_variance(num):
+    mean = sum(num) / len(num)
+    total_sum = 0
+    for i in num:
+        total_sum += (i - mean)**2
+    variance = (total_sum / len(num))
+    return variance
+print(calculate_variance([1,2,3]))
+'''

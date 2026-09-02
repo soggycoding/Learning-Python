@@ -140,3 +140,17 @@ def calculate_range(nums):
 print(calculate_range([]))
 print(calculate_range([1, 2, 3, 4]))
 '''
+
+'''
+# Pattern 1: Generator Expression
+def calculate_variance(num):
+    mean = sum(num) / len(num)
+    return sum((i - mean) ** 2 for i in num) / len(num)
+
+# Pattern 2: Built-in Statistics
+import statistics
+def calculate_variance_lib(num):
+    return statistics.pvariance(num)
+
+print(calculate_variance([1, 2, 3]))
+'''
