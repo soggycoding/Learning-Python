@@ -221,15 +221,42 @@ def calculate_mode(nums):
     count = 0
     num_count = 0
     list_item = []
+    item_counter = []
     for i in nums:
         d = ({"item" : i, "count" : count + 1})
         count += 1
+        d.append(d)
+    return d
+print(calculate_mode([1, 2, 2, 3, 4]))
+'''
         list_item.append(d)
     for item in list_item:
-        if 4 in item.values():
-            num_count += 1
-    return num_count 
+        if ["item"] in item.values():
+            return item
+        num_count += 1
+        item_counter.append(item)
+    return item_counter
 print(calculate_mode([1, 2, 2, 3, 4]))
+
+        if item["item"] == 1:
+            if item in item_counter:
+                return item['item']
+            item_counter.append(item)
+        elif item["item"] == 2:
+            if item.values() in item_counter:
+                return item['item']
+            item_counter.append(item)
+        elif item["item"] == 3:
+            if item in item_counter:
+                return item['item']
+            item_counter.append(item)
+        elif item["item"] == 4:
+            if item in item_counter:
+                return item['item']
+            item_counter.append(item)
+        else:
+            pass
+'''
 
 
 '''
