@@ -213,49 +213,16 @@ def calculate_median(num):
 print(calculate_median([1, 2, 3 ,4]))
 '''
 
-
-import math
-
+'''
 def calculate_mode(nums):
     d = {}
-    count = 0
-    num_count = 0
-    list_item = []
-    item_counter = []
     for i in nums:
-        d = ({"item" : i, "count" : count + 1})
-        count += 1
-        d.append(d)
-    return d
-print(calculate_mode([1, 2, 2, 3, 4]))
-'''
-        list_item.append(d)
-    for item in list_item:
-        if ["item"] in item.values():
-            return item
-        num_count += 1
-        item_counter.append(item)
-    return item_counter
-print(calculate_mode([1, 2, 2, 3, 4]))
-
-        if item["item"] == 1:
-            if item in item_counter:
-                return item['item']
-            item_counter.append(item)
-        elif item["item"] == 2:
-            if item.values() in item_counter:
-                return item['item']
-            item_counter.append(item)
-        elif item["item"] == 3:
-            if item in item_counter:
-                return item['item']
-            item_counter.append(item)
-        elif item["item"] == 4:
-            if item in item_counter:
-                return item['item']
-            item_counter.append(item)
+        if i in d:
+            d[i] += 1
         else:
-            pass
+            d[i] = 1
+    return max(d, key=d.get)
+print(calculate_mode([1, 2, 3, 3, 4]))
 '''
 
 
@@ -275,3 +242,24 @@ def calculate_variance(num):
     return variance
 print(calculate_variance([1,2,3]))
 '''
+
+
+'''
+def calculate_std(nums):
+    mean = sum(nums) / len(nums)
+    var = 0
+    for i in nums:
+        x = (i - mean)** 2
+        var += x
+    total = var / len(nums)
+    std = total**0.5
+    return std
+print(calculate_std([1,2,3]))
+'''
+
+'''
+def greet(name="Guest"):
+    print(f"Hello, {name}!")
+greet()
+'''
+

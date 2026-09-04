@@ -112,3 +112,55 @@ def calculate_range(nums):
 
 print(calculate_range([-10, 0, 15, 25]))
 '''
+
+'''
+def calculate_variance(nums):
+    mean = sum(nums) / len(nums)
+    variance = 0
+    for i in nums:
+        x = (i - mean)**2
+        variance = variance + x
+    total = variance / len(nums)
+    return total
+    
+print(calculate_variance([1,2,3]))
+
+import statistics
+def calculate_variance(nums):
+    return statistics.variance(nums)
+print(calculate_variance([1,2,3]))
+'''
+'''
+def calculate_mode(nums):
+    d = {}
+    for i in nums:
+        if i not in d:
+            d[i] = 1
+        else:
+            d[i] += 1
+    return max(d, key=d.get)
+print(calculate_mode([1,2,2,3,4]))
+'''
+
+'''
+import statistics
+def calculate_mode(nums):
+    return statistics.multimode(nums)
+print(calculate_mode([1,2,2,3,3,4,4,5]))
+'''
+
+'''
+def calculate_variance(nums):
+    mean = sum(nums) / len(nums)
+    var = 0
+    for i in nums:
+        x = (i - mean)** 2
+        var += x
+    total = var / len(nums)
+    return total
+
+def calculate_std(nums):
+    return calculate_variance(nums)**0.5
+
+print(calculate_std([1,2,3]))
+'''

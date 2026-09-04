@@ -154,3 +154,58 @@ def calculate_variance_lib(num):
 
 print(calculate_variance([1, 2, 3]))
 '''
+
+'''
+import statistics
+def calculate_mode(nums):
+    return statistics.multimode(nums) # Can tally up multiple modes
+    #return statistics.mode(nums) # Can tally up to one only
+print(calculate_mode([1,2,2,3,4,4,3,5,6,7,8]))
+'''
+'''
+import collections
+def calculate_mode(nums):
+    c = collections.Counter(nums) # Tally up the code into a one liner without the only result itself
+    return c.most_common(1) # Returns specific tally
+print(calculate_mode([1,2,3,3,4]))
+'''
+'''
+import collections
+def calculate_mode(nums):
+    c = collections.Counter(nums)
+    return max(c,key=c.get) # Gets the highest number tallied 
+print(calculate_mode([1,2,3,3,4]))
+'''
+
+'''
+import statistics
+def calculate_std(nums):
+    # std = statistics.pstdev(nums) # Divides by count of items in list then raise the result to the power of 0.5
+    std = statistics.stdev(nums) # divides the sum by n-1
+    return std
+print(calculate_std([1,2,3]))
+'''
+
+'''
+def calculate_variance(nums):
+    mean = sum(nums) / len(nums)
+    var = 0
+    for i in nums:
+        x = (i - mean)**2
+        var += x
+    total = var / len(nums)
+    return total
+
+def calculate_std(nums):
+    return calculate_variance(nums) ** 0.5
+
+print(calculate_std([1,2,3]))
+'''
+
+'''
+def greet(name="Guest"):
+    #print(f"Welcome, {name or 'Guest'}!") # Short circuting Idiom
+    resolved = name or "Guest"
+    print(f"Welcome, {resolved}!")
+greet()
+'''

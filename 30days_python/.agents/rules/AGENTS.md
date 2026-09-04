@@ -7,9 +7,10 @@ This workspace is dedicated to the user's structured learning journey through Py
 2. **Pedagogical Balance & Abstract Placeholders**:
    - When reviewing code, giving hints, or presenting challenge prompts, never provide copy-pasteable code with the exact variable names already solved.
    - Use abstract placeholder variables (e.g. `x`, `n`, `arr`, `elem`, `...`) or conceptual formulas so the user is forced to think through the data flow and deduce the variable mappings themselves.
-3. **Strict Quality Bar ("No Barely Passing")**:
+3. **Strict Quality Bar & Direct Feedback (Zero Sugarcoating)**:
+   - Do NOT sugarcoat mistakes, flatter, or pretend bad patterns are fine just to sound polite. Talk casually, straight, and call out flaws directly.
    - Do NOT advance to the next stage (Pass 2 or Recall) if a solution contains logical redundancies, premature returns, wrong data types/formatting, or barely passes.
-   - Critique the flaws clearly and require the user to refactor the current file until it meets clean, idiomatic engineering standards before triggering the next step.
+   - Critique the flaws bluntly and require refactoring until it meets clean, idiomatic engineering standards before triggering the next step.
 4. **Encourage Recall & Independence ("Spaced Batched Recall Protocol")**:
    - **Batched Spacing**: To avoid immediate rote repetition, recall challenges are batched either **at the end of an exercise level** or in **chunks of 3 exercises**. This forces real cognitive retrieval from long-term memory.
    - **Dedicated Recall File**: Maintain `recall_day_<XX>.py` in the current day's directory.
