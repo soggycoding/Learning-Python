@@ -164,3 +164,16 @@ def calculate_std(nums):
 
 print(calculate_std([1,2,3]))
 '''
+
+'''
+def greet(name="Guest"):
+    resolved = name or "Guest"
+    return f"Welcome {resolved}!"
+print(greet("Soggy"))
+
+def show_args(**user):
+    if not user:
+        return "Argument is empty"
+    return "Received: " + ", ".join(f'{k}: {v}' for k, v in user.items())
+print(show_args())
+'''

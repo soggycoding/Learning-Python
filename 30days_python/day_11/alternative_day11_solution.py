@@ -209,3 +209,76 @@ def greet(name="Guest"):
     print(f"Welcome, {resolved}!")
 greet()
 '''
+
+'''
+def show_args(**user):
+    if not user:
+        return "No arguments received"
+    return "Received: " + ", ".join(f"{k}: {v}" for k, v in user.items())
+print(show_args(name="Soggy", age=23, city="Bingbong"))
+'''
+
+'''
+def is_prime(num):
+    if num <= 1:
+        return False
+    limit = int(num ** 0.5) + 1
+    return all(num % i != 0 for i in range(2, limit))
+print(is_prime(15))
+'''
+
+'''
+def check_unique(items):
+    # return len(items) == len(set(items)) # Alternative Pattern 1
+    tracker = set()
+    for item in items:
+        if item in tracker:
+            return False
+        tracker.add(item)
+    return True
+print(check_unique([1,2,3,4,4]))
+'''
+
+# =====================================================================
+# STAGE 2: ALTERNATIVE EXPLORATION - same_data_type
+# =====================================================================
+# Goal: Short-Circuiting Generators vs. Set Comprehensions & Big-O Analysis.
+#
+# Big-O Complexity Analysis:
+# - Baseline:
+#   * Guard clause + loop checking type(val) != ref.
+#   * Time Complexity: O(N) worst-case, O(1) best-case (early return on first mismatch).
+#   * Space Complexity: O(1) auxiliary space.
+#
+# - Alternative Pattern 1: Generator Expression with all(...)
+#   * Extract reference type, then evaluate equality lazily:
+#   * all(type(val) == ref for val in seq)
+#   * Time Complexity: O(N) worst-case, O(1) best-case (stops on first mismatch).
+#   * Space Complexity: O(1).
+#
+# - Alternative Pattern 2: Set Comprehension of Types (The 1-Liner)
+#   * Concept: A set comprehension collapses duplicate elements.
+#   * What happens if you collect the type of every element into a set: {type(val) for val in seq}?
+#     - If all items share the exact same type: len(types_set) is 1.
+#     - If the list is empty: len(types_set) is 0.
+#     - If items have mixed types: len(types_set) >= 2.
+#   * Condition: len({type(val) for val in seq}) <= 1
+#   * Time Complexity: O(N) (must evaluate the full list to construct the set).
+#   * Trade-off: Extremely concise, handles empty list without guard clauses, but does not early-exit.
+#
+# Task:
+# 1. Implement same_data_type using the set comprehension pattern (len(...) <= 1).
+# 2. Implement same_data_type using all(...).
+# 3. Test both against the Adversarial Test Matrix with Ctrl+F5.
+#
+# ADVERSARIAL TEST MATRIX:
+# 1. Standard Cases:
+#    same_data_type([1, 2, 3, 4])     -> True
+#    same_data_type(['a', 'b', 'c'])   -> True
+#    same_data_type([1, 'two', 3])     -> False (mixed int and str)
+# 2. Boundary Cases:
+#    same_data_type([])                -> True  (empty list)
+#    same_data_type([3.14])            -> True  (single element)
+# 3. Trap Cases:
+#    same_data_type([1, 1.0, 2])       -> False (int vs float)
+#    same_data_type([1, True, 0])      -> False (int vs bool)

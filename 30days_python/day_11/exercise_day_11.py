@@ -263,3 +263,50 @@ def greet(name="Guest"):
 greet()
 '''
 
+'''
+def show_args(**user):
+    user_info = []
+    received = "Received: "
+    for key, value in user.items():
+        user_info.append(f"{key}: {value}")
+    formatted = ', '.join(user_info)
+    return received + formatted
+print(show_args(name='Soggy', age=30, city='Bingbong Island'))
+'''
+
+'''
+def is_prime(num):
+    if num <= 1:
+        return False
+    
+    for i in range(2, num):
+        if num % i == 0:
+            return False
+    return True
+print(is_prime(9))
+'''
+
+'''
+def check_unique(items):
+    seen = []
+    for item in items:
+        if item not in seen:
+            duplicate_checker = item
+            seen.append(duplicate_checker)
+        else:
+            return False
+    return True
+print(check_unique([1, 2, 3, 5]))
+'''
+
+'''
+def same_data_type(data):
+    if not data:
+        return True
+    checker = type(data[0])
+    for types in data:
+        if type(types) != checker:
+            return False
+    return True
+print(same_data_type([]))
+'''
