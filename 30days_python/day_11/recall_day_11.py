@@ -177,3 +177,76 @@ def show_args(**user):
     return "Received: " + ", ".join(f'{k}: {v}' for k, v in user.items())
 print(show_args())
 '''
+
+# =====================================================================
+# BATCHED SPACED RECALL: LEVEL 3 CHUNK (Day 11)
+# =====================================================================
+# Complete all 3 challenges below from pure memory without looking at
+# exercise_day_11.py or alternative_day11_solution.py!
+#
+# ---------------------------------------------------------------------
+# CHALLENGE 1: is_prime(num)
+# ---------------------------------------------------------------------
+# Contract: num (int) -> bool
+# Guard Clauses: Numbers <= 1 are not prime.
+# Flow Architecture:
+# - Mathematical upper bound for factors is int(num ** 0.5) + 1.
+# - Test divisibility from 2 up to the square root limit (loop or all(...)).
+#
+# Adversarial Test Matrix:
+# - Standard: is_prime(7) -> True
+# - Boundary: is_prime(1) -> False, is_prime(2) -> True
+# - Trap: is_prime(9) -> False (odd composite!), is_prime(15) -> False
+#
+# ---------------------------------------------------------------------
+# CHALLENGE 2: check_unique(items)
+# ---------------------------------------------------------------------
+# Contract: items (sequence) -> bool
+# Guard Clauses: len <= 1 is inherently unique.
+# Flow Architecture:
+# - Either use a hash set tracker with O(1) early exit on first duplicate,
+#   OR compare collection length against set conversion length.
+#
+# Adversarial Test Matrix:
+# - Standard: check_unique([1, 2, 3]) -> True, check_unique([1, 2, 2, 3]) -> False
+# - Boundary: check_unique([]) -> True, check_unique(['solo']) -> True
+# - Trap: check_unique(['a', 'b', 'A']) -> True (case distinction)
+#
+# ---------------------------------------------------------------------
+# CHALLENGE 3: same_data_type(data)
+# ---------------------------------------------------------------------
+# Contract: data (sequence) -> bool
+# Guard Clauses: Empty sequence has 0 conflicting types (True).
+# Flow Architecture:
+# - Either use set comprehension to count unique type(item) instances (<= 1),
+#   OR guard against empty, capture type of first item, and lazy-check with all(...).
+#
+# Adversarial Test Matrix:
+# - Standard: same_data_type([1, 2, 3]) -> True, same_data_type([1, 'a', 3]) -> False
+# - Boundary: same_data_type([]) -> True, same_data_type([42]) -> True
+# - Trap: same_data_type([1, 1.0, 2]) -> False (int vs float), same_data_type([1, True, 0]) -> False (int vs bool)
+#
+# ---------------------------------------------------------------------
+# WRITE YOUR IMPLEMENTATIONS BELOW FROM MEMORY:
+
+def is_prime(num):
+    if num <= 1:
+        return False
+
+    for i in range(2, num):
+        print(i)
+        if i % int(num ** 0.5) + 1 == 0:
+            return False
+    return True
+print(is_prime(9))
+
+'''
+def check_unique(items):
+    unique = []
+    for item in items:
+        if item in unique:
+            return False
+        unique.append(item)
+    return True
+print(check_unique([1,'2',3]))
+'''

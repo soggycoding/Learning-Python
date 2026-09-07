@@ -282,3 +282,20 @@ print(check_unique([1,2,3,4,4]))
 # 3. Trap Cases:
 #    same_data_type([1, 1.0, 2])       -> False (int vs float)
 #    same_data_type([1, True, 0])      -> False (int vs bool)
+
+'''
+# Pattern 1: Set Comprehension (Pure 1-liner, zero guard clauses needed)
+def same_data_type(data):
+    return len({type(val) for val in data}) <= 1
+
+# Pattern 2: Generator Expression with all() (Short-circuiting O(1) best case)
+def same_data_type(data):
+    if not data:
+        return True
+    ref = type(data[0])
+    return all(type(val) == ref for val in data)
+
+print(same_data_type([1, 2, 3]))
+print(same_data_type([1, '2', 3]))
+print(same_data_type([]))
+'''
