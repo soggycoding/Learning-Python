@@ -239,51 +239,8 @@ def check_unique(items):
 print(check_unique([1,2,3,4,4]))
 '''
 
-# =====================================================================
-# STAGE 2: ALTERNATIVE EXPLORATION - same_data_type
-# =====================================================================
-# Goal: Short-Circuiting Generators vs. Set Comprehensions & Big-O Analysis.
-#
-# Big-O Complexity Analysis:
-# - Baseline:
-#   * Guard clause + loop checking type(val) != ref.
-#   * Time Complexity: O(N) worst-case, O(1) best-case (early return on first mismatch).
-#   * Space Complexity: O(1) auxiliary space.
-#
-# - Alternative Pattern 1: Generator Expression with all(...)
-#   * Extract reference type, then evaluate equality lazily:
-#   * all(type(val) == ref for val in seq)
-#   * Time Complexity: O(N) worst-case, O(1) best-case (stops on first mismatch).
-#   * Space Complexity: O(1).
-#
-# - Alternative Pattern 2: Set Comprehension of Types (The 1-Liner)
-#   * Concept: A set comprehension collapses duplicate elements.
-#   * What happens if you collect the type of every element into a set: {type(val) for val in seq}?
-#     - If all items share the exact same type: len(types_set) is 1.
-#     - If the list is empty: len(types_set) is 0.
-#     - If items have mixed types: len(types_set) >= 2.
-#   * Condition: len({type(val) for val in seq}) <= 1
-#   * Time Complexity: O(N) (must evaluate the full list to construct the set).
-#   * Trade-off: Extremely concise, handles empty list without guard clauses, but does not early-exit.
-#
-# Task:
-# 1. Implement same_data_type using the set comprehension pattern (len(...) <= 1).
-# 2. Implement same_data_type using all(...).
-# 3. Test both against the Adversarial Test Matrix with Ctrl+F5.
-#
-# ADVERSARIAL TEST MATRIX:
-# 1. Standard Cases:
-#    same_data_type([1, 2, 3, 4])     -> True
-#    same_data_type(['a', 'b', 'c'])   -> True
-#    same_data_type([1, 'two', 3])     -> False (mixed int and str)
-# 2. Boundary Cases:
-#    same_data_type([])                -> True  (empty list)
-#    same_data_type([3.14])            -> True  (single element)
-# 3. Trap Cases:
-#    same_data_type([1, 1.0, 2])       -> False (int vs float)
-#    same_data_type([1, True, 0])      -> False (int vs bool)
-
 '''
+
 # Pattern 1: Set Comprehension (Pure 1-liner, zero guard clauses needed)
 def same_data_type(data):
     return len({type(val) for val in data}) <= 1
@@ -299,3 +256,66 @@ print(same_data_type([1, 2, 3]))
 print(same_data_type([1, '2', 3]))
 print(same_data_type([]))
 '''
+
+# =====================================================================
+# STAGE 2: ALTERNATIVE EXPLORATION - is_valid_variable
+# =====================================================================
+# Goal: Compound Short-Circuiting Booleans vs. Under-The-Hood Parsing.
+#
+# Big-O Complexity Analysis:
+# - Time Complexity: O(L) where L is the length of the string (linear scan of characters).
+# - Space Complexity: O(1) auxiliary space (no extra collections allocated).
+#
+# Pattern 1: Compound Boolean 1-Liner with Short-Circuiting
+# - Concept: Combine both conditions into a single logical expression using `and`.
+# - Design decision (Short-circuiting order):
+#   Why evaluate `name.isidentifier()` BEFORE `keyword.iskeyword(name)`?
+#   * If a string is invalid syntax (e.g. '1st_number' or 'my-var'), `isidentifier()` immediately returns False.
+#   * Python short-circuits on `False and ...` and never even needs to hash/lookup the keyword table!
+#
+# Pattern 2: Manual Lexical Parsing (How Python does it under the hood)
+# - Imagine .isidentifier() did not exist. How would you validate the lexical grammar?
+#   1. Boundary guard: string must not be empty.
+#   2. First character rule: must be a letter or underscore (c.isalpha() or c == '_').
+#   3. Remaining characters rule: every character must be alphanumeric or underscore (c.isalnum() or c == '_').
+#   4. Keyword rule: not keyword.iskeyword(name).
+#
+# Task:
+# 1. Implement Pattern 1 as a clean, idiomatic 1-liner.
+# 2. Implement Pattern 2 using manual character rules (using all(...) for remaining characters).
+# 3. Test both against the Adversarial Test Matrix with Ctrl+F5.
+#
+# ADVERSARIAL TEST MATRIX:
+# 1. Standard Cases:
+#    is_valid_variable('user_name')   -> True
+#    is_valid_variable('_counter')    -> True
+#    is_valid_variable('total_sum_1') -> True
+# 2. Boundary Cases:
+#    is_valid_variable('')            -> False (empty string)
+#    is_valid_variable('_')           -> True  (single underscore)
+#    is_valid_variable('x')           -> True  (single letter)
+# 3. Trap Cases:
+#    is_valid_variable('1st_number')  -> False (starts with digit)
+#    is_valid_variable('first-name')  -> False (hyphen is invalid)
+#    is_valid_variable('first name')  -> False (spaces invalid)
+#    is_valid_variable('for')         -> False (reserved keyword)
+#    is_valid_variable('def')         -> False (reserved keyword)
+
+import keyword
+def is_valid_variable(name):
+    '''
+    if name.isidentifier() and keyword.iskeyword(name):
+        return False
+    if not name:
+        return False
+    return True
+    '''
+    if not name:
+        return False
+    for c in name:
+        if c.isalpha() or c == '_':
+            return False
+        if c.isalnum() or c ==  '_':
+            return True
+        return True
+print(is_valid_variable('user_name'))

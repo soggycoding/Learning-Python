@@ -310,3 +310,51 @@ def same_data_type(data):
     return True
 print(same_data_type([]))
 '''
+
+# =====================================================================
+# LEVEL 3 - EXERCISE 4: is_valid_variable(name)
+# =====================================================================
+# Goal: Validate whether a string is a legal, assignable Python variable identifier.
+#
+# Rules of Python Identifiers & Variables:
+# 1. Must start with a letter (a-z, A-Z) or an underscore (_). It CANNOT start with a digit.
+# 2. Remaining characters can only be letters, digits, or underscores.
+# 3. Cannot contain spaces, hyphens, or special punctuation (e.g. $, @, -, .).
+# 4. Cannot be a reserved Python keyword (e.g. 'for', 'while', 'def', 'class', 'if', 'return', etc.).
+#
+# Architectural Blueprint:
+# - Contract: name (str) -> bool
+# - Guard Clauses:
+#   * If input is not a non-empty string, immediately reject (False).
+# - Flow Architecture:
+#   * Python strings have a built-in method .isidentifier() that verifies lexical syntax rules.
+#   * Python's standard library module `keyword` contains `keyword.iskeyword(...)` to check if a word is reserved.
+#   * A variable is valid if and only if it is a valid identifier AND NOT a reserved keyword.
+#   *(You can also build the character-by-character validation loop yourself if you prefer manual parsing!)*
+#
+# ADVERSARIAL TEST MATRIX:
+# 1. Standard Cases:
+#    is_valid_variable('user_name')   -> True
+#    is_valid_variable('_counter')    -> True
+#    is_valid_variable('total_sum_1') -> True
+# 2. Boundary Cases:
+#    is_valid_variable('')            -> False (empty string)
+#    is_valid_variable('_')           -> True  (single underscore)
+#    is_valid_variable('x')           -> True  (single character)
+# 3. Trap Cases:
+#    is_valid_variable('1st_number')  -> False (cannot start with a number)
+#    is_valid_variable('first-name')  -> False (hyphen is invalid operator)
+#    is_valid_variable('first name')  -> False (space not allowed)
+#    is_valid_variable('for')         -> False (reserved keyword)
+#    is_valid_variable('def')         -> False (reserved keyword)
+#
+# WRITE YOUR BASELINE SOLUTION BELOW:
+
+import keyword
+def is_valid_variable(name):
+    if keyword.iskeyword(name):
+        return False
+    if name.isidentifier():
+        return True
+    return False
+print(is_valid_variable('total_sum_1'))

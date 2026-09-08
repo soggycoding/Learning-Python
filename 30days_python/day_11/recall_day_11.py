@@ -228,25 +228,37 @@ print(show_args())
 #
 # ---------------------------------------------------------------------
 # WRITE YOUR IMPLEMENTATIONS BELOW FROM MEMORY:
-
+'''
 def is_prime(num):
     if num <= 1:
         return False
+    max = int(num ** 0.5) + 1
 
-    for i in range(2, num):
-        print(i)
-        if i % int(num ** 0.5) + 1 == 0:
+    for i in range(2, max):
+        if num % i == 0:
             return False
     return True
-print(is_prime(9))
-
+print(is_prime(2))
+'''
 '''
 def check_unique(items):
-    unique = []
+    seen = set()
     for item in items:
-        if item in unique:
+        if item in seen:
             return False
-        unique.append(item)
+        seen.add(item)
     return True
-print(check_unique([1,'2',3]))
+     # return len(items) == len(set(items))
+print(check_unique([1,2,3]))
 '''
+
+def same_data_type(data):
+    if not data:
+        return True
+    unique = type(data[0])
+    for item in data:
+        if type(item) != unique:
+            return False
+    return True
+
+print(same_data_type([1, 2, 2]))
