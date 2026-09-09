@@ -301,21 +301,26 @@ print(same_data_type([]))
 #    is_valid_variable('for')         -> False (reserved keyword)
 #    is_valid_variable('def')         -> False (reserved keyword)
 
+'''
 import keyword
+
+# Pattern 1: Compound Boolean 1-Liner with Short-Circuiting
 def is_valid_variable(name):
-    '''
-    if name.isidentifier() and keyword.iskeyword(name):
-        return False
+    return name.isidentifier() and not keyword.iskeyword(name)
+
+# Pattern 2: Manual Lexical Parsing (Under the hood)
+def is_valid_variable_manual(name):
     if not name:
+        return False
+    if not (name[0].isalpha() or name[0] == '_'):
+        return False
+    if keyword.iskeyword(name):
+        return False
+    if not all(c.isalnum() or c == '_' for c in name[1:]):
         return False
     return True
-    '''
-    if not name:
-        return False
-    for c in name:
-        if c.isalpha() or c == '_':
-            return False
-        if c.isalnum() or c ==  '_':
-            return True
-        return True
+
 print(is_valid_variable('user_name'))
+print(is_valid_variable('1st_number'))
+print(is_valid_variable('for'))
+'''

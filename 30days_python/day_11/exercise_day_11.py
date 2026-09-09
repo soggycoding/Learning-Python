@@ -350,6 +350,7 @@ print(same_data_type([]))
 #
 # WRITE YOUR BASELINE SOLUTION BELOW:
 
+'''
 import keyword
 def is_valid_variable(name):
     if keyword.iskeyword(name):
@@ -358,3 +359,90 @@ def is_valid_variable(name):
         return True
     return False
 print(is_valid_variable('total_sum_1'))
+'''
+
+# =====================================================================
+# LEVEL 3 - EXERCISE 5: Countries Data Analysis (Functions & Data Structures)
+# =====================================================================
+# Goal: Build real-world data processing functions on a dataset of 250 countries.
+#
+# Import the dataset cleanly (no need to paste 2,600 lines!):
+# from countries_data import countries_data
+#
+# Each country is a dictionary structured like:
+# {
+#     "name": "Afghanistan",
+#     "capital": "Kabul",
+#     "languages": ["Pashto", "Uzbek", "Turkmen"],
+#     "population": 27657145
+# }
+#
+# ---------------------------------------------------------------------
+# PART A: most_spoken_languages(data, top_n=10)
+# ---------------------------------------------------------------------
+# Contract: data (list of dicts), top_n (int, default 10) -> list
+# Flow Architecture:
+# 1. Guard against empty data (return []).
+# 2. Tally: Loop through every country, and for every language in country['languages'],
+#    count its total frequency across the world (using a dict).
+# 3. Sort: Order the tallies in descending order by count.
+# 4. Slice: Return the top `top_n` results.
+#
+# ADVERSARIAL TEST MATRIX (Part A):
+# - Standard Case: most_spoken_languages(countries_data, 10) -> Top 10 languages
+# - Boundary Case: most_spoken_languages(countries_data, 1)  -> Top 1 language
+# - Trap Case:     most_spoken_languages([], 5)              -> [] (empty dataset)
+#
+# ---------------------------------------------------------------------
+# PART B: most_populated_countries(data, top_n=10)
+# ---------------------------------------------------------------------
+# Contract: data (list of dicts), top_n (int, default 10) -> list
+# Flow Architecture:
+# 1. Guard against empty data (return []).
+# 2. Sort countries directly by their 'population' key in descending order.
+# 3. Slice the top `top_n` countries and return clean summary records
+#    (e.g. list of dicts with {'country': name, 'population': pop} or tuples).
+#
+# ADVERSARIAL TEST MATRIX (Part B):
+# - Standard Case: most_populated_countries(countries_data, 10) -> Top 10 populated countries
+# - Boundary Case: most_populated_countries(countries_data, 3)  -> Top 3 populated countries
+# - Trap Case:     most_populated_countries([], 5)              -> [] (empty dataset)
+#
+# WRITE YOUR BASELINE SOLUTIONS BELOW:
+'''
+# PART A
+from collections import Counter
+from countries_data import countries_data
+
+def most_spoken_languages(data, top_n=10):
+    language_tally = {}
+    counter = 1
+    for language_data in data:
+        lang = language_data['languages']
+        for language in lang:
+            if language in language_tally:
+                counter += 1
+            else:
+                counter == 1
+            d = {language: counter}
+            language_tally.update(d)
+    language_list = dict(sorted(language_tally.items(), key=lambda item: item[1], reverse=True))
+    language_top10 = dict(Counter(language_list).most_common(top_n))
+    return language_top10
+print(most_spoken_languages([], 1))
+'''
+        '''
+        from countries_data import countries_data
+
+        def most_populated_countries(data, top_n=10):
+            population_list = {}
+            if not data:
+                return data
+            for population_data in data:
+                population = population_data['population']
+                country = population_data['name']
+                country_and_population = {population, country}
+                population_list.update(country_and_population)
+            return population_list
+        print(most_populated_countries(countries_data,10))
+        '''
