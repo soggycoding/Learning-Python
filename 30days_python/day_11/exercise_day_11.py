@@ -311,45 +311,6 @@ def same_data_type(data):
 print(same_data_type([]))
 '''
 
-# =====================================================================
-# LEVEL 3 - EXERCISE 4: is_valid_variable(name)
-# =====================================================================
-# Goal: Validate whether a string is a legal, assignable Python variable identifier.
-#
-# Rules of Python Identifiers & Variables:
-# 1. Must start with a letter (a-z, A-Z) or an underscore (_). It CANNOT start with a digit.
-# 2. Remaining characters can only be letters, digits, or underscores.
-# 3. Cannot contain spaces, hyphens, or special punctuation (e.g. $, @, -, .).
-# 4. Cannot be a reserved Python keyword (e.g. 'for', 'while', 'def', 'class', 'if', 'return', etc.).
-#
-# Architectural Blueprint:
-# - Contract: name (str) -> bool
-# - Guard Clauses:
-#   * If input is not a non-empty string, immediately reject (False).
-# - Flow Architecture:
-#   * Python strings have a built-in method .isidentifier() that verifies lexical syntax rules.
-#   * Python's standard library module `keyword` contains `keyword.iskeyword(...)` to check if a word is reserved.
-#   * A variable is valid if and only if it is a valid identifier AND NOT a reserved keyword.
-#   *(You can also build the character-by-character validation loop yourself if you prefer manual parsing!)*
-#
-# ADVERSARIAL TEST MATRIX:
-# 1. Standard Cases:
-#    is_valid_variable('user_name')   -> True
-#    is_valid_variable('_counter')    -> True
-#    is_valid_variable('total_sum_1') -> True
-# 2. Boundary Cases:
-#    is_valid_variable('')            -> False (empty string)
-#    is_valid_variable('_')           -> True  (single underscore)
-#    is_valid_variable('x')           -> True  (single character)
-# 3. Trap Cases:
-#    is_valid_variable('1st_number')  -> False (cannot start with a number)
-#    is_valid_variable('first-name')  -> False (hyphen is invalid operator)
-#    is_valid_variable('first name')  -> False (space not allowed)
-#    is_valid_variable('for')         -> False (reserved keyword)
-#    is_valid_variable('def')         -> False (reserved keyword)
-#
-# WRITE YOUR BASELINE SOLUTION BELOW:
-
 '''
 import keyword
 def is_valid_variable(name):
@@ -361,88 +322,39 @@ def is_valid_variable(name):
 print(is_valid_variable('total_sum_1'))
 '''
 
-# =====================================================================
-# LEVEL 3 - EXERCISE 5: Countries Data Analysis (Functions & Data Structures)
-# =====================================================================
-# Goal: Build real-world data processing functions on a dataset of 250 countries.
-#
-# Import the dataset cleanly (no need to paste 2,600 lines!):
-# from countries_data import countries_data
-#
-# Each country is a dictionary structured like:
-# {
-#     "name": "Afghanistan",
-#     "capital": "Kabul",
-#     "languages": ["Pashto", "Uzbek", "Turkmen"],
-#     "population": 27657145
-# }
-#
-# ---------------------------------------------------------------------
-# PART A: most_spoken_languages(data, top_n=10)
-# ---------------------------------------------------------------------
-# Contract: data (list of dicts), top_n (int, default 10) -> list
-# Flow Architecture:
-# 1. Guard against empty data (return []).
-# 2. Tally: Loop through every country, and for every language in country['languages'],
-#    count its total frequency across the world (using a dict).
-# 3. Sort: Order the tallies in descending order by count.
-# 4. Slice: Return the top `top_n` results.
-#
-# ADVERSARIAL TEST MATRIX (Part A):
-# - Standard Case: most_spoken_languages(countries_data, 10) -> Top 10 languages
-# - Boundary Case: most_spoken_languages(countries_data, 1)  -> Top 1 language
-# - Trap Case:     most_spoken_languages([], 5)              -> [] (empty dataset)
-#
-# ---------------------------------------------------------------------
-# PART B: most_populated_countries(data, top_n=10)
-# ---------------------------------------------------------------------
-# Contract: data (list of dicts), top_n (int, default 10) -> list
-# Flow Architecture:
-# 1. Guard against empty data (return []).
-# 2. Sort countries directly by their 'population' key in descending order.
-# 3. Slice the top `top_n` countries and return clean summary records
-#    (e.g. list of dicts with {'country': name, 'population': pop} or tuples).
-#
-# ADVERSARIAL TEST MATRIX (Part B):
-# - Standard Case: most_populated_countries(countries_data, 10) -> Top 10 populated countries
-# - Boundary Case: most_populated_countries(countries_data, 3)  -> Top 3 populated countries
-# - Trap Case:     most_populated_countries([], 5)              -> [] (empty dataset)
-#
-# WRITE YOUR BASELINE SOLUTIONS BELOW:
 '''
-# PART A
 from collections import Counter
 from countries_data import countries_data
 
 def most_spoken_languages(data, top_n=10):
     language_tally = {}
-    counter = 1
     for language_data in data:
         lang = language_data['languages']
-        for language in lang:
-            if language in language_tally:
-                counter += 1
+        for spoken_language in lang:
+            if spoken_language in language_tally:
+                language_tally[spoken_language] += 1
             else:
-                counter == 1
-            d = {language: counter}
-            language_tally.update(d)
-    language_list = dict(sorted(language_tally.items(), key=lambda item: item[1], reverse=True))
-    language_top10 = dict(Counter(language_list).most_common(top_n))
-    return language_top10
-print(most_spoken_languages([], 1))
+                language_tally[spoken_language] = 1
+    sorted_tally = sorted(language_tally.items(), key=lambda item: item[1], reverse=True)
+    return dict(sorted_tally[:top_n])
+print(most_spoken_languages(countries_data, 10))
 '''
-        '''
-        from countries_data import countries_data
 
-        def most_populated_countries(data, top_n=10):
-            population_list = {}
-            if not data:
-                return data
-            for population_data in data:
-                population = population_data['population']
-                country = population_data['name']
-                country_and_population = {population, country}
-                population_list.update(country_and_population)
-            return population_list
-        print(most_populated_countries(countries_data,10))
-        '''
+'''
+from collections import Counter
+from countries_data import countries_data
+
+def most_populated_countries(data, top_n=10):
+    population_list = {}
+    if not data:
+        return data
+    for population_data in data:
+        population = population_data['population']
+        country = population_data['name']
+        population_list[country] = population
+    country_population = sorted(population_list.items(), key=lambda item: item[1], reverse=True)
+    return dict(country_population[:top_n])
+print(most_populated_countries(countries_data,10))
+'''
+
+

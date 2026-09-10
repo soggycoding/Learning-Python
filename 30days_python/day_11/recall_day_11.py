@@ -178,56 +178,6 @@ def show_args(**user):
 print(show_args())
 '''
 
-# =====================================================================
-# BATCHED SPACED RECALL: LEVEL 3 CHUNK (Day 11)
-# =====================================================================
-# Complete all 3 challenges below from pure memory without looking at
-# exercise_day_11.py or alternative_day11_solution.py!
-#
-# ---------------------------------------------------------------------
-# CHALLENGE 1: is_prime(num)
-# ---------------------------------------------------------------------
-# Contract: num (int) -> bool
-# Guard Clauses: Numbers <= 1 are not prime.
-# Flow Architecture:
-# - Mathematical upper bound for factors is int(num ** 0.5) + 1.
-# - Test divisibility from 2 up to the square root limit (loop or all(...)).
-#
-# Adversarial Test Matrix:
-# - Standard: is_prime(7) -> True
-# - Boundary: is_prime(1) -> False, is_prime(2) -> True
-# - Trap: is_prime(9) -> False (odd composite!), is_prime(15) -> False
-#
-# ---------------------------------------------------------------------
-# CHALLENGE 2: check_unique(items)
-# ---------------------------------------------------------------------
-# Contract: items (sequence) -> bool
-# Guard Clauses: len <= 1 is inherently unique.
-# Flow Architecture:
-# - Either use a hash set tracker with O(1) early exit on first duplicate,
-#   OR compare collection length against set conversion length.
-#
-# Adversarial Test Matrix:
-# - Standard: check_unique([1, 2, 3]) -> True, check_unique([1, 2, 2, 3]) -> False
-# - Boundary: check_unique([]) -> True, check_unique(['solo']) -> True
-# - Trap: check_unique(['a', 'b', 'A']) -> True (case distinction)
-#
-# ---------------------------------------------------------------------
-# CHALLENGE 3: same_data_type(data)
-# ---------------------------------------------------------------------
-# Contract: data (sequence) -> bool
-# Guard Clauses: Empty sequence has 0 conflicting types (True).
-# Flow Architecture:
-# - Either use set comprehension to count unique type(item) instances (<= 1),
-#   OR guard against empty, capture type of first item, and lazy-check with all(...).
-#
-# Adversarial Test Matrix:
-# - Standard: same_data_type([1, 2, 3]) -> True, same_data_type([1, 'a', 3]) -> False
-# - Boundary: same_data_type([]) -> True, same_data_type([42]) -> True
-# - Trap: same_data_type([1, 1.0, 2]) -> False (int vs float), same_data_type([1, True, 0]) -> False (int vs bool)
-#
-# ---------------------------------------------------------------------
-# WRITE YOUR IMPLEMENTATIONS BELOW FROM MEMORY:
 '''
 def is_prime(num):
     if num <= 1:
@@ -240,6 +190,7 @@ def is_prime(num):
     return True
 print(is_prime(2))
 '''
+
 '''
 def check_unique(items):
     seen = set()
@@ -252,6 +203,7 @@ def check_unique(items):
 print(check_unique([1,2,3]))
 '''
 
+'''
 def same_data_type(data):
     if not data:
         return True
@@ -262,3 +214,84 @@ def same_data_type(data):
     return True
 
 print(same_data_type([1, 2, 2]))
+'''
+
+# =====================================================================
+# BATCHED SPACED RECALL: LEVEL 3 COMPLETION (Day 11)
+# =====================================================================
+# Complete all challenges below from pure memory without looking at
+# exercise_day_11.py or alternative_day11_solution.py!
+#
+# ---------------------------------------------------------------------
+# CHALLENGE 1: is_valid_variable(name)
+# ---------------------------------------------------------------------
+# Contract: name (str) -> bool
+# Guard Clauses:
+# - Must be a non-empty string.
+# Flow Architecture:
+# - Validate that the string is a syntactically legal Python identifier
+#   AND is NOT a reserved language keyword.
+# - You may use string validation methods + keyword module, OR manual character parsing.
+#
+# Adversarial Test Matrix:
+# - Standard: is_valid_variable('user_name') -> True, is_valid_variable('_counter') -> True
+# - Boundary: is_valid_variable('') -> False, is_valid_variable('_') -> True
+# - Trap:     is_valid_variable('1st_var') -> False, is_valid_variable('for') -> False, is_valid_variable('var-name') -> False
+#
+# ---------------------------------------------------------------------
+# CHALLENGE 2: most_spoken_languages(data, top_n=10)
+# ---------------------------------------------------------------------
+# Contract: data (list of dicts), top_n (int, default 10) -> dict or list
+# Flow Architecture:
+# - Aggregate the occurrence count of each language across all country records.
+# - Rank the counts in descending order and slice the top `top_n`.
+# - Choose either:
+#   * Manual dictionary frequency count + sorted(), OR
+#   * List comprehension flattening + Counter.most_common().
+#
+# Adversarial Test Matrix:
+# - Standard: most_spoken_languages(countries_data, 10) -> top 10 languages
+# - Boundary: most_spoken_languages(countries_data, 1)  -> top 1 language
+# - Trap:     most_spoken_languages([], 5)              -> empty result ({})
+#
+# ---------------------------------------------------------------------
+# CHALLENGE 3: most_populated_countries(data, top_n=10)
+# ---------------------------------------------------------------------
+# Contract: data (list of dicts), top_n (int, default 10) -> list or dict
+# Flow Architecture:
+# - Rank countries in descending order based on their population value.
+# - Slice the top `top_n` records and return.
+# - Choose either:
+#   * Direct in-situ keyed sort: sorted(..., key=..., reverse=True)[:top_n], OR
+#   * Map to country: population pairs, sort, and slice.
+#
+# Adversarial Test Matrix:
+# - Standard: most_populated_countries(countries_data, 10) -> top 10 populated countries
+# - Boundary: most_populated_countries(countries_data, 1)  -> top 1 populated country
+# - Trap:     most_populated_countries([], 5)              -> empty result ([])
+#
+# ---------------------------------------------------------------------
+# WRITE YOUR IMPLEMENTATIONS BELOW FROM MEMORY:
+'''
+import keyword
+def is_valid_variable(name):
+    return name.isidentifier() and not keyword.iskeyword(name)
+print(is_valid_variable(""))
+'''
+'''
+from collections import Counter
+from countries_data import countries_data
+
+def most_spoken_language(data, top_n=10):
+    language_list = {}
+    for language in data:
+        lang = language['languages']
+        for spoken_language in lang:
+            if spoken_language in language_list:
+                language_list[spoken_language] += 1
+            else:
+                language_list[spoken_language] = 1
+    sorted_list = sorted(language_list.items(), key=lambda item:item[1], reverse=True)[:top_n]
+    return sorted_list
+print(most_spoken_language(countries_data, 10))
+'''

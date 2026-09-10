@@ -257,49 +257,6 @@ print(same_data_type([1, '2', 3]))
 print(same_data_type([]))
 '''
 
-# =====================================================================
-# STAGE 2: ALTERNATIVE EXPLORATION - is_valid_variable
-# =====================================================================
-# Goal: Compound Short-Circuiting Booleans vs. Under-The-Hood Parsing.
-#
-# Big-O Complexity Analysis:
-# - Time Complexity: O(L) where L is the length of the string (linear scan of characters).
-# - Space Complexity: O(1) auxiliary space (no extra collections allocated).
-#
-# Pattern 1: Compound Boolean 1-Liner with Short-Circuiting
-# - Concept: Combine both conditions into a single logical expression using `and`.
-# - Design decision (Short-circuiting order):
-#   Why evaluate `name.isidentifier()` BEFORE `keyword.iskeyword(name)`?
-#   * If a string is invalid syntax (e.g. '1st_number' or 'my-var'), `isidentifier()` immediately returns False.
-#   * Python short-circuits on `False and ...` and never even needs to hash/lookup the keyword table!
-#
-# Pattern 2: Manual Lexical Parsing (How Python does it under the hood)
-# - Imagine .isidentifier() did not exist. How would you validate the lexical grammar?
-#   1. Boundary guard: string must not be empty.
-#   2. First character rule: must be a letter or underscore (c.isalpha() or c == '_').
-#   3. Remaining characters rule: every character must be alphanumeric or underscore (c.isalnum() or c == '_').
-#   4. Keyword rule: not keyword.iskeyword(name).
-#
-# Task:
-# 1. Implement Pattern 1 as a clean, idiomatic 1-liner.
-# 2. Implement Pattern 2 using manual character rules (using all(...) for remaining characters).
-# 3. Test both against the Adversarial Test Matrix with Ctrl+F5.
-#
-# ADVERSARIAL TEST MATRIX:
-# 1. Standard Cases:
-#    is_valid_variable('user_name')   -> True
-#    is_valid_variable('_counter')    -> True
-#    is_valid_variable('total_sum_1') -> True
-# 2. Boundary Cases:
-#    is_valid_variable('')            -> False (empty string)
-#    is_valid_variable('_')           -> True  (single underscore)
-#    is_valid_variable('x')           -> True  (single letter)
-# 3. Trap Cases:
-#    is_valid_variable('1st_number')  -> False (starts with digit)
-#    is_valid_variable('first-name')  -> False (hyphen is invalid)
-#    is_valid_variable('first name')  -> False (spaces invalid)
-#    is_valid_variable('for')         -> False (reserved keyword)
-#    is_valid_variable('def')         -> False (reserved keyword)
 
 '''
 import keyword
@@ -323,4 +280,24 @@ def is_valid_variable_manual(name):
 print(is_valid_variable('user_name'))
 print(is_valid_variable('1st_number'))
 print(is_valid_variable('for'))
+'''
+
+'''
+# Part A
+from collections import Counter
+from countries_data import countries_data
+def most_spoken_languages(data, top_n=10):
+    language = [lang for country in data for lang in country['languages']]
+    return dict(Counter(language).most_common(top_n))
+print(most_spoken_languages(countries_data, 10))
+'''
+
+'''
+# Part B
+from collections import Counter
+from countries_data import countries_data
+def most_populated_countries(data, top_n=10):
+    sorted_countries = sorted(data, key=lambda c: c['population'], reverse=True)[:top_n]
+    return sorted_countries
+print(most_populated_countries(countries_data, 1))
 '''
