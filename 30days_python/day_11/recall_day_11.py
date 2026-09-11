@@ -216,68 +216,13 @@ def same_data_type(data):
 print(same_data_type([1, 2, 2]))
 '''
 
-# =====================================================================
-# BATCHED SPACED RECALL: LEVEL 3 COMPLETION (Day 11)
-# =====================================================================
-# Complete all challenges below from pure memory without looking at
-# exercise_day_11.py or alternative_day11_solution.py!
-#
-# ---------------------------------------------------------------------
-# CHALLENGE 1: is_valid_variable(name)
-# ---------------------------------------------------------------------
-# Contract: name (str) -> bool
-# Guard Clauses:
-# - Must be a non-empty string.
-# Flow Architecture:
-# - Validate that the string is a syntactically legal Python identifier
-#   AND is NOT a reserved language keyword.
-# - You may use string validation methods + keyword module, OR manual character parsing.
-#
-# Adversarial Test Matrix:
-# - Standard: is_valid_variable('user_name') -> True, is_valid_variable('_counter') -> True
-# - Boundary: is_valid_variable('') -> False, is_valid_variable('_') -> True
-# - Trap:     is_valid_variable('1st_var') -> False, is_valid_variable('for') -> False, is_valid_variable('var-name') -> False
-#
-# ---------------------------------------------------------------------
-# CHALLENGE 2: most_spoken_languages(data, top_n=10)
-# ---------------------------------------------------------------------
-# Contract: data (list of dicts), top_n (int, default 10) -> dict or list
-# Flow Architecture:
-# - Aggregate the occurrence count of each language across all country records.
-# - Rank the counts in descending order and slice the top `top_n`.
-# - Choose either:
-#   * Manual dictionary frequency count + sorted(), OR
-#   * List comprehension flattening + Counter.most_common().
-#
-# Adversarial Test Matrix:
-# - Standard: most_spoken_languages(countries_data, 10) -> top 10 languages
-# - Boundary: most_spoken_languages(countries_data, 1)  -> top 1 language
-# - Trap:     most_spoken_languages([], 5)              -> empty result ({})
-#
-# ---------------------------------------------------------------------
-# CHALLENGE 3: most_populated_countries(data, top_n=10)
-# ---------------------------------------------------------------------
-# Contract: data (list of dicts), top_n (int, default 10) -> list or dict
-# Flow Architecture:
-# - Rank countries in descending order based on their population value.
-# - Slice the top `top_n` records and return.
-# - Choose either:
-#   * Direct in-situ keyed sort: sorted(..., key=..., reverse=True)[:top_n], OR
-#   * Map to country: population pairs, sort, and slice.
-#
-# Adversarial Test Matrix:
-# - Standard: most_populated_countries(countries_data, 10) -> top 10 populated countries
-# - Boundary: most_populated_countries(countries_data, 1)  -> top 1 populated country
-# - Trap:     most_populated_countries([], 5)              -> empty result ([])
-#
-# ---------------------------------------------------------------------
-# WRITE YOUR IMPLEMENTATIONS BELOW FROM MEMORY:
 '''
 import keyword
 def is_valid_variable(name):
     return name.isidentifier() and not keyword.iskeyword(name)
 print(is_valid_variable(""))
 '''
+
 '''
 from collections import Counter
 from countries_data import countries_data
@@ -295,3 +240,17 @@ def most_spoken_language(data, top_n=10):
     return sorted_list
 print(most_spoken_language(countries_data, 10))
 '''
+
+'''
+from collections import Counter
+from countries_data import countries_data
+def most_populated_countries(data, top_n=10):
+    country_tally = {}
+    for population in data:
+        country = population['population']
+        name_country = population['name']
+        country_tally[name_country] = country
+    return sorted(country_tally.items(), key=lambda item:item[1], reverse=True)[:top_n]
+print(most_populated_countries(countries_data, 10))
+'''
+
