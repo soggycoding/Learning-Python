@@ -1,3 +1,18 @@
 {
-    "python.REPL.enableREPLSmartSend": false
+    "python.defaultInterpreterPath": "C:\\Python313\\python.exe",
+    "python.terminal.executeInFileDir": true,
+    "python.REPL.enableREPLSmartSend": false,
+    "editor.inlineSuggest.enabled": false,
+    "editor.quickSuggestions": {
+        "other": "off",
+        "comments": "off",
+        "strings": "off"
+    },
+    "editor.suggestOnTriggerCharacters": false,
+    "editor.wordBasedSuggestions": "off",
+    "editor.parameterHints.enabled": false,
+    "editor.snippetSuggestions": "none",
+    "editor.suggest.showWords": false,
+    "editor.acceptSuggestionOnEnter": "off",
+    "editor.tabCompletion": "off"
 }
