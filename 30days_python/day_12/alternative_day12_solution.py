@@ -100,3 +100,45 @@ def user_id_gen_by_user():
 
 print(user_id_gen_by_user())
 '''
+
+# ==============================================================================
+# Level 1 - Exercise 3: rgb_color_gen (Pass 2: Alternative Exploration)
+# ==============================================================================
+# Exploration Objectives:
+# 1. Implementation Alternatives:
+#    - Alternative A (Unpacking with List Comprehension & randint):
+#      Generate the 3 channel values using a list comprehension with `random.randint(0, 255)`,
+#      unpack them into discrete variables (e.g. `r, g, b`), and format via an explicit f-string.
+#    - Alternative B (Bulk Generation with random.choices):
+#      Explore sampling directly from `range(256)` using `random.choices(range(256), k=3)`
+#      to produce all three channels in a single call without a Python-level loop.
+#
+# 2. Mechanistic Analysis & Trade-offs:
+#    - Brittle Formatting vs Explicit Formatting: Why relying on `tuple`'s string representation
+#      `f"rgb{tuple_val}"` is a clever shortcut for 3 items, but why explicit string interpolation
+#      is preferred in production (e.g. custom spacing, or single-element tuple trailing commas).
+#    - Complexity Analysis:
+#      * Time Complexity: O(1) constant time (generating exactly 3 channels).
+#      * Space Complexity: O(1) constant auxiliary space.
+#      * Micro-efficiency: Bulk sampling (`random.choices`) vs 3 separate Python loop iterations.
+# ==============================================================================
+
+# Write your Pass 2 solution below:
+
+'''
+import random
+
+# Solution 1
+def rgb_color_gen():
+    r,g,b = tuple(random.randint(0,255) for _ in range(3))
+    return f"rgb({r}, {g}, {b})"
+result = rgb_color_gen()
+print(result)
+
+# Solution 2
+def rgb_color_gen():
+    r,g,b = random.choices(range(256), k=3)
+    return f"rgb({r}, {g}, {b})"
+result = rgb_color_gen()
+print(result)
+'''

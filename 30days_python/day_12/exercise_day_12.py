@@ -3,6 +3,7 @@
 # ==============================================================================
 # Level 1 - Exercise 1: random_user_id (COMPLETED)
 # ==============================================================================
+from collections.abc import Sequence
 import string
 import random
 #
@@ -63,7 +64,7 @@ print(user_id_gen_by_user())
 '''
 
 # ==============================================================================
-# Level 1 - Exercise 3: rgb_color_gen
+# Level 1 - Exercise 3: rgb_color_gen (COMPLETED)
 # ==============================================================================
 # Challenge: Write a function named rgb_color_gen that generates random RGB colors.
 # An RGB color format has three integer values, each ranging from 0 to 255 inclusive.
@@ -77,6 +78,42 @@ print(user_id_gen_by_user())
 #   1. Standard Case: Output string format matches 'rgb(r, g, b)' exactly.
 #   2. Boundary Case: All three values are valid integer values between 0 and 255 inclusive (0 <= val <= 255).
 #   3. Trap Case: Return vs Print — must return the string object, not print it. Multiple successive calls must generate varying random numbers.
+# ==============================================================================
+
+'''
+import random
+
+def rgb_color_gen():
+    rgb_list = []
+    for _ in range(3):
+        color = random.randrange(0,256)
+        rgb_list.append(color)
+    tuple_rgb = tuple(rgb_list)
+    first, second, third = tuple_rgb
+    return f"rgb({first}, {second}, {third})"
+result = rgb_color_gen()
+print(result)
+'''
+
+# ==============================================================================
+# Level 2 - Exercise 1: list_of_hexa_colors
+# ==============================================================================
+# Challenge: Write a function named list_of_hexa_colors which returns any number
+# of hexadecimal colors in a list.
+# A hexadecimal color starts with a '#' symbol followed by six hexadecimal
+# digits (0-9, a-f).
+#
+# Function signature:
+#   def list_of_hexa_colors(count=1):
+#
+# Examples:
+#   list_of_hexa_colors(1)  # ['#a3e12f']
+#   list_of_hexa_colors(3)  # ['#a3e12f', '#03ed55', '#eb3d2b']
+#
+# Adversarial Test Matrix:
+#   1. Standard Case: count=3 -> returns a list of 3 hex strings, each formatted as '#hhhhhh' (length 7).
+#   2. Boundary Case: count=0 -> returns empty list `[]`. count=1 -> returns 1-element list.
+#   3. Trap Case: Ensure each color begins with '#' and consists only of valid hexadecimal characters (0-9, a-f).
 # ==============================================================================
 
 # Write your solution below:
