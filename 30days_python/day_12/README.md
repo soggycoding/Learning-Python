@@ -64,9 +64,22 @@ print(full_name('Soggy', 'Coder'))
 
 Python comes with an extensive standard library of pre-built modules:
 
-* **`random`**: Random number generation, shuffling, and choosing items (`random.random()`, `random.randint()`, `random.choice()`, `random.sample()`, `random.shuffle()`).
+* **`random`**: Pseudo-random number generator for simulations, games, and non-security tasks (`random.random()`, `random.randint()`, `random.choice()`, `random.choices()`, `random.sample()`, `random.shuffle()`).
+* **`secrets`**: Cryptographically secure random number generator designed for security tokens, passwords, authentication keys, and sensitive data (`secrets.choice()`, `secrets.randbelow()`, `secrets.token_hex()`, `secrets.token_urlsafe()`, `secrets.compare_digest()`).
 * **`string`**: Predefined character constants (`string.ascii_letters`, `string.digits`, `string.punctuation`, `string.hexdigits`).
 * **`math`**: Mathematical functions and constants (`math.pi`, `math.sqrt()`, `math.floor()`, `math.ceil()`).
 * **`os`**: Operating system interactions (directories, environment variables, paths).
 * **`sys`**: System-specific parameters and functions (`sys.argv`, `sys.exit()`, `sys.version`).
 * **`statistics`**: Mathematical statistics functions (`statistics.mean()`, `statistics.median()`, `statistics.mode()`).
+
+---
+
+## 5. Security Note: `random` vs `secrets`
+
+| Feature | `random` Module | `secrets` Module |
+| :--- | :--- | :--- |
+| **Engine** | Mersenne Twister (PRNG) | OS Cryptographic Entropy (CSPRNG) |
+| **Predictability** | **Predictable**: State can be reversed after seeing 624 outputs | **Non-predictable**: Cryptographically secure |
+| **Best Used For** | Games, simulations, statistical modeling, shuffling playlists | Passwords, account recovery tokens, session IDs, API keys |
+| **Multi-Item Sampling** | `random.choices(seq, k=n)` (with replacement) | Pick 1 item at a time with `secrets.choice(seq)` |
+

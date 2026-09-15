@@ -42,3 +42,30 @@ scores = [85, 90, 78, 92, 85, 95]
 print(statistics.mean(scores))
 print(statistics.median(scores))
 print(statistics.mode(scores))
+
+# 6. Built-in: secrets module (Cryptographically Secure for sensitive data)
+import secrets
+
+# A. Selecting a random element from a sequence (e.g. load balancing / server selection)
+servers = ['server-us-east-1', 'server-eu-west-1', 'server-ap-south-1']
+assigned_server = secrets.choice(servers)
+print('Assigned server:', assigned_server)
+
+# B. Secure integer below a bound [0, n) (e.g. rolling a 20-sided die: 1 to 20)
+d20_roll = secrets.randbelow(20) + 1
+print('D20 roll result:', d20_roll)
+
+# C. Generating a URL-safe token (e.g. email verification / password reset link)
+password_reset_token = secrets.token_urlsafe(16)
+print('Reset link token:', password_reset_token)
+
+# D. Generating a random hex key (e.g. API access token)
+api_session_key = secrets.token_hex(16)
+print('API session key:', api_session_key)
+
+# E. Safe comparison resistant to timing attacks (constant-time comparison)
+stored_token = 'vault_key_abc123'
+incoming_token = 'vault_key_abc123'
+is_authenticated = secrets.compare_digest(stored_token, incoming_token)
+print('Token match valid:', is_authenticated)
+
