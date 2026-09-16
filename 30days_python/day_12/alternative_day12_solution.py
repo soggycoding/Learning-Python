@@ -142,3 +142,52 @@ def rgb_color_gen():
 result = rgb_color_gen()
 print(result)
 '''
+
+# ==============================================================================
+# Level 2 - Exercise 1: list_of_hexa_colors (Pass 2: Alternative Exploration)
+# ==============================================================================
+# Exploration Objectives:
+# 1. Implementation Alternatives:
+#    - Alternative A (Nested List Comprehension & Expression Inlining):
+#      Eliminate manual list initialization and `.append()` loops by returning
+#      a list comprehension. Generate the 6-character hex string inline
+#      using an f-string or helper composition.
+#    - Alternative B (Numeric Randomness with Hex Format Specifier `:06x`):
+#      Instead of picking 6 random characters from a string pool, sample a single
+#      random integer from the entire 24-bit color space (0 to 16,777,215, or 0xFFFFFF)
+#      and format it directly using hex formatting: `f"#{val:06x}"`.
+#    - Alternative C (Standard Library `secrets.token_hex`):
+#      Examine `secrets.token_hex(nbytes=3)`—each byte produces 2 hex characters,
+#      yielding exactly 6 hex characters directly from the operating system's CSPRNG.
+#
+# 2. Mechanistic Analysis & Trade-offs:
+#    - Why `:06x` padding matters: What happens if an integer is `15` without padding?
+#    - Algorithmic Complexity:
+#      * Time Complexity: Compare string character sampling (6 lookups + join per color)
+#        vs single integer generation ($O(N)$ with lower constant factor).
+#      * Space Complexity: Auxiliary space comparison.
+# ==============================================================================
+
+# Write your Pass 2 solution below:
+
+import secrets
+import string
+import random
+
+'''
+def list_of_hexa_colors(count=3):
+    pool = string.ascii_lowercase[:6] + string.digits
+    return [f"#{''.join(random.choices(pool, k=6))}" for _ in range(count)]
+print(list_of_hexa_colors(3))
+'''
+'''
+def list_of_hexa_colors(count=1):
+    return [f"#{random.getrandbits(24):06x}" for _ in range(count)]
+print(list_of_hexa_colors(3))
+'''
+
+'''
+def list_of_hexa_colors(count=1):
+    return [f"#{secrets.token_hex(3)}" for _ in range(count)]
+print(list_of_hexa_colors(3))
+'''

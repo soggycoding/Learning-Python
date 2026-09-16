@@ -3,6 +3,7 @@
 # ==============================================================================
 # Level 1 - Exercise 1: random_user_id (COMPLETED)
 # ==============================================================================
+'''
 from collections.abc import Sequence
 import string
 import random
@@ -12,6 +13,7 @@ def random_user_id(length):
     return ''.join(random.choices(random_id, k=length))
 #
 # print(random_user_id())
+'''
 
 # ==============================================================================
 # Level 1 - Exercise 2: user_id_gen_by_user
@@ -114,6 +116,46 @@ print(result)
 #   1. Standard Case: count=3 -> returns a list of 3 hex strings, each formatted as '#hhhhhh' (length 7).
 #   2. Boundary Case: count=0 -> returns empty list `[]`. count=1 -> returns 1-element list.
 #   3. Trap Case: Ensure each color begins with '#' and consists only of valid hexadecimal characters (0-9, a-f).
+# ==============================================================================
+
+# Write your solution below:
+'''
+import string
+import random
+
+def list_of_hexa_colors(count=1):
+    selected_string = string.ascii_lowercase[:6] + string.digits
+    hexa_color_list = []
+    for _ in range(count):
+        hexa_color_gen = random.choices(selected_string, k=6)
+        hexa_color = ''.join(hexa_color_gen)
+        hexa_color = '#' + hexa_color
+        hexa_color_list.append(hexa_color)
+    return hexa_color_list
+print(list_of_hexa_colors(3))
+'''
+
+# ==============================================================================
+# Level 2 - Exercise 2: list_of_rgb_colors
+# ==============================================================================
+# Challenge: Write a function named list_of_rgb_colors which returns any number
+# of RGB colors in a list.
+#
+# Each RGB color string is formatted as "rgb(r, g, b)" where r, g, b are integers
+# ranging from 0 to 255 inclusive.
+#
+# Function signature:
+#   def list_of_rgb_colors(count=1):
+#
+# Examples:
+#   list_of_rgb_colors(1)  # ['rgb(125, 244, 255)']
+#   list_of_rgb_colors(3)  # ['rgb(125, 244, 255)', 'rgb(19, 12, 102)', 'rgb(255, 0, 128)']
+#
+# Adversarial Test Matrix:
+#   1. Standard Case: count=3 -> returns a list of 3 strings, each matching the 'rgb(r, g, b)' format.
+#   2. Boundary Case: count=0 -> returns empty list `[]`. count=1 -> returns 1-element list.
+#   3. Trap Case: Each channel value must be an integer between 0 and 255 inclusive (0 <= c <= 255).
+#                 Must return the list object, not print it.
 # ==============================================================================
 
 # Write your solution below:
