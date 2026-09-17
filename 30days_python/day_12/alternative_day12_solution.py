@@ -170,9 +170,6 @@ print(result)
 
 # Write your Pass 2 solution below:
 
-import secrets
-import string
-import random
 
 '''
 def list_of_hexa_colors(count=3):
@@ -191,3 +188,85 @@ def list_of_hexa_colors(count=1):
     return [f"#{secrets.token_hex(3)}" for _ in range(count)]
 print(list_of_hexa_colors(3))
 '''
+
+# ==============================================================================
+# Level 2 - Exercise 2: list_of_rgb_colors (Pass 2: Alternative Exploration)
+# ==============================================================================
+# Exploration Objectives:
+# 1. Implementation Alternatives:
+#    - Alternative A (Function Composition & Modular Reuse):
+#      In Level 1 Exercise 3, you built `rgb_color_gen()`.
+#      Instead of re-implementing 3 random channel generations inside `list_of_rgb_colors`,
+#      leverage modular composition by calling your existing `rgb_color_gen()` inside a list comprehension:
+#      e.g. `[rgb_color_gen() for _ in range(count)]`.
+#    - Alternative B (Bulk Generation with random.choices & Inlined Comprehension):
+#      Instead of 3 separate calls to `random.randint`, generate all 3 channel values at once
+#      using `random.choices(range(256), k=3)` and unpack them directly into the f-string.
+#
+# 2. Mechanistic Analysis & Trade-offs:
+#    - Modularity vs Inlining (The DRY Principle):
+#      Why is composing from `rgb_color_gen()` considered an industry standard?
+#      If business requirements change the color format (e.g. adding an alpha channel `rgba(...)`),
+#      how many places in your codebase do you need to update if you composed vs inlined?
+#    - Complexity Analysis:
+#      * Time Complexity: O(N) where N = count. Each color takes O(1) constant generation time.
+#      * Space Complexity: O(N) auxiliary space to store the list of N formatted strings.
+# ==============================================================================
+
+'''
+# Option A: Function Composition (Modular DRY Reuse)
+from exercise_day_12 import rgb_color_gen
+
+def list_of_rgb_colors(count=1):
+    return [rgb_color_gen() for _ in range(count)]
+
+print(list_of_rgb_colors(3))
+'''
+
+'''
+# Option B: Bulk Generation with random.choices
+import random
+
+def list_of_rgb_colors(count=1):
+    color_list = []
+    for _ in range(count):
+        r, g, b = random.choices(range(256), k=3)
+        color = f"rgb({r}, {g}, {b})"
+        color_list.append(color)
+    return color_list
+
+print(list_of_rgb_colors(3))
+'''
+
+# ==============================================================================
+# Level 2 - Exercise 3: generate_colors (Pass 2: Alternative Exploration)
+# ==============================================================================
+# Exploration Objectives:
+# 1. Implementation Alternatives:
+#    - Alternative A (First-Class Functions & Table-Driven Dispatch Dictionary):
+#      In Python, functions are first-class objects (they can be stored in dictionaries!).
+#      Instead of a chain of `if / elif` statements, define a dispatch table:
+#        dispatch = {
+#            'hexa': list_of_hexa_colors,
+#            'rgb': list_of_rgb_colors,
+#        }
+#      Look up the generator using `dispatch.get(color_type.lower())` and execute it!
+#    - Alternative B (Modular Delegation):
+#      Delegate directly to your existing `list_of_hexa_colors(count)` and
+#      `list_of_rgb_colors(count)` helpers so `generate_colors` doesn't contain
+#      a single line of color-generation math.
+#
+# 2. Mechanistic Analysis & Trade-offs:
+#    - Table-Driven Dispatch vs `if/elif/else`:
+#      How does a dispatch table adhere to the Open-Closed Principle (OCP)?
+#      If you add a 3rd color model tomorrow (e.g. `'hsl'`), what changes?
+#    - Complexity Analysis:
+#      * Time Complexity: O(1) dictionary hash lookup + O(N) generation time = O(N).
+#      * Space Complexity: O(N) auxiliary space for the returned list.
+# ==============================================================================
+
+# Write your Pass 2 solution below:
+
+
+
+

@@ -94,7 +94,6 @@ def rgb_color_gen():
     first, second, third = tuple_rgb
     return f"rgb({first}, {second}, {third})"
 result = rgb_color_gen()
-print(result)
 '''
 
 # ==============================================================================
@@ -159,3 +158,76 @@ print(list_of_hexa_colors(3))
 # ==============================================================================
 
 # Write your solution below:
+'''
+import random
+
+def list_of_rgb_colors(count=1):
+    color_list = []
+    for _ in range(count):
+        r_color = random.randint(0, 255)
+        g_color = random.randint(0, 255)
+        b_color = random.randint(0, 255)
+        color = f"rgb({r_color}, {g_color}, {b_color})"
+        color_list.append(color)
+    return color_list
+
+print(list_of_rgb_colors(1))
+'''
+
+# ==============================================================================
+# Level 2 - Exercise 3: generate_colors
+# ==============================================================================
+# Challenge: Write a function named generate_colors which can generate any number
+# of hexa or rgb colors.
+#
+# It takes two arguments:
+#   1. color_type: 'hexa' or 'rgb' (string)
+#   2. count: number of colors to generate (integer, default=1)
+#
+# Examples:
+#   generate_colors('hexa', 3)  # ['#a3e12f', '#03ed55', '#eb3d2b']
+#   generate_colors('hexa', 1)  # ['#a3e12f']
+#   generate_colors('rgb', 3)   # ['rgb(5, 55, 175)', 'rgb(50, 105, 100)', 'rgb(15, 26, 80)']
+#   generate_colors('rgb', 1)   # ['rgb(33, 79, 176)']
+#
+# Adversarial Test Matrix:
+#   1. Standard Case:
+#      - generate_colors('hexa', 3) -> returns list of 3 '#hhhhhh' strings.
+#      - generate_colors('rgb', 2) -> returns list of 2 'rgb(r, g, b)' strings.
+#   2. Boundary Case:
+#      - count=0 -> returns empty list `[]`.
+#      - count=1 -> returns list of 1 color string.
+#   3. Trap Case:
+#      - Guard against unsupported color types (e.g. 'cmyk' or typo) cleanly.
+#      - Return vs Print: Must return the list object.
+# ==============================================================================
+
+# Write your solution below:
+'''
+import string
+import random
+
+def generate_colors(color_type='hexa', count=1):
+    pool = string.ascii_lowercase[:6] + string.digits
+    color_list = []
+
+    color_type = color_type.lower()
+    if color_type:
+        if color_type == 'rgb':
+            for _ in range(count):
+                r,g,b = random.choices(range(256), k=3)
+                rgb_colors = f"rgb({r}, {g}, {b})"
+                color_list.append(rgb_colors)
+            return color_list
+        if color_type == 'hexa':
+            for _ in range(count):
+                hexa_gen = random.choices(pool, k=6)
+                hexa_gen = ''.join(hexa_gen)
+                hexa_gen = '#' + hexa_gen
+                color_list.append(hexa_gen)
+            return color_list
+    return f"Invalid color type:'{color_type}'. Expected 'hexa' or 'rgb'."
+
+print(generate_colors('rgb', 3))
+'''
+    
