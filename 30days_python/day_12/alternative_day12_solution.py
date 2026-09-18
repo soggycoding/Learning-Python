@@ -266,7 +266,42 @@ print(list_of_rgb_colors(3))
 # ==============================================================================
 
 # Write your Pass 2 solution below:
+# Alternative A:
+import string
+import random
 
+def generate_colors(color_type='hexa', count=1):
+    color_type = color_type.lower()
+    pool = string.ascii_letters[:6] + string.digits
+    list_of_hexa_colors = []
+    list_of_rgb_colors = []
+    dispatch = {
+        "hexa" : list_of_hexa_colors,
+        "rgb" : list_of_rgb_colors
+    }
+    if color_type == 'hexa':
+        for _ in range(count):
+            hexa = random.choices(pool, k=6)
+            hexa_generated = ''.join(hexa)
+            hexa_generated = '#' + hexa_generated
+            list_of_hexa_colors.append(hexa_generated)
+    if color_type == 'rgb':
+        for _ in range(count):
+            r,g,b = random.choices(range(256), k=3)
+            rgb = f"rgb({r}, {g}, {b})"
+            list_of_rgb_colors.append(rgb)
+    return dispatch[color_type]
+print(generate_colors('RGB', 3))
 
+'''
+# Alternative B:
+from exercise_day_12 import list_of_hexa_colors, list_of_rgb_colors
 
-
+def generate_colors(color_type='hexa', count=1):
+    dispatch = {
+        'hexa' : list_of_hexa_colors,
+        'rgb' : list_of_rgb_colors
+    }
+    return dispatch.get(color_type.lower())(count)
+print(generate_colors('hexa',3))
+'''

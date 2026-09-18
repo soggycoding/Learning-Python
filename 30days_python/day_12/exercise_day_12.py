@@ -118,7 +118,6 @@ result = rgb_color_gen()
 # ==============================================================================
 
 # Write your solution below:
-'''
 import string
 import random
 
@@ -131,8 +130,7 @@ def list_of_hexa_colors(count=1):
         hexa_color = '#' + hexa_color
         hexa_color_list.append(hexa_color)
     return hexa_color_list
-print(list_of_hexa_colors(3))
-'''
+
 
 # ==============================================================================
 # Level 2 - Exercise 2: list_of_rgb_colors
@@ -158,8 +156,6 @@ print(list_of_hexa_colors(3))
 # ==============================================================================
 
 # Write your solution below:
-'''
-import random
 
 def list_of_rgb_colors(count=1):
     color_list = []
@@ -171,8 +167,6 @@ def list_of_rgb_colors(count=1):
         color_list.append(color)
     return color_list
 
-print(list_of_rgb_colors(1))
-'''
 
 # ==============================================================================
 # Level 2 - Exercise 3: generate_colors
