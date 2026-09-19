@@ -269,7 +269,6 @@ print(list_of_rgb_colors(3))
 # Alternative A:
 import string
 import random
-
 def generate_colors(color_type='hexa', count=1):
     color_type = color_type.lower()
     pool = string.ascii_letters[:6] + string.digits
@@ -279,20 +278,18 @@ def generate_colors(color_type='hexa', count=1):
         "hexa" : list_of_hexa_colors,
         "rgb" : list_of_rgb_colors
     }
-    if color_type == 'hexa':
-        for _ in range(count):
-            hexa = random.choices(pool, k=6)
-            hexa_generated = ''.join(hexa)
-            hexa_generated = '#' + hexa_generated
-            list_of_hexa_colors.append(hexa_generated)
-    if color_type == 'rgb':
-        for _ in range(count):
-            r,g,b = random.choices(range(256), k=3)
-            rgb = f"rgb({r}, {g}, {b})"
-            list_of_rgb_colors.append(rgb)
-    return dispatch[color_type]
-print(generate_colors('RGB', 3))
+    if color_type in dispatch:
+        hexa = random.choices(pool, k=6)
+        hexa_generated = ''.join(hexa)
+        hexa_generated = '#' + hexa_generated
+        list_of_hexa_colors.append(hexa_generated)
 
+        r,g,b = random.choices(range(256), k=3)
+        rgb = f"rgb({r}, {g}, {b})"
+        list_of_rgb_colors.append(rgb)
+        return dispatch.get(color_type)
+    return f"Invalid color type: '{color_type}'. Expected 'hexa' or 'rgb'"
+print(generate_colors('hexa', 3))
 '''
 # Alternative B:
 from exercise_day_12 import list_of_hexa_colors, list_of_rgb_colors
@@ -302,6 +299,8 @@ def generate_colors(color_type='hexa', count=1):
         'hexa' : list_of_hexa_colors,
         'rgb' : list_of_rgb_colors
     }
+    if not dispatch.get(color_type):
+        return f"Invalid color type: '{color_type}'. Expected 'hexa' or 'rgb'"
     return dispatch.get(color_type.lower())(count)
-print(generate_colors('hexa',3))
+print(generate_colors('',3))
 '''
