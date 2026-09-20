@@ -267,10 +267,11 @@ print(list_of_rgb_colors(3))
 
 # Write your Pass 2 solution below:
 # Alternative A:
+'''
 import string
 import random
 def generate_colors(color_type='hexa', count=1):
-    color_type = color_type.lower()
+    color_type = color_type.strip().lower()
     pool = string.ascii_letters[:6] + string.digits
     list_of_hexa_colors = []
     list_of_rgb_colors = []
@@ -278,29 +279,84 @@ def generate_colors(color_type='hexa', count=1):
         "hexa" : list_of_hexa_colors,
         "rgb" : list_of_rgb_colors
     }
-    if color_type in dispatch:
-        hexa = random.choices(pool, k=6)
-        hexa_generated = ''.join(hexa)
-        hexa_generated = '#' + hexa_generated
-        list_of_hexa_colors.append(hexa_generated)
+    if color_type == "hexa":
+        for _ in range(count):
+            hexa = random.choices(pool, k=6)
+            hexa_generated = ''.join(hexa)
+            hexa_generated = '#' + hexa_generated
+            list_of_hexa_colors.append(hexa_generated)
+    elif color_type == "rgb":
+        for _ in range(count):
+            r,g,b = random.choices(range(256), k=3)
+            rgb = f"rgb({r}, {g}, {b})"
+            list_of_rgb_colors.append(rgb)
+    else:
+        return f"Invalid color type: '{color_type}'. Expected 'hexa' or 'rgb'"
+    return dispatch.get(color_type)
 
-        r,g,b = random.choices(range(256), k=3)
-        rgb = f"rgb({r}, {g}, {b})"
-        list_of_rgb_colors.append(rgb)
-        return dispatch.get(color_type)
-    return f"Invalid color type: '{color_type}'. Expected 'hexa' or 'rgb'"
-print(generate_colors('hexa', 3))
+
+print(generate_colors('dwd',3))
+'''
+
 '''
 # Alternative B:
 from exercise_day_12 import list_of_hexa_colors, list_of_rgb_colors
 
 def generate_colors(color_type='hexa', count=1):
+    clean = color_type.strip().lower()
     dispatch = {
         'hexa' : list_of_hexa_colors,
         'rgb' : list_of_rgb_colors
     }
-    if not dispatch.get(color_type):
+    generator = dispatch.get(clean)
+    if not generator:
         return f"Invalid color type: '{color_type}'. Expected 'hexa' or 'rgb'"
-    return dispatch.get(color_type.lower())(count)
-print(generate_colors('',3))
+    return generator(count)
+print(generate_colors('rgb',3))
 '''
+
+# ==============================================================================
+# Level 3 - Exercise 1: shuffle_list (Pass 2: Alternative Exploration)
+# ==============================================================================
+# Exploration Objectives:
+# 1. Implementation Alternatives:
+#    - Alternative A (The Defensive Clone & In-Place Shuffle Pattern):
+#      Instead of `random.sample`, make an explicit shallow copy using `lst.copy()`
+#      or slicing `lst[:]`, run `random.shuffle()` on that clone, and return it.
+#    - Alternative B (The Fisher-Yates / Knuth Shuffle from Scratch):
+#      Implement the classic algorithm that powers `random.shuffle` under the hood:
+#      Make a copy of `lst`. Iterate backwards from index len-1 down to 1,
+#      picking a random index j in [0, i], and swapping: `clone[i], clone[j] = clone[j], clone[i]`.
+#
+# 2. Mechanistic Analysis & Trade-offs:
+#    - Contrast `random.sample(seq, k=len(seq))` vs `clone + random.shuffle(clone)`:
+#      * Both return a new list, preserving caller immutability: O(N) Time, O(N) Space.
+#      * When would you want an in-place shuffle? (When memory is limited and modifying the original is intended).
+# ==============================================================================
+
+# Write your Pass 2 solution for Exercise 1 below:
+
+
+
+
+# ==============================================================================
+# Level 3 - Exercise 2: seven_random_numbers (Pass 2: Alternative Exploration)
+# ==============================================================================
+# Exploration Objectives:
+# 1. Implementation Alternatives:
+#    - Alternative A (Set Accumulator with While Loop):
+#      Accumulate unique integers in a `set()` using `random.randint(0, 9)` until
+#      `len(unique_set) == 7`, then convert to a list: `list(unique_set)`.
+#    - Alternative B (Shuffle-and-Slice Modular Reuse):
+#      Create a list of digits `list(range(10))`, shuffle it with your `shuffle_list`
+#      helper from Exercise 1, and slice the first 7 elements: `shuffled[:7]`.
+#
+# 2. Mechanistic Analysis & Trade-offs:
+#    - Deterministic O(k) vs Non-Deterministic While Loop (The Collision Trap):
+#      * Why is `random.sample(range(10), k=7)` preferred over a `while len(s) < 7` loop?
+#      * In a while loop, as the set grows, the probability of collision increases
+#        (Coupon Collector's Problem). In the worst case, the loop could iterate many extra times!
+#      * `random.sample` is guaranteed deterministic O(k) Time and O(k) Space.
+# ==============================================================================
+
+# Write your Pass 2 solution for Exercise 2 below:

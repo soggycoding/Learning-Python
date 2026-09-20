@@ -67,3 +67,97 @@ def rgb_color_gen():
 result = rgb_color_gen()
 print(result)
 '''
+
+# ==============================================================================
+# BATCHED RECALL PROTOCOL: LEVEL 2 (Exercises 1, 2, and 3)
+# ==============================================================================
+# Rules for Pure Recall:
+# 1. Do NOT look back at `exercise_day_12.py` or `alternative_day12_solution.py`!
+# 2. Write your implementations from pure conceptual retrieval.
+# 3. Test each function against its Adversarial Test Matrix.
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# Recall 1: list_of_hexa_colors(count=1)
+# ------------------------------------------------------------------------------
+# - Task: Write a function `list_of_hexa_colors(count=1)` that returns a list
+#   of any number of random hexadecimal color strings.
+# - Format: Each string begins with '#' followed by 6 hex characters (0-9, a-f).
+# - Contract: (int) -> list[str]
+# - Adversarial Test Cases:
+#   * Standard: count=3 -> list of 3 '#hhhhhh' strings.
+#   * Boundary: count=0 -> [], count=1 -> 1-element list.
+#   * Trap: Each color must be valid hex characters, length 7.
+# ------------------------------------------------------------------------------
+# Write Recall 1 below:
+'''
+import string
+import random
+
+def list_of_hexa_colors(count=1):
+    pool = string.ascii_letters[:6] + string.digits
+    hexa_list = []
+    for _ in range(count):
+        generator = random.choices(pool, k=6)
+        generated = ''.join(generator)
+        generated = "#" + generated
+        hexa_list.append(generated)
+    return hexa_list
+'''
+
+
+
+# ------------------------------------------------------------------------------
+# Recall 2: list_of_rgb_colors(count=1)
+# ------------------------------------------------------------------------------
+# - Task: Write a function `list_of_rgb_colors(count=1)` that returns a list
+#   of any number of random RGB color strings.
+# - Format: Each string formatted as "rgb(r, g, b)" where 0 <= r, g, b <= 255.
+# - Contract: (int) -> list[str]
+# - Adversarial Test Cases:
+#   * Standard: count=3 -> list of 3 'rgb(r, g, b)' strings.
+#   * Boundary: count=0 -> [], count=1 -> 1-element list.
+#   * Trap: Channel values must be integers between 0 and 255 inclusive.
+# ------------------------------------------------------------------------------
+
+# Write Recall 2 below:
+
+'''
+def list_of_rgb_colors(count=1):
+    rgb_list = []
+    for _ in range(count):
+        r,g,b = random.choices(range(256), k=3)
+        generated = f"rgb({r}, {g}, {b})"
+        rgb_list.append(generated)
+    return rgb_list
+'''
+
+
+# ------------------------------------------------------------------------------
+# Recall 3: generate_colors(color_type='hexa', count=1)
+# ------------------------------------------------------------------------------
+# - Task: Write a function `generate_colors(color_type='hexa', count=1)` that
+#   dispatches to generate any number of hexa or rgb colors.
+# - Architecture: Use a dispatch table / first-class function lookup.
+# - Contract: (str, int) -> list[str] | str
+# - Adversarial Test Cases:
+#   * Standard: ('hexa', 3), ('rgb', 2).
+#   * Boundary: count=0 -> [], case-insensitive & whitespace ('RGB', 'rgb ').
+#   * Trap: Invalid types ('' or 'cmyk') return an error message cleanly.
+# ------------------------------------------------------------------------------
+
+# Write Recall 3 below:
+
+'''
+def generate_colors(color_type='hexa', count=1):
+    clean = color_type.lower().strip()
+    dispatch = {
+        'hexa' : list_of_hexa_colors,
+        'rgb' : list_of_rgb_colors
+    }
+    generated = dispatch.get(clean)
+    if not generated:
+        return f"Invalid input '{color_type}', should be 'hexa' or 'rgb'."
+    return generated(count)
+print(generate_colors('rgb ', 3))
+'''

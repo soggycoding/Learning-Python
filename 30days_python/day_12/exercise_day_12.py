@@ -118,6 +118,7 @@ result = rgb_color_gen()
 # ==============================================================================
 
 # Write your solution below:
+'''
 import string
 import random
 
@@ -130,6 +131,7 @@ def list_of_hexa_colors(count=1):
         hexa_color = '#' + hexa_color
         hexa_color_list.append(hexa_color)
     return hexa_color_list
+'''
 
 
 # ==============================================================================
@@ -157,6 +159,7 @@ def list_of_hexa_colors(count=1):
 
 # Write your solution below:
 
+'''
 def list_of_rgb_colors(count=1):
     color_list = []
     for _ in range(count):
@@ -166,6 +169,7 @@ def list_of_rgb_colors(count=1):
         color = f"rgb({r_color}, {g_color}, {b_color})"
         color_list.append(color)
     return color_list
+'''
 
 
 # ==============================================================================
@@ -224,4 +228,74 @@ def generate_colors(color_type='hexa', count=1):
 
 print(generate_colors('rgb', 3))
 '''
-    
+
+# ==============================================================================
+# Level 3 - Exercise 1: shuffle_list
+# ==============================================================================
+# Challenge: Write a function named `shuffle_list`.
+# It takes a list as a parameter and returns a shuffled list.
+#
+# Mechanistic Note on In-Place Mutation vs Returning New List:
+#   Python's `random.shuffle(lst)` mutates a list in-place and returns None.
+#   A well-engineered function avoids unexpected side-effects (mutating the
+#   caller's input). Make a copy or sample without replacement, and return
+#   the shuffled list.
+#
+# Function signature:
+#   def shuffle_list(lst):
+#
+# Examples:
+#   shuffle_list([1, 2, 3, 4, 5])  # [3, 1, 5, 2, 4]
+#   shuffle_list(['A', 'B', 'C'])  # ['B', 'A', 'C']
+#
+# Adversarial Test Matrix:
+#   1. Standard Case: lst=[1, 2, 3, 4, 5] -> returns shuffled list of same 5 elements.
+#   2. Boundary Case: lst=[] -> returns []. lst=[42] -> returns [42].
+#   3. Trap Case: Immutability / Side-Effect Test:
+#                 original = [1, 2, 3]
+#                 shuffled = shuffle_list(original)
+#                 Ensure `original` is still [1, 2, 3]!
+# ==============================================================================
+
+# Write your solution below:
+
+'''
+import random
+def shuffle_list(lst):
+    shuffled = random.sample(lst, k=len(lst))
+    return shuffled
+
+original = [1, 2, 3, 4, 5]
+result = shuffle_list(original)
+print("Original list:", original)
+print("Shuffled list:", result)
+print("Is original intact?", original == [1, 2, 3, 4, 5])
+print("Is result a distinct object?", result is not original)
+'''
+# ==============================================================================
+# Level 3 - Exercise 2: seven_random_numbers
+# ==============================================================================
+# Challenge: Write a function named `seven_random_numbers` which returns a list
+# of seven random numbers in a range of 0-9. All the numbers must be unique.
+#
+# Function signature:
+#   def seven_random_numbers():
+#
+# Examples:
+#   seven_random_numbers()  # [7, 2, 0, 9, 5, 8, 3]
+#
+# Adversarial Test Matrix:
+#   1. Standard Case: Returns a list of length 7.
+#   2. Boundary Case: Every element is an integer between 0 and 9 inclusive (0 <= n <= 9).
+#   3. Trap Case: Uniqueness: `len(set(result)) == 7` (strictly no duplicates).
+#                 Must return the list object, not print it.
+# ==============================================================================
+
+# Write your solution below:
+'''
+import random
+def seven_random_numbers():
+    numbs = random.sample(range(10), k=7)
+    return numbs
+print(seven_random_numbers())
+'''
