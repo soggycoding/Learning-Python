@@ -161,3 +161,48 @@ def generate_colors(color_type='hexa', count=1):
     return generated(count)
 print(generate_colors('rgb ', 3))
 '''
+
+# ==============================================================================
+# BATCHED RECALL PROTOCOL: LEVEL 3 (Exercises 1 and 2)
+# ==============================================================================
+# Rules for Pure Recall:
+# 1. Do NOT look back at `exercise_day_12.py` or `alternative_day12_solution.py`!
+# 2. Write your implementations from pure conceptual retrieval.
+# 3. Test each function against its Adversarial Test Matrix.
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# Recall 1: shuffle_list(lst)
+# ------------------------------------------------------------------------------
+# - Task: Write a function `shuffle_list(lst)` that takes a list and returns a
+#   shuffled copy of the list.
+# - Contract: (list) -> list
+# - Adversarial Test Cases:
+#   * Standard: lst=[1, 2, 3, 4, 5] -> returns shuffled list of same elements.
+#   * Boundary: lst=[] -> [], lst=[42] -> [42].
+#   * Trap: Immutability / Side-Effect Test:
+#           original = [1, 2, 3]
+#           shuffled = shuffle_list(original)
+#           Ensure `original` is still [1, 2, 3] and `shuffled is not original`!
+# ------------------------------------------------------------------------------
+
+# Write Recall 1 below:
+
+
+
+
+# ------------------------------------------------------------------------------
+# Recall 2: seven_random_numbers()
+# ------------------------------------------------------------------------------
+# - Task: Write a function `seven_random_numbers()` which returns a list of
+#   seven random numbers in the range of 0-9. All numbers must be unique.
+# - Contract: () -> list[int]
+# - Adversarial Test Cases:
+#   * Standard: Returns a list of length 7.
+#   * Boundary: Every element is an integer between 0 and 9 inclusive (0 <= n <= 9).
+#   * Trap: Uniqueness: `len(set(result)) == 7` (strictly no duplicates).
+# ------------------------------------------------------------------------------
+
+# Write Recall 2 below:
+
+

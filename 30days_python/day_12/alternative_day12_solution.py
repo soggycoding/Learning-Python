@@ -335,9 +335,31 @@ print(generate_colors('rgb',3))
 # ==============================================================================
 
 # Write your Pass 2 solution for Exercise 1 below:
-
-
-
+import random
+'''
+# Alternative A:
+def shuffle_list(lst):
+    
+    copy_list = lst.copy()
+    random.shuffle(copy_list)
+    return copy_list
+'''
+'''
+# Alternative B:
+def shuffle_list(lst):
+    copy_lst = lst.copy()
+    start = len(copy_lst) - 1
+    for i in range(start, 0, -1):
+        j = random.randint(0, i)
+        copy_lst[j], copy_lst[i] = copy_lst[i], copy_lst[j]
+    return copy_lst
+original = [1, 2, 3, 4, 5]
+result = shuffle_list(original)
+print("Original list:", original)
+print("Shuffled list:", result)
+print("Is original intact?", original == [1, 2, 3, 4, 5])
+print("Is result a distinct object?", result is not original)
+'''
 
 # ==============================================================================
 # Level 3 - Exercise 2: seven_random_numbers (Pass 2: Alternative Exploration)
@@ -360,3 +382,24 @@ print(generate_colors('rgb',3))
 # ==============================================================================
 
 # Write your Pass 2 solution for Exercise 2 below:
+
+import random
+'''
+# Alternative A:
+def seven_random_numbers():
+    nums = set()
+    while len(nums) < 7:
+        num_gen = random.randint(0, 9)
+        nums.add(num_gen)
+    return list(nums)
+print(seven_random_numbers())
+'''
+'''
+from exercise_day_12 import shuffle_list
+# Alternative B:
+def seven_random_numbers():
+    list_digits = list(range(10))
+    rand_num = shuffle_list(list_digits)
+    return rand_num[:7]
+print(seven_random_numbers())
+'''

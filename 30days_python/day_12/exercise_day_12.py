@@ -259,19 +259,12 @@ print(generate_colors('rgb', 3))
 
 # Write your solution below:
 
-'''
+
 import random
 def shuffle_list(lst):
     shuffled = random.sample(lst, k=len(lst))
     return shuffled
 
-original = [1, 2, 3, 4, 5]
-result = shuffle_list(original)
-print("Original list:", original)
-print("Shuffled list:", result)
-print("Is original intact?", original == [1, 2, 3, 4, 5])
-print("Is result a distinct object?", result is not original)
-'''
 # ==============================================================================
 # Level 3 - Exercise 2: seven_random_numbers
 # ==============================================================================
