@@ -186,9 +186,20 @@ print(generate_colors('rgb ', 3))
 #           Ensure `original` is still [1, 2, 3] and `shuffled is not original`!
 # ------------------------------------------------------------------------------
 
+'''
 # Write Recall 1 below:
+import random
 
+def shuffle_list(lst):
+    copy_list = lst.copy()
+    random.shuffle(copy_list)
+    return copy_list
 
+original = [1, 2, 3]
+shuffled = shuffle_list(original)
+print("shuffled is not original:", shuffled is not original)
+print("original remains intact:", original == [1, 2, 3])
+'''
 
 
 # ------------------------------------------------------------------------------
@@ -202,7 +213,11 @@ print(generate_colors('rgb ', 3))
 #   * Boundary: Every element is an integer between 0 and 9 inclusive (0 <= n <= 9).
 #   * Trap: Uniqueness: `len(set(result)) == 7` (strictly no duplicates).
 # ------------------------------------------------------------------------------
-
+'''
 # Write Recall 2 below:
-
-
+import random
+def seven_random_numbers():
+    nums = random.sample(range(10), k=7)
+    return nums
+print(seven_random_numbers())
+'''

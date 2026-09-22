@@ -4,15 +4,15 @@
     "python.REPL.enableREPLSmartSend": false,
     "editor.inlineSuggest.enabled": false,
     "editor.quickSuggestions": {
-        "other": "off",
+        "other": "on",
         "comments": "off",
         "strings": "off"
     },
-    "editor.suggestOnTriggerCharacters": false,
+    "editor.suggestOnTriggerCharacters": true,
     "editor.wordBasedSuggestions": "off",
-    "editor.parameterHints.enabled": false,
+    "editor.parameterHints.enabled": true,
     "editor.snippetSuggestions": "none",
     "editor.suggest.showWords": false,
-    "editor.acceptSuggestionOnEnter": "off",
+    "editor.acceptSuggestionOnEnter": "on",
     "editor.tabCompletion": "off"
 }

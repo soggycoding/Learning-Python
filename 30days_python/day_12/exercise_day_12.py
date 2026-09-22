@@ -260,10 +260,12 @@ print(generate_colors('rgb', 3))
 # Write your solution below:
 
 
+'''
 import random
 def shuffle_list(lst):
     shuffled = random.sample(lst, k=len(lst))
     return shuffled
+'''
 
 # ==============================================================================
 # Level 3 - Exercise 2: seven_random_numbers
