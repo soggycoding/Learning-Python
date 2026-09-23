@@ -15,45 +15,42 @@ list_of_lists = [[[1, 2, 3]], [[4, 5, 6]], [[7, 8, 9]]]
 #   output -> [1, 2, 3, 4, 5, 6, 7, 8, 9]
 flatten = [num for sublist in list_of_lists for row in sublist for num in row]
 print(flatten)
+
+# [num(final action)
+#  for sublist in list_of_lists(copy loop 1 directly),
+#  for row in sublist(copy loop 2 directly),
+#  for num in row(copy loop 3 directly)]
+'''
+
+# Exercise 3: Powers of Numbers Tuple List
+'''
+result = [(i, i**0, i**1, i**2, i**3, i**4, i**5) for i in range(11)]
+print(result)
 '''
 
 # ==============================================================================
-# Exercise 3: Powers of Numbers Tuple List
+# Exercise 4: Flatten Country/City Tuples to Formatted Lists
 # ==============================================================================
 # Challenge:
-#   Using list comprehension, create the following list of tuples from i = 0 to 10:
-#   [(0, 1, 0, 0, 0, 0, 0),
-#    (1, 1, 1, 1, 1, 1, 1),
-#    (2, 1, 2, 4, 8, 16, 32),
-#    (3, 1, 3, 9, 27, 81, 243),
-#    (4, 1, 4, 16, 64, 256, 1024),
-#    (5, 1, 5, 25, 125, 625, 3125),
-#    (6, 1, 6, 36, 216, 1296, 7776),
-#    (7, 1, 7, 49, 343, 2401, 16807),
-#    (8, 1, 8, 64, 512, 4096, 32768),
-#    (9, 1, 9, 81, 729, 6561, 59049),
-#    (10, 1, 10, 100, 1000, 10000, 100000)]
+#   Given the list:
+#   countries = [[('Finland', 'Helsinki')], [('Sweden', 'Stockholm')], [('Norway', 'Oslo')]]
+#   Flatten and transform it into the following list of lists using list comprehension:
+#   [['FINLAND', 'FIN', 'HELSINKI'], ['SWEDEN', 'SWE', 'STOCKHOLM'], ['NORWAY', 'NOR', 'OSLO']]
 #
-# Hint / Mathematical Pattern for each tuple:
-#   Examine the columns for index `i`:
-#   Column 0: i
-#   Column 1: i**0 (which is 1)
-#   Column 2: i**1 (which is i)
-#   Column 3: i**2
-#   Column 4: i**3
-#   Column 5: i**4
-#   Column 6: i**5
+# Hint / Architecture:
+#   - Each item in `countries` is a list containing a single tuple with (country, city).
+#   - You need to unpack/extract the country name and city name.
+#   - For each country/city pair, build a 3-element list:
+#       [country in uppercase, first 3 letters of country in uppercase, city in uppercase]
 #
-# Adversarial Test Cases:
-#   1. Standard Case: Returns a list of 11 tuples (for 0 through 10 inclusive).
-#   2. Boundary Case: First tuple is (0, 1, 0, 0, 0, 0, 0); Last tuple is (10, 1, 10, 100, 1000, 10000, 100000).
-#   3. Trap Case: Ensure range includes 10! (i.e. `range(11)`).
+# Adversarial Test Matrix:
+#   1. Standard Case: countries as defined above -> [['FINLAND', 'FIN', 'HELSINKI'], ['SWEDEN', 'SWE', 'STOCKHOLM'], ['NORWAY', 'NOR', 'OSLO']]
+#   2. Boundary Case: empty list `[]` -> `[]`
+#   3. Trap Case: Ensure each transformed item is a list `[...]`, not a tuple!
 # ==============================================================================
 
-# Write your Exercise 3 solution below:
+# Write your Exercise 4 solution below:
 
-#
-# Exercise 4: Flatten the following list to a new list:
 #   countries = [[('Finland', 'Helsinki')], [('Sweden', 'Stockholm')], [('Norway', 'Oslo')]]
 #   output -> [['FINLAND', 'FIN', 'HELSINKI'], ['SWEDEN', 'SWE', 'STOCKHOLM'], ['NORWAY', 'NOR', 'OSLO']]
 #
