@@ -51,7 +51,23 @@ print(result)
 
 # Write your Exercise 4 solution below:
 
-#   countries = [[('Finland', 'Helsinki')], [('Sweden', 'Stockholm')], [('Norway', 'Oslo')]]
+countries_cities = [[('Finland', 'Helsinki')], [('Sweden', 'Stockholm')], [('Norway', 'Oslo')]]
+list_of_country = []
+country_list = [rows for country_name in countries_cities for rows in country_name]
+for _ in country_list:
+    country, city = _
+    country_name = country.upper()
+    country_3rd_letter = country_name[:3]
+    city_name = city.upper()
+    country_city = [country_name, country_3rd_letter, city_name]
+    list_of_country.append(country_city)
+print(list_of_country)
+'''
+countries = country_list[::2]
+city_names = 
+print(countries)
+print(city_names)
+'''
 #   output -> [['FINLAND', 'FIN', 'HELSINKI'], ['SWEDEN', 'SWE', 'STOCKHOLM'], ['NORWAY', 'NOR', 'OSLO']]
 #
 # Exercise 5: Change the following list to a list of dictionaries:

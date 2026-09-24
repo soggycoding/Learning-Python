@@ -19,6 +19,26 @@
 #   Generate the 11 tuples for i = 0 to 10 where each tuple has 7 items:
 #   (i, i**0, i**1, i**2, i**3, i**4, i**5) using list comprehension.
 # ==============================================================================
-
+'''
 # Write your Recall solutions below:
+numbers = [-4, -3, -2, -1, 0, 2, 4 ,6]
+filtered = [c for c in numbers if c <= 0]
+print(filtered)
+'''
 
+'''
+list_of_lists = [[[1, 2, 3]], [[4, 5, 6]], [[7, 8, 9]]]
+flatten = [nums for sublist in list_of_lists for rows in sublist for nums in rows]
+
+for sublist in list_of_lists:
+    for rows in sublist:
+        for nums in rows:
+            flatten.append(nums)
+
+print(flatten)
+'''
+'''
+i = 0
+powers_tuple = [(i,) + tuple(i**x for x in range(6)) for i in range(11)]
+print(powers_tuple)
+'''
