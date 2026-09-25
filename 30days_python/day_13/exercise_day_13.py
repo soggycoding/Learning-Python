@@ -50,30 +50,21 @@ print(result)
 # ==============================================================================
 
 # Write your Exercise 4 solution below:
-
-countries_cities = [[('Finland', 'Helsinki')], [('Sweden', 'Stockholm')], [('Norway', 'Oslo')]]
-list_of_country = []
-country_list = [rows for country_name in countries_cities for rows in country_name]
-for _ in country_list:
-    country, city = _
-    country_name = country.upper()
-    country_3rd_letter = country_name[:3]
-    city_name = city.upper()
-    country_city = [country_name, country_3rd_letter, city_name]
-    list_of_country.append(country_city)
-print(list_of_country)
 '''
-countries = country_list[::2]
-city_names = 
-print(countries)
-print(city_names)
+countries_cities = [[('Finland', 'Helsinki')], [('Sweden', 'Stockholm')], [('Norway', 'Oslo')]]
+country_list = [rows for country_name in countries_cities for rows in country_name]
+list_of_country = [[country.upper(), country[:3].upper(), city.upper() ]for country, city in country_list]
+print(list_of_country)
 '''
 #   output -> [['FINLAND', 'FIN', 'HELSINKI'], ['SWEDEN', 'SWE', 'STOCKHOLM'], ['NORWAY', 'NOR', 'OSLO']]
 #
 # Exercise 5: Change the following list to a list of dictionaries:
 #   countries = [[('Finland', 'Helsinki')], [('Sweden', 'Stockholm')], [('Norway', 'Oslo')]]
 #   output -> [{'country': 'FINLAND', 'city': 'HELSINKI'}, {'country': 'SWEDEN', 'city': 'STOCKHOLM'}, {'country': 'NORWAY', 'city': 'OSLO'}]
-#
+countries = [[('Finland', 'Helsinki')], [('Sweden', 'Stockholm')], [('Norway', 'Oslo')]]
+country_list = [country_city for country_ in countries for country_city in country_]
+country_dict = [{'country': country.upper(), 'city': city.upper()}for country, city in country_list]
+print(country_dict)
 # Exercise 6: Change the following list of lists to a list of concatenated strings:
 #   names = [[('Asabeneh', 'Yetayeh')], [('David', 'Smith')], [('Donald', 'Trump')], [('Bill', 'Gates')]]
 #   output -> ['Asabeneh Yetayeh', 'David Smith', 'Donald Trump', 'Bill Gates']
