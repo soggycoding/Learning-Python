@@ -61,14 +61,19 @@ print(list_of_country)
 # Exercise 5: Change the following list to a list of dictionaries:
 #   countries = [[('Finland', 'Helsinki')], [('Sweden', 'Stockholm')], [('Norway', 'Oslo')]]
 #   output -> [{'country': 'FINLAND', 'city': 'HELSINKI'}, {'country': 'SWEDEN', 'city': 'STOCKHOLM'}, {'country': 'NORWAY', 'city': 'OSLO'}]
+'''
 countries = [[('Finland', 'Helsinki')], [('Sweden', 'Stockholm')], [('Norway', 'Oslo')]]
-country_list = [country_city for country_ in countries for country_city in country_]
-country_dict = [{'country': country.upper(), 'city': city.upper()}for country, city in country_list]
-print(country_dict)
+country_list = [{'country': country.upper(), 'city': city.upper()} for sublist in countries for country, city in sublist]
+print(country_list)
+'''
 # Exercise 6: Change the following list of lists to a list of concatenated strings:
 #   names = [[('Asabeneh', 'Yetayeh')], [('David', 'Smith')], [('Donald', 'Trump')], [('Bill', 'Gates')]]
 #   output -> ['Asabeneh Yetayeh', 'David Smith', 'Donald Trump', 'Bill Gates']
-#
+'''
+names = [[('Asabeneh', 'Yetayeh')], [('David', 'Smith')], [('Donald', 'Trump')], [('Bill', 'Gates')]]
+outed_names = [' '.join(name_tuple) for sublist in names for name_tuple in sublist]
+print(outed_names)
+'''
 # Exercise 7: Write a lambda function which can solve a slope or y-intercept of linear functions.
 # ==============================================================================
 
