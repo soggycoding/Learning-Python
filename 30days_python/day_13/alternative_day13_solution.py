@@ -94,12 +94,11 @@ print(nested_dynamic_tuple)
 #    - Alternative A (Decoupled Pipeline with itertools.chain.from_iterable):
 #      Instead of coupling flattening and transformation in a single nested comprehension,
 #      decouple the pipeline into two distinct stages:
-#        Stage 1: Flatten outer lists to a 1D stream of (country, city) tuples using
-#                 `itertools.chain.from_iterable(countries)`.
-#        Stage 2: Map each tuple to `[country.upper(), country[:3].upper(), city.upper()]`.
-#    - Alternative B (Functional Transformation via map and helper function):
-#      Implement the formatting using `list(map(format_country, flat_stream))` or a pure
-#      lambda to compare readability against list comprehensions.
+#        Stage 1: Flatten outer lists to a 1D stream using an iterator tool from `itertools`.
+#        Stage 2: Transform each element to the 3-item target structure.
+#    - Alternative B (Functional Transformation via map):
+#      Implement the formatting using `map()` paired with a custom helper function or lambda
+#      to compare readability and execution against list comprehensions.
 #
 # 2. Mechanistic Analysis & Trade-offs:
 #    - Monolithic vs Decoupled Pipelines:
@@ -127,6 +126,7 @@ flat = itertools.chain.from_iterable(countries_cities)
 country_ = [[country.upper(), country[:3].upper(), city.upper()] for country, city in list(flat)]
 print(country_)
 '''
+'''
 # Alternative B:
 import itertools
 countries_cities = [[('Finland', 'Helsinki')], [('Sweden', 'Stockholm')], [('Norway', 'Oslo')]]
@@ -139,19 +139,19 @@ flat_stream = itertools.chain.from_iterable(countries_cities)
 
 result = list(map(format_country, flat_stream))
 print(result)
-
+'''
 # ==============================================================================
 # Exercise 5: List to List of Dictionaries (Pass 2: Alternative Exploration)
 # ==============================================================================
 # Exploration Objectives:
 # 1. Implementation Alternatives:
-#    - Alternative A (Dynamic Key-Value Pairing via dict(zip(...))):
-#      Instead of hardcoding dictionary literals `{'country': ..., 'city': ...}`, define
-#      a reusable schema `keys = ('country', 'city')` and construct dictionaries dynamically
-#      via `dict(zip(keys, (country.upper(), city.upper())))`.
-#    - Alternative B (Functional Dict Construction via map and dict constructor):
-#      Build the list of dictionaries using `list(map(lambda pair: dict(country=pair[0].upper(), city=pair[1].upper()), ...))`
-#      or by passing key-value pairs into `dict([...])`.
+#    - Alternative A (Dynamic Key-Value Pairing via dict + zip):
+#      Decouple schema keys from the incoming stream. Pair a defined tuple of key names
+#      with the uppercased values dynamically via `zip()` and construct the dict without
+#      hardcoding literal dictionary brackets for every item.
+#    - Alternative B (Functional Construction via map):
+#      Map a transformation across the flattened items using `map()` and the `dict()`
+#      constructor or keyword arguments, avoiding an explicit for-loop or comprehension.
 #
 # 2. Mechanistic Analysis & Trade-offs:
 #    - Dict Literal `{k: v}` vs `dict(zip(...))` vs `dict(k=v)`:
@@ -170,9 +170,18 @@ print(result)
 
 # Write your Pass 2 solution below:
 # Target Output: [{'country': 'FINLAND', 'city': 'HELSINKI'}, {'country': 'SWEDEN', 'city': 'STOCKHOLM'}, {'country': 'NORWAY', 'city': 'OSLO'}]
-
-
-
+'''
+# Alternative A
+country_list = []
+countries = [[('Finland', 'Helsinki')], [('Sweden', 'Stockholm')], [('Norway', 'Oslo')]]
+outed = [sublist for county in countries for sublist in county]
+for out in outed:
+    country, city = out
+    keys = ('country', 'city')
+    country_dict = dict(zip(keys, (country.upper(), city.upper())))
+    country_list.append(country_dict)
+print(country_list)
+'''
 
 
 # ==============================================================================
@@ -180,12 +189,12 @@ print(result)
 # ==============================================================================
 # Exploration Objectives:
 # 1. Implementation Alternatives:
-#    - Alternative A (Pure Functional Pipeline with map and ' '.join):
-#      Flatten the stream with `itertools.chain.from_iterable` and feed it directly
-#      into `list(map(' '.join, flat_names))`—achieving zero manual variable naming and zero indexing.
+#    - Alternative A (Pure Functional Pipeline with map and str.join):
+#      Flatten the stream and pipe it directly into `map()` bound to a join delimiter,
+#      achieving zero manual variable naming and zero manual indexing.
 #    - Alternative B (Structural Unpacking with Formatted f-strings):
-#      Unpack directly in the loop or comprehension and format with an f-string:
-#      `[f"{first} {last}" for [(first, last)] in names]`.
+#      Explore pattern matching / structural unpacking directly inside the comprehension
+#      header to format each pair with an f-string in one step.
 #
 # 2. Mechanistic Analysis & Trade-offs:
 #    - `str.join(tuple)` vs f-string `f"{first} {last}"` vs Chained `+`:
@@ -204,6 +213,16 @@ print(result)
 
 # Write your Pass 2 solution below:
 # Target Output: ['Asabeneh Yetayeh', 'David Smith', 'Donald Trump', 'Bill Gates']
+'''
+# Alternative A:
+import itertools
+names = [[('Asabeneh', 'Yetayeh')], [('David', 'Smith')], [('Donald', 'Trump')], [('Bill', 'Gates')]]
+flat_names = itertools.chain.from_iterable(names)
+name_list = list(map(' '.join, flat_names))
+print(name_list) 
+'''
 
-
-
+# Alternative B:
+names = [[('Asabeneh', 'Yetayeh')], [('David', 'Smith')], [('Donald', 'Trump')], [('Bill', 'Gates')]]
+comprehension = [f"{first}, {last}" for [(first, last)] in names]
+print(comprehension)
