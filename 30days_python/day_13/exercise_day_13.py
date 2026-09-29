@@ -74,22 +74,9 @@ names = [[('Asabeneh', 'Yetayeh')], [('David', 'Smith')], [('Donald', 'Trump')],
 outed_names = [' '.join(name_tuple) for sublist in names for name_tuple in sublist]
 print(outed_names)
 '''
-# Exercise 7: Write a lambda function which can solve a slope or y-intercept of linear functions.
-# ==============================================================================
-
-# ==============================================================================
-# Exercise 1: Filter Negative and Zero
-# ==============================================================================
-# Challenge:
-#   Given the list `numbers = [-4, -3, -2, -1, 0, 2, 4, 6]`, filter out all
-#   positive numbers so that only negative numbers and zero remain.
-#   You MUST use a list comprehension.
-#
-# Adversarial Test Matrix:
-#   1. Standard Case: numbers = [-4, -3, -2, -1, 0, 2, 4, 6] -> [-4, -3, -2, -1, 0]
-#   2. Boundary Case: numbers = [] -> []
-#   3. Trap Case: numbers = [0, 1, -1] -> [0, -1] (ensure 0 is explicitly included!)
-# ==============================================================================
-
-# Write your Exercise 1 solution below:
+# Exercise 7: Linear Function Slope Lambda — verified 2026-09-29
+'''
+calc_slope = lambda x1, y1, x2, y2 : (y2 - y1) / (x2 - x1)
+print(calc_slope(2, 3, 6, 11))
+'''
 

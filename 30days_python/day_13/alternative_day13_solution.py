@@ -222,7 +222,45 @@ name_list = list(map(' '.join, flat_names))
 print(name_list) 
 '''
 
+'''
 # Alternative B:
 names = [[('Asabeneh', 'Yetayeh')], [('David', 'Smith')], [('Donald', 'Trump')], [('Bill', 'Gates')]]
 comprehension = [f"{first}, {last}" for [(first, last)] in names]
 print(comprehension)
+'''
+
+# ==============================================================================
+# Exercise 7: Linear Function Slope & Intercept (Pass 2: Alternative Exploration)
+# ==============================================================================
+# Exploration Objectives:
+# 1. Implementation Alternatives:
+#    - Alternative A (Coordinate Tuple Pairs):
+#      Instead of passing 4 loose scalar numbers (x1, y1, x2, y2), write a lambda that
+#      takes two coordinate point tuples `p1` and `p2` (e.g. `p1 = (2, 3)` and `p2 = (6, 11)`).
+#      Compute the slope using indexing `p[0]`, `p[1]` or tuple unpacking so the function
+#      works naturally with coordinate pairs.
+#    - Alternative B (Higher-Order Function / Linear Closure Factory):
+#      Create a higher-order lambda factory that takes slope `m` and y-intercept `b`,
+#      and returns a *new* lambda function `f(x)` representing the line `y = mx + b`.
+#      Example usage: `line = make_line(2, -1); print(line(5))` -> 9.
+#    - Alternative C (Safe Slope with ZeroDivision Guard):
+#      Write a slope lambda using a conditional ternary expression (`val1 if cond else val2`)
+#      that returns `None` or `'undefined'` if the line is vertical (`x1 == x2`),
+#      preventing a runtime `ZeroDivisionError`.
+#
+# 2. Mechanistic Analysis & Trade-offs:
+#    - Loose Arguments vs Tuple Bundles:
+#      Passing structured coordinate tuples `(x, y)` prevents argument order confusion
+#      (e.g. accidentally mixing up x2 and y1) and matches real geometric APIs.
+#    - Lambdas as Function Factories:
+#      Returning a lambda from another lambda demonstrates closures—preserving the
+#      enclosing slope and intercept values without defining full classes.
+# ==============================================================================
+
+# Write your Pass 2 solution below:
+
+p1 = input(tuple("Input x1, x2: "))
+p2 = input(tuple("Input y1, y2: "))
+slope_calc = lambda x1, y1, x2, y2: (p1[0] - p2[0]) / (p1[1] - p2[1])
+
+

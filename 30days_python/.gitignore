@@ -1,0 +1,4 @@
+# Custom agent skills & local instructions
+.agents/skills/
+.agents/rules/AGENTS.md
+.claude/
