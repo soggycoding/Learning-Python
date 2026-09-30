@@ -92,3 +92,29 @@ names = [[('Asabeneh', 'Yetayeh')], [('David', 'Smith')], [('Donald', 'Trump')],
 flat_list = [f"{first} {last}" for sublist in names for first, last in sublist]
 print(flat_list)
 '''
+
+# ==============================================================================
+# BATCHED RECALL CHUNK 3 (Exercise 7)
+# ==============================================================================
+# Instructions:
+#   Do NOT look back at `exercise_day_13.py` or `alternative_day13_solution.py`.
+#   Write your implementation strictly from memory below.
+#
+# Recall Prompt 7: Linear Function Slope Calculator
+#   Input:
+#     Four coordinate values: x1 = 2, y1 = 3, x2 = 6, y2 = 11
+#   Expected Output:
+#     2.0
+#   Constraints:
+#     Must be implemented as an anonymous lambda function.
+# ==============================================================================
+
+# Recall Prompt 7: Linear Function Slope Calculator — verified 2026-09-30
+'''
+p1 = (1, 2)
+p2 = (3, 6)
+linear_function_slope = lambda p1, p2: (p2[1] - p1[1]) / (p2[0] - p1[0])
+print(linear_function_slope(p1, p2))
+'''
+
+

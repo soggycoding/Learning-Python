@@ -257,10 +257,17 @@ print(comprehension)
 #      enclosing slope and intercept values without defining full classes.
 # ==============================================================================
 
-# Write your Pass 2 solution below:
+# Exercise 7: Linear Function Slope & Factory — verified 2026-09-30
+'''
+# Alternative A: Coordinate Tuple Pairs
+p1 = (2, 3)
+p2 = (6, 11)
+slope_calc = lambda p1, p2: (p1[1] - p2[1]) / (p1[0] - p2[0])
+print(slope_calc(p1, p2))
 
-p1 = input(tuple("Input x1, x2: "))
-p2 = input(tuple("Input y1, y2: "))
-slope_calc = lambda x1, y1, x2, y2: (p1[0] - p2[0]) / (p1[1] - p2[1])
-
+# Alternative B: Higher-Order Linear Function Closure Factory
+make_line = lambda m, b: lambda x: m * x + b
+line = make_line(2, -1)
+print(line(5))
+'''
 
