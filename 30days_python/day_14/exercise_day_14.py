@@ -1,0 +1,428 @@
+# Day 14: Higher Order Functions, Closures & Decorators Exercises
+
+from functools import reduce
+
+# ==============================================================================
+# Starter Datasets Provided for Day 14
+# ==============================================================================
+countries = ['Estonia', 'Finland', 'Sweden', 'Denmark', 'Norway', 'Iceland']
+names = ['Asabeneh', 'Lidiya', 'Ermias', 'Abraham']
+numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+
+
+# ==============================================================================
+# LEVEL 1 - EXERCISE 1: Explain map, filter, and reduce
+# ==============================================================================
+# Challenge:
+#   Explain the difference between `map()`, `filter()`, and `reduce()`.
+#   Provide your answer as structured comments or docstrings explaining:
+#   - Purpose & mechanics of each
+#   - Expected input function signature (number of parameters, return types)
+#   - Return type of each construct in Python 3
+#
+# Adversarial Test Matrix:
+#   1. Standard Case: Clearly delineates 1-to-1 transformation (map), selection/filtering (filter), and aggregation/folding (reduce).
+#   2. Boundary Case: Notes on iterator behavior (map/filter return lazy iterators; reduce returns a scalar value).
+#   3. Trap Case: Explains what happens on empty iterables for reduce (requires initializer vs TypeError).
+# ==============================================================================
+
+# Write your explanation below:
+
+
+
+
+# ==============================================================================
+# LEVEL 1 - EXERCISE 2: Explain HOF, Closure, and Decorator
+# ==============================================================================
+# Challenge:
+#   Explain the difference between:
+#   1. Higher Order Function (HOF)
+#   2. Closure
+#   3. Decorator
+#   Provide your answer as structured comments or docstrings explaining the
+#   relationship and progression between these three concepts.
+#
+# Adversarial Test Matrix:
+#   1. Standard Case: Accurate definition of each and how decorators build on closures and HOFs.
+#   2. Boundary Case: Explains the 3 criteria for a closure (nested function, outer scope reference, returned).
+#   3. Trap Case: Clarifies the role of `@functools.wraps` in production decorators.
+# ==============================================================================
+
+# Write your explanation below:
+
+
+
+
+# ==============================================================================
+# LEVEL 1 - EXERCISE 3: Define Callback Functions for map, filter, and reduce
+# ==============================================================================
+# Challenge:
+#   Define standalone named callback functions (not lambdas) before calling
+#   `map()`, `filter()`, and `reduce()`:
+#   1. A transformation function to pass into `map()`
+#   2. A predicate (boolean) function to pass into `filter()`
+#   3. An accumulator function to pass into `reduce()`
+#   Call each with appropriate sample data and print the results.
+#
+# Adversarial Test Matrix:
+#   1. Standard Case: All 3 callbacks defined with `def` and passed cleanly as arguments.
+#   2. Boundary Case: Handling empty sequence or single item safely.
+#   3. Trap Case: Ensure predicate returns a boolean/truthy value, and reduce function takes exactly 2 parameters.
+# ==============================================================================
+
+# Write your solution below:
+
+
+
+
+# ==============================================================================
+# LEVEL 1 - EXERCISE 4: Print Countries using for loop
+# ==============================================================================
+# Challenge:
+#   Use a `for` loop to iterate over the `countries` list and print each country.
+#
+# Adversarial Test Matrix:
+#   1. Standard Case: Prints all 6 countries in order.
+#   2. Boundary Case: Empty list prints nothing without error.
+#   3. Trap Case: Iterates directly over items (`for country in countries`), not indexing by range(len()).
+# ==============================================================================
+
+# Write your solution below:
+
+
+
+
+# ==============================================================================
+# LEVEL 1 - EXERCISE 5: Print Names using for loop
+# ==============================================================================
+# Challenge:
+#   Use a `for` loop to iterate over the `names` list and print each name.
+#
+# Adversarial Test Matrix:
+#   1. Standard Case: Prints all 4 names in order.
+#   2. Boundary Case: Empty list prints nothing without error.
+#   3. Trap Case: Direct iteration without side effects.
+# ==============================================================================
+
+# Write your solution below:
+
+
+
+
+# ==============================================================================
+# LEVEL 1 - EXERCISE 6: Print Numbers using for loop
+# ==============================================================================
+# Challenge:
+#   Use a `for` loop to iterate over the `numbers` list and print each number.
+#
+# Adversarial Test Matrix:
+#   1. Standard Case: Prints 1 through 10.
+#   2. Boundary Case: Single number sequence prints that single number.
+#   3. Trap Case: Direct iteration over sequence.
+# ==============================================================================
+
+# Write your solution below:
+
+
+
+
+# ==============================================================================
+# LEVEL 2 - EXERCISE 1: Uppercase Countries with map()
+# ==============================================================================
+# Challenge:
+#   Use `map()` to create a new list by changing each country in `countries`
+#   to uppercase.
+#
+# Adversarial Test Matrix:
+#   1. Standard Case: `['ESTONIA', 'FINLAND', 'SWEDEN', 'DENMARK', 'NORWAY', 'ICELAND']`
+#   2. Boundary Case: `countries = []` -> returns `[]`.
+#   3. Trap Case: Output must be a `list`, not an unconsumed `map` iterator object.
+# ==============================================================================
+
+# Write your solution below:
+
+
+
+
+# ==============================================================================
+# LEVEL 2 - EXERCISE 2: Square Numbers with map()
+# ==============================================================================
+# Challenge:
+#   Use `map()` to create a new list by changing each number in `numbers`
+#   to its square.
+#
+# Adversarial Test Matrix:
+#   1. Standard Case: `[1, 4, 9, 16, 25, 36, 49, 64, 81, 100]`
+#   2. Boundary Case: `numbers = [0]` -> `[0]`
+#   3. Trap Case: Result must be materialized as a list.
+# ==============================================================================
+
+# Write your solution below:
+
+
+
+
+# ==============================================================================
+# LEVEL 2 - EXERCISE 3: Uppercase Names with map()
+# ==============================================================================
+# Challenge:
+#   Use `map()` to create a new list by changing each name in `names`
+#   to uppercase.
+#
+# Adversarial Test Matrix:
+#   1. Standard Case: `['ASABENEH', 'LIDIYA', 'ERMIAS', 'ABRAHAM']`
+#   2. Boundary Case: Single name list `['sam']` -> `['SAM']`
+#   3. Trap Case: Proper type checking and list conversion.
+# ==============================================================================
+
+# Write your solution below:
+
+
+
+
+# ==============================================================================
+# LEVEL 2 - EXERCISE 4: Filter Countries Containing 'land'
+# ==============================================================================
+# Challenge:
+#   Use `filter()` to filter out countries containing `'land'` from `countries`.
+#   (Only countries with 'land' in their name should remain).
+#
+# Adversarial Test Matrix:
+#   1. Standard Case: `['Finland', 'Iceland']`
+#   2. Boundary Case: If no country contains 'land', return `[]`.
+#   3. Trap Case: Case sensitivity check — handles substrings properly.
+# ==============================================================================
+
+# Write your solution below:
+
+
+
+
+# ==============================================================================
+# LEVEL 2 - EXERCISE 5: Filter Countries with Exactly Six Characters
+# ==============================================================================
+# Challenge:
+#   Use `filter()` to filter out countries having exactly six characters.
+#
+# Adversarial Test Matrix:
+#   1. Standard Case: `['Sweden', 'Norway']`
+#   2. Boundary Case: List with no 6-letter countries returns `[]`.
+#   3. Trap Case: Exact equality `len(c) == 6`, not `>= 6`.
+# ==============================================================================
+
+# Write your solution below:
+
+
+
+
+# ==============================================================================
+# LEVEL 2 - EXERCISE 6: Filter Countries with Six or More Letters
+# ==============================================================================
+# Challenge:
+#   Use `filter()` to filter out countries containing six letters and more.
+#
+# Adversarial Test Matrix:
+#   1. Standard Case: `['Estonia', 'Finland', 'Sweden', 'Denmark', 'Norway', 'Iceland']`
+#   2. Boundary Case: Short names like `['Chad', 'Fiji', 'Peru']` -> all filtered out -> `[]`.
+#   3. Trap Case: Greater-than-or-equal `len(c) >= 6`.
+# ==============================================================================
+
+# Write your solution below:
+
+
+
+
+# ==============================================================================
+# LEVEL 2 - EXERCISE 7: Filter Countries Starting with 'E'
+# ==============================================================================
+# Challenge:
+#   Use `filter()` to filter out countries starting with the letter `'E'`.
+#
+# Adversarial Test Matrix:
+#   1. Standard Case: `['Estonia']`
+#   2. Boundary Case: List without any 'E' countries returns `[]`.
+#   3. Trap Case: Handles casing (e.g. `.startswith('E')` or case-insensitive check).
+# ==============================================================================
+
+# Write your solution below:
+
+
+
+
+# ==============================================================================
+# LEVEL 2 - EXERCISE 8: Chain Two or More List Iterators
+# ==============================================================================
+# Challenge:
+#   Chain two or more higher-order operations together in a pipeline
+#   (e.g., filter numbers, map transformations, then reduce to a final result).
+#
+# Adversarial Test Matrix:
+#   1. Standard Case: Clear functional pipeline (e.g. filter evens -> square -> sum).
+#   2. Boundary Case: Pipeline functions cleanly when intermediary produces an empty sequence.
+#   3. Trap Case: Avoid nested parentheses confusion; ensure lazy consumption flows properly.
+# ==============================================================================
+
+# Write your solution below:
+
+
+
+
+# ==============================================================================
+# LEVEL 2 - EXERCISE 9: get_string_lists Function
+# ==============================================================================
+# Challenge:
+#   Declare a function called `get_string_lists` which takes a list as a
+#   parameter and returns a list containing only string items using `filter()`.
+#
+# Function signature:
+#   def get_string_lists(lst):
+#
+# Adversarial Test Matrix:
+#   1. Standard Case: `[1, 'apple', 3.14, 'banana', True, 'cherry']` -> `['apple', 'banana', 'cherry']`
+#   2. Boundary Case: List of numbers only `[1, 2, 3]` -> `[]`; empty list `[]` -> `[]`
+#   3. Trap Case: Ensure boolean `True`/`False` are not treated as strings; use `isinstance(x, str)`.
+# ==============================================================================
+
+# Write your solution below:
+
+
+
+
+# ==============================================================================
+# LEVEL 2 - EXERCISE 10: Sum Numbers with reduce()
+# ==============================================================================
+# Challenge:
+#   Use `reduce()` from `functools` to sum all the numbers in the `numbers` list.
+#
+# Adversarial Test Matrix:
+#   1. Standard Case: `numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]` -> `55`
+#   2. Boundary Case: Single element `[42]` -> `42`; empty list with initializer `0` -> `0`
+#   3. Trap Case: Pass initializer `0` to prevent `TypeError` on empty lists.
+# ==============================================================================
+
+# Write your solution below:
+
+
+
+
+# ==============================================================================
+# LEVEL 2 - EXERCISE 11: Concatenate Countries into a Sentence with reduce()
+# ==============================================================================
+# Challenge:
+#   Use `reduce()` to concatenate all countries in `countries` to produce this
+#   exact sentence:
+#   "Estonia, Finland, Sweden, Denmark, Norway, and Iceland are north European countries"
+#
+# Adversarial Test Matrix:
+#   1. Standard Case: Matches target string with Oxford comma and conjunction: "..., Norway, and Iceland are north European countries".
+#   2. Boundary Case: Handling trailing and special formatting accurately.
+#   3. Trap Case: Ensure the sentence ending is exact without extra trailing commas.
+# ==============================================================================
+
+# Write your solution below:
+
+
+
+
+# ==============================================================================
+# LEVEL 2 - EXERCISE 12: categorize_countries
+# ==============================================================================
+# Challenge:
+#   Declare a function called `categorize_countries` that takes a pattern (e.g.
+#   'land', 'ia', 'island', 'stan') and returns a list of countries containing
+#   that pattern from the full countries dataset.
+#
+# Function signature:
+#   def categorize_countries(pattern):
+#
+# Adversarial Test Matrix:
+#   1. Standard Case: `categorize_countries('land')` returns all countries ending with or containing 'land'.
+#   2. Boundary Case: Pattern not found returns `[]`.
+#   3. Trap Case: Case-insensitive search (`pattern.lower() in country.lower()`).
+# ==============================================================================
+
+# Write your solution below:
+
+
+
+
+# ==============================================================================
+# LEVEL 2 - EXERCISE 13: countries_by_starting_letter
+# ==============================================================================
+# Challenge:
+#   Create a function returning a dictionary where keys stand for starting letters
+#   of countries and values are the number of country names starting with that letter.
+#
+# Function signature:
+#   def countries_by_starting_letter():
+#
+# Adversarial Test Matrix:
+#   1. Standard Case: Returns dict `{ 'A': count, 'B': count, ... }`.
+#   2. Boundary Case: Letters with 0 countries should not have invalid counts.
+#   3. Trap Case: Ensure uppercase standardization of starting letters.
+# ==============================================================================
+
+# Write your solution below:
+
+
+
+
+# ==============================================================================
+# LEVEL 2 - EXERCISE 14: get_first_ten_countries
+# ==============================================================================
+# Challenge:
+#   Declare a `get_first_ten_countries` function that returns a list of the
+#   first ten countries from the countries dataset.
+#
+# Function signature:
+#   def get_first_ten_countries():
+#
+# Adversarial Test Matrix:
+#   1. Standard Case: Returns exactly 10 countries.
+#   2. Boundary Case: If dataset has fewer than 10, return all available without IndexError.
+#   3. Trap Case: Preserves original list ordering.
+# ==============================================================================
+
+# Write your solution below:
+
+
+
+
+# ==============================================================================
+# LEVEL 2 - EXERCISE 15: get_last_ten_countries
+# ==============================================================================
+# Challenge:
+#   Declare a `get_last_ten_countries` function that returns the last ten
+#   countries from the countries dataset.
+#
+# Function signature:
+#   def get_last_ten_countries():
+#
+# Adversarial Test Matrix:
+#   1. Standard Case: Returns exactly the last 10 countries.
+#   2. Boundary Case: If dataset has fewer than 10, return all available.
+#   3. Trap Case: Slice indexing `[-10:]` does not invert order.
+# ==============================================================================
+
+# Write your solution below:
+
+
+
+
+# ==============================================================================
+# LEVEL 3 - EXERCISE 1: Sorting and Data Analysis with countries_data
+# ==============================================================================
+# Challenge:
+#   Use `countries_data.py` to perform the following higher-order operations:
+#   1. Sort countries by name, by capital, and by population.
+#   2. Sort out the ten most spoken languages by location.
+#   3. Sort out the ten most populated countries.
+#
+# Adversarial Test Matrix:
+#   1. Standard Case: Uses `sorted()` with key lambdas; top 10 lists have length 10.
+#   2. Boundary Case: Handles missing fields or empty values cleanly.
+#   3. Trap Case: Descending sort (`reverse=True`) for top populated and spoken items.
+# ==============================================================================
+
+# Write your solution below:
+
