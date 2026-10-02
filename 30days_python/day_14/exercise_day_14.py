@@ -27,10 +27,11 @@ numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 # ==============================================================================
 
 # Write your explanation below:
-
-
-
-
+'''
+- map(), maps the list and without the need of indexing. To convert without the need of manually doing it each index, requires 1 helper function and returns lazy iterator
+- filter(), filters out the data that is correct based on the instructions/directions given, requires 1 helper function and also returns a lazy iterator but filtered to only what meets the requiremenets
+- reduce(), to fold a sequence of items down into a single final scalar value, takes 1 helper function. Must be import via functools, always supply initial seed value, running on empty list crashes with TypeError
+'''
 # ==============================================================================
 # LEVEL 1 - EXERCISE 2: Explain HOF, Closure, and Decorator
 # ==============================================================================
