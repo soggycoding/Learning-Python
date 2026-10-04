@@ -1,5 +1,6 @@
 # Day 14: Higher Order Functions, Closures & Decorators Exercises
 
+import string
 from functools import reduce
 
 # ==============================================================================
@@ -50,10 +51,11 @@ numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 # ==============================================================================
 
 # Write your explanation below:
-
-
-
-
+'''
+Higher Order Function - function that accepts or returns functions
+Closure - Function inside a function, or a bundled function with captured outer variables. The three criterea. Must be a nested function, must have a reference variable, and the outer function must return the inner function object
+Decorator - HOF + Closure that intercepts and extends a target function, it applies a design pattern combining the two without modifying the original functions source code
+'''
 # ==============================================================================
 # LEVEL 1 - EXERCISE 3: Define Callback Functions for map, filter, and reduce
 # ==============================================================================
@@ -72,9 +74,26 @@ numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 # ==============================================================================
 
 # Write your solution below:
+def to_pounds(kg):
+    return kg * 2.205
+kilogram = [55, 78, 96]
+result = list(map(to_pounds, kilogram))
+print(result)
 
+def is_string(value):
+    return isinstance(value, str)
 
+random_things = [1, '23', 3, 'hello', 'bye', 6]
+string_in_list = list(filter(is_string, random_things))
+print(string_in_list)
 
+def accumulate_step(running_value, current_value):
+    return running_value + current_value
+
+factors = [1,2,3,4,5,6,7,8,9,10]
+
+final_product = reduce(accumulate_step, factors, 0)
+print(final_product)
 
 # ==============================================================================
 # LEVEL 1 - EXERCISE 4: Print Countries using for loop
