@@ -11,69 +11,23 @@ names = ['Asabeneh', 'Lidiya', 'Ermias', 'Abraham']
 numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
 
-# ==============================================================================
-# LEVEL 1 - EXERCISE 1: Explain map, filter, and reduce
-# ==============================================================================
-# Challenge:
-#   Explain the difference between `map()`, `filter()`, and `reduce()`.
-#   Provide your answer as structured comments or docstrings explaining:
-#   - Purpose & mechanics of each
-#   - Expected input function signature (number of parameters, return types)
-#   - Return type of each construct in Python 3
-#
-# Adversarial Test Matrix:
-#   1. Standard Case: Clearly delineates 1-to-1 transformation (map), selection/filtering (filter), and aggregation/folding (reduce).
-#   2. Boundary Case: Notes on iterator behavior (map/filter return lazy iterators; reduce returns a scalar value).
-#   3. Trap Case: Explains what happens on empty iterables for reduce (requires initializer vs TypeError).
-# ==============================================================================
-
-# Write your explanation below:
+# Exercise 1: Explain map, filter, and reduce — verified 2026-10-04
 '''
 - map(), maps the list and without the need of indexing. To convert without the need of manually doing it each index, requires 1 helper function and returns lazy iterator
 - filter(), filters out the data that is correct based on the instructions/directions given, requires 1 helper function and also returns a lazy iterator but filtered to only what meets the requiremenets
 - reduce(), to fold a sequence of items down into a single final scalar value, takes 1 helper function. Must be import via functools, always supply initial seed value, running on empty list crashes with TypeError
 '''
-# ==============================================================================
-# LEVEL 1 - EXERCISE 2: Explain HOF, Closure, and Decorator
-# ==============================================================================
-# Challenge:
-#   Explain the difference between:
-#   1. Higher Order Function (HOF)
-#   2. Closure
-#   3. Decorator
-#   Provide your answer as structured comments or docstrings explaining the
-#   relationship and progression between these three concepts.
-#
-# Adversarial Test Matrix:
-#   1. Standard Case: Accurate definition of each and how decorators build on closures and HOFs.
-#   2. Boundary Case: Explains the 3 criteria for a closure (nested function, outer scope reference, returned).
-#   3. Trap Case: Clarifies the role of `@functools.wraps` in production decorators.
-# ==============================================================================
 
-# Write your explanation below:
+# Exercise 2: Explain HOF, Closure, and Decorator — verified 2026-10-04
 '''
 Higher Order Function - function that accepts or returns functions
 Closure - Function inside a function, or a bundled function with captured outer variables. The three criterea. Must be a nested function, must have a reference variable, and the outer function must return the inner function object
 Decorator - HOF + Closure that intercepts and extends a target function, it applies a design pattern combining the two without modifying the original functions source code
+@functools.wraps helps us wrap a function inside a decorator, it preserves the original function's metadata
 '''
-# ==============================================================================
-# LEVEL 1 - EXERCISE 3: Define Callback Functions for map, filter, and reduce
-# ==============================================================================
-# Challenge:
-#   Define standalone named callback functions (not lambdas) before calling
-#   `map()`, `filter()`, and `reduce()`:
-#   1. A transformation function to pass into `map()`
-#   2. A predicate (boolean) function to pass into `filter()`
-#   3. An accumulator function to pass into `reduce()`
-#   Call each with appropriate sample data and print the results.
-#
-# Adversarial Test Matrix:
-#   1. Standard Case: All 3 callbacks defined with `def` and passed cleanly as arguments.
-#   2. Boundary Case: Handling empty sequence or single item safely.
-#   3. Trap Case: Ensure predicate returns a boolean/truthy value, and reduce function takes exactly 2 parameters.
-# ==============================================================================
 
-# Write your solution below:
+# Exercise 3: Define Callback Functions for map, filter, and reduce — verified 2026-10-04
+'''
 def to_pounds(kg):
     return kg * 2.205
 kilogram = [55, 78, 96]
@@ -94,56 +48,27 @@ factors = [1,2,3,4,5,6,7,8,9,10]
 
 final_product = reduce(accumulate_step, factors, 0)
 print(final_product)
+'''
 
-# ==============================================================================
-# LEVEL 1 - EXERCISE 4: Print Countries using for loop
-# ==============================================================================
-# Challenge:
-#   Use a `for` loop to iterate over the `countries` list and print each country.
-#
-# Adversarial Test Matrix:
-#   1. Standard Case: Prints all 6 countries in order.
-#   2. Boundary Case: Empty list prints nothing without error.
-#   3. Trap Case: Iterates directly over items (`for country in countries`), not indexing by range(len()).
-# ==============================================================================
-
-# Write your solution below:
+# Exercise 4: Print Countries using for loop — verified 2026-10-05
+'''
+for country in countries:
+    print(country)
+'''
 
 
+# Exercise 5: Print Names using for loop — verified 2026-10-05
+'''
+for name in names:
+    print(name)
+'''
 
 
-# ==============================================================================
-# LEVEL 1 - EXERCISE 5: Print Names using for loop
-# ==============================================================================
-# Challenge:
-#   Use a `for` loop to iterate over the `names` list and print each name.
-#
-# Adversarial Test Matrix:
-#   1. Standard Case: Prints all 4 names in order.
-#   2. Boundary Case: Empty list prints nothing without error.
-#   3. Trap Case: Direct iteration without side effects.
-# ==============================================================================
-
-# Write your solution below:
-
-
-
-
-# ==============================================================================
-# LEVEL 1 - EXERCISE 6: Print Numbers using for loop
-# ==============================================================================
-# Challenge:
-#   Use a `for` loop to iterate over the `numbers` list and print each number.
-#
-# Adversarial Test Matrix:
-#   1. Standard Case: Prints 1 through 10.
-#   2. Boundary Case: Single number sequence prints that single number.
-#   3. Trap Case: Direct iteration over sequence.
-# ==============================================================================
-
-# Write your solution below:
-
-
+# Exercise 6: Print Numbers using for loop — verified 2026-10-05
+'''
+for nums in numbers:
+    print(nums)
+'''
 
 
 # ==============================================================================
