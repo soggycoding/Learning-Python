@@ -85,7 +85,10 @@ for nums in numbers:
 # ==============================================================================
 
 # Write your solution below:
-
+def uppCountries(val):
+    return val.upper()
+country_upper = list(map(uppCountries, countries))
+print(country_upper)
 
 
 
@@ -103,7 +106,10 @@ for nums in numbers:
 # ==============================================================================
 
 # Write your solution below:
-
+def squarenum(val):
+    return val**2
+squarednum = list(map(squarenum, numbers))
+print(squarednum)
 
 
 
@@ -121,7 +127,10 @@ for nums in numbers:
 # ==============================================================================
 
 # Write your solution below:
-
+def uppname(val):
+    return val.upper()
+uppernames = list(map(uppname, names))
+print(uppernames)
 
 
 

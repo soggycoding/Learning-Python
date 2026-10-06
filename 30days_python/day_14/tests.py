@@ -31,7 +31,7 @@ triple = make_multiplier(3)
 print(double(2))  # 10 (remembers factor=2)
 print(triple(5))  # 15 (remembers factor=3)
 '''
-
+'''
 import functools
 
 def announce_execution(target_func):
@@ -49,3 +49,7 @@ def compute(x, y):
     return x + y
 
 print(compute(10, 20))
+'''
+print("Jonathan")
+print("test")
+    print("hello")
