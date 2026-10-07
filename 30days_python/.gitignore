@@ -2,3 +2,7 @@
 .agents/skills/
 .agents/rules/AGENTS.md
 .claude/
+
+# Local AI tool config & Gemini audit reports
+.gemini/
+gemini_audit.md

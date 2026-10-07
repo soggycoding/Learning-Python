@@ -1,0 +1,2 @@
+# Python virtual environments (recreate with: python -m venv .venv)
+.venv/

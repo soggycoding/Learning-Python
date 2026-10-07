@@ -71,66 +71,32 @@ for nums in numbers:
 '''
 
 
-# ==============================================================================
-# LEVEL 2 - EXERCISE 1: Uppercase Countries with map()
-# ==============================================================================
-# Challenge:
-#   Use `map()` to create a new list by changing each country in `countries`
-#   to uppercase.
-#
-# Adversarial Test Matrix:
-#   1. Standard Case: `['ESTONIA', 'FINLAND', 'SWEDEN', 'DENMARK', 'NORWAY', 'ICELAND']`
-#   2. Boundary Case: `countries = []` -> returns `[]`.
-#   3. Trap Case: Output must be a `list`, not an unconsumed `map` iterator object.
-# ==============================================================================
-
-# Write your solution below:
+# LEVEL 2 - EXERCISE 1: Uppercase Countries with map() — verified 2026-10-07
+'''
 def uppCountries(val):
     return val.upper()
 country_upper = list(map(uppCountries, countries))
 print(country_upper)
+'''
 
 
-
-# ==============================================================================
-# LEVEL 2 - EXERCISE 2: Square Numbers with map()
-# ==============================================================================
-# Challenge:
-#   Use `map()` to create a new list by changing each number in `numbers`
-#   to its square.
-#
-# Adversarial Test Matrix:
-#   1. Standard Case: `[1, 4, 9, 16, 25, 36, 49, 64, 81, 100]`
-#   2. Boundary Case: `numbers = [0]` -> `[0]`
-#   3. Trap Case: Result must be materialized as a list.
-# ==============================================================================
-
-# Write your solution below:
+# LEVEL 2 - EXERCISE 2: Square Numbers with map() — verified 2026-10-07
+'''
 def squarenum(val):
     return val**2
 squarednum = list(map(squarenum, numbers))
 print(squarednum)
+'''
 
 
-
-# ==============================================================================
-# LEVEL 2 - EXERCISE 3: Uppercase Names with map()
-# ==============================================================================
-# Challenge:
-#   Use `map()` to create a new list by changing each name in `names`
-#   to uppercase.
-#
-# Adversarial Test Matrix:
-#   1. Standard Case: `['ASABENEH', 'LIDIYA', 'ERMIAS', 'ABRAHAM']`
-#   2. Boundary Case: Single name list `['sam']` -> `['SAM']`
-#   3. Trap Case: Proper type checking and list conversion.
-# ==============================================================================
-
-# Write your solution below:
+# LEVEL 2 - EXERCISE 3: Uppercase Names with map() — verified 2026-10-07
+'''
 def uppname(val):
     return val.upper()
 uppernames = list(map(uppname, names))
 print(uppernames)
+'''
+
 
 
 
