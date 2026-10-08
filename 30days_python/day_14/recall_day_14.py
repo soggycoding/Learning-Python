@@ -51,7 +51,67 @@ numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 #     3. Trap Case: `['ABRAHAM']` (already uppercase) -> `['ABRAHAM']`; result is a `list`.
 # ==============================================================================
 
-# Write your Recall solutions below:
+# Recall Prompt 1: Uppercase Country Names — verified 2026-10-08
+'''
+country_upper = list(map(str.upper, countries))
+print(country_upper)
+'''
+
+# Recall Prompt 2: Square Numbers — verified 2026-10-08
+'''
+squared = list(map(lambda x: x**2, numbers))
+print(squared)
+'''
+
+# Recall Prompt 3: Uppercase Person Names — verified 2026-10-08
+'''
+names_upper = list(map(str.upper, names))
+print(names_upper)
+'''
 
 
+# ==============================================================================
+# BATCHED RECALL: LEVEL 2 (Exercises 4, 5, and 6)
+# ==============================================================================
+# Instructions:
+#   Do NOT look back at `exercise_day_14.py` or `alternative_day14_solution.py`.
+#   Write your implementations strictly from memory below.
+#
+# Recall Prompt 4: Filter Countries Containing 'land'
+#   Input:
+#     countries = ['Estonia', 'Finland', 'Sweden', 'Denmark', 'Norway', 'Iceland']
+#   Expected Output:
+#     ['Finland', 'Iceland']
+#   Constraints:
+#     Must return a materialized list containing only countries that contain the substring 'land'.
+#   Adversarial Test Matrix:
+#     1. Standard Case: the expected output above
+#     2. Boundary Case: `['Chad', 'Peru']` -> `[]`
+#     3. Trap Case: Case sensitivity — handles `'IreLaNd'` if normalized -> `['IreLaNd']`; result is a `list`.
+#
+# Recall Prompt 5: Filter Countries with Exactly Six Characters
+#   Input:
+#     countries = ['Estonia', 'Finland', 'Sweden', 'Denmark', 'Norway', 'Iceland']
+#   Expected Output:
+#     ['Sweden', 'Norway']
+#   Constraints:
+#     Must return a materialized list of countries whose character length is exactly 6.
+#   Adversarial Test Matrix:
+#     1. Standard Case: the expected output above
+#     2. Boundary Case: `['Chad', 'Fiji']` -> `[]`
+#     3. Trap Case: Exact equality `len(c) == 6`, not `>= 6`.
+#
+# Recall Prompt 6: Filter Countries with Six or More Letters
+#   Input:
+#     countries = ['Estonia', 'Finland', 'Sweden', 'Denmark', 'Norway', 'Iceland']
+#   Expected Output:
+#     ['Estonia', 'Finland', 'Sweden', 'Denmark', 'Norway', 'Iceland']
+#   Constraints:
+#     Must return a materialized list of countries whose character length is 6 or greater.
+#   Adversarial Test Matrix:
+#     1. Standard Case: the expected output above
+#     2. Boundary Case: `['Chad', 'Fiji', 'Peru']` -> `[]`
+#     3. Trap Case: Inequality check `len(c) >= 6`.
+# ==============================================================================
 
+# Write your Batch 2 Recall solutions below:

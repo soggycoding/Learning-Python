@@ -100,57 +100,31 @@ print(uppernames)
 
 
 
-# ==============================================================================
-# LEVEL 2 - EXERCISE 4: Filter Countries Containing 'land'
-# ==============================================================================
-# Challenge:
-#   Use `filter()` to filter out countries containing `'land'` from `countries`.
-#   (Only countries with 'land' in their name should remain).
-#
-# Adversarial Test Matrix:
-#   1. Standard Case: `['Finland', 'Iceland']`
-#   2. Boundary Case: If no country contains 'land', return `[]`.
-#   3. Trap Case: Case sensitivity check — handles substrings properly.
-# ==============================================================================
-
-# Write your solution below:
+# LEVEL 2 - EXERCISE 4: Filter Countries Containing 'land' — verified 2026-10-08
+'''
+def country(val):
+    return "land" in val.lower()
+land_country = list(filter(country, countries))
+print(land_country)
+'''
 
 
+# LEVEL 2 - EXERCISE 5: Filter Countries with Exactly Six Characters — verified 2026-10-08
+'''
+def counter(val):
+    return len(val) == 6
+country_w_six = list(filter(counter, countries))
+print(country_w_six)
+'''
 
 
-# ==============================================================================
-# LEVEL 2 - EXERCISE 5: Filter Countries with Exactly Six Characters
-# ==============================================================================
-# Challenge:
-#   Use `filter()` to filter out countries having exactly six characters.
-#
-# Adversarial Test Matrix:
-#   1. Standard Case: `['Sweden', 'Norway']`
-#   2. Boundary Case: List with no 6-letter countries returns `[]`.
-#   3. Trap Case: Exact equality `len(c) == 6`, not `>= 6`.
-# ==============================================================================
-
-# Write your solution below:
-
-
-
-
-# ==============================================================================
-# LEVEL 2 - EXERCISE 6: Filter Countries with Six or More Letters
-# ==============================================================================
-# Challenge:
-#   Use `filter()` to filter out countries containing six letters and more.
-#
-# Adversarial Test Matrix:
-#   1. Standard Case: `['Estonia', 'Finland', 'Sweden', 'Denmark', 'Norway', 'Iceland']`
-#   2. Boundary Case: Short names like `['Chad', 'Fiji', 'Peru']` -> all filtered out -> `[]`.
-#   3. Trap Case: Greater-than-or-equal `len(c) >= 6`.
-# ==============================================================================
-
-# Write your solution below:
-
-
-
+# LEVEL 2 - EXERCISE 6: Filter Countries with Six or More Letters — verified 2026-10-08
+'''
+def counter(val):
+    return len(val) >= 6
+country_w_more_six = list(filter(counter, countries))
+print(country_w_more_six)
+'''
 
 # ==============================================================================
 # LEVEL 2 - EXERCISE 7: Filter Countries Starting with 'E'

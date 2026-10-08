@@ -94,3 +94,82 @@ print(upper_names)
 upper_names = list(map(str.upper, names))
 print(upper_names)
 '''
+
+
+# ==============================================================================
+# Level 2 - Exercise 4: Filter Countries Containing 'land' (Pass 2: Alternative Exploration) — verified 2026-10-08
+# ==============================================================================
+# Exploration Objectives:
+# 1. Implementation Alternatives:
+#    - Option A (List Comprehension with Filtering):
+#      Filter items using a list comprehension: `[elem for elem in ... if <condition>]`.
+#    - Option B (Inline Lambda with filter()):
+#      Instead of defining a standalone `def` helper function, pass an anonymous inline lambda directly to `filter()`.
+#
+# 2. Mechanistic Analysis & Trade-offs:
+#    - Readability vs Functional style: List comprehensions are generally considered more Pythonic and concise than `filter()` with a lambda.
+#    - Execution Overhead: `filter()` with a Python lambda invokes a function frame for every element, whereas list comprehensions execute optimized C-level loop bytecode.
+# ==============================================================================
+
+# Target Output: ['Finland', 'Iceland']
+'''
+# Option A: List comprehension
+country_six = [country for country in countries if "land" in country]
+print(country_six)
+
+# Option B: Inline lambda with filter
+country_six = list(filter(lambda x: "land" in x, countries))
+print(country_six)
+'''
+
+
+# ==============================================================================
+# Level 2 - Exercise 5: Filter Countries with Exactly Six Characters (Pass 2: Alternative Exploration) — verified 2026-10-08
+# ==============================================================================
+# Exploration Objectives:
+# 1. Implementation Alternatives:
+#    - Option A (List Comprehension):
+#      Filter elements by exact length using a list comprehension: `[elem for elem in ... if len(elem) == ...]`.
+#    - Option B (Inline Lambda with filter()):
+#      Use `filter()` paired with an inline lambda checking the length.
+#
+# 2. Mechanistic Analysis & Trade-offs:
+#    - In-place predicate logic: Avoid namespace pollution by omitting single-use named functions for simple length checks.
+# ==============================================================================
+
+# Target Output: ['Sweden', 'Norway']
+'''
+# Option A: List comprehension
+country_w_six = [country for country in countries if len(country) == 6]
+print(country_w_six)
+
+# Option B: Inline lambda with filter
+country_w_six = list(filter(lambda x: len(x) == 6, countries))
+print(country_w_six)
+'''
+
+
+# ==============================================================================
+# Level 2 - Exercise 6: Filter Countries with Six or More Letters (Pass 2: Alternative Exploration) — verified 2026-10-08
+# ==============================================================================
+# Exploration Objectives:
+# 1. Implementation Alternatives:
+#    - Option A (List Comprehension):
+#      Filter elements using `>=` length comparison inside a list comprehension.
+#    - Option B (Inline Lambda with filter()):
+#      Use `filter()` paired with an inline lambda with `>=`.
+#
+# 2. Mechanistic Analysis & Trade-offs:
+#    - Comparison operators in functional pipelines: Observe the syntactic parity between exact match (`==`) and inequality (`>=`) across both paradigms.
+# ==============================================================================
+
+# Target Output: ['Estonia', 'Finland', 'Sweden', 'Denmark', 'Norway', 'Iceland']
+'''
+# Option A: List comprehension
+country_w_six_or_more = [country for country in countries if len(country) >= 6]
+print(country_w_six_or_more)
+
+# Option B: Inline lambda with filter
+country_w_six_or_more = list(filter(lambda x: len(x) >= 6, countries))
+print(country_w_six_or_more)
+'''
