@@ -114,4 +114,20 @@ print(names_upper)
 #     3. Trap Case: Inequality check `len(c) >= 6`.
 # ==============================================================================
 
-# Write your Batch 2 Recall solutions below:
+# Recall Prompt 4: Filter Countries Containing 'land' — verified 2026-10-09
+'''
+country = [x for x in countries if "land" in x.lower()]
+print(country)
+'''
+
+# Recall Prompt 5: Filter Countries with Exactly Six Characters — verified 2026-10-09
+'''
+country = [x for x in countries if len(x) == 6]
+print(country)
+'''
+
+# Recall Prompt 6: Filter Countries with Six or More Letters — verified 2026-10-09
+'''
+country = list(filter(lambda x: len(x) >= 6, countries))
+print(country)
+'''

@@ -127,57 +127,27 @@ print(country_w_more_six)
 '''
 
 # ==============================================================================
-# LEVEL 2 - EXERCISE 7: Filter Countries Starting with 'E'
-# ==============================================================================
-# Challenge:
-#   Use `filter()` to filter out countries starting with the letter `'E'`.
-#
-# Adversarial Test Matrix:
-#   1. Standard Case: `['Estonia']`
-#   2. Boundary Case: List without any 'E' countries returns `[]`.
-#   3. Trap Case: Handles casing (e.g. `.startswith('E')` or case-insensitive check).
-# ==============================================================================
-
-# Write your solution below:
+# LEVEL 2 - EXERCISE 7: Filter Countries Starting with 'E' — verified 2026-10-09
+'''
+country = list(filter(lambda x: x.startswith('E'), countries))
+print(country)
+'''
 
 
+# LEVEL 2 - EXERCISE 8: Chain Two or More List Iterators — verified 2026-10-09
+'''
+filtered = reduce(lambda x, y: x + y, map(lambda x: x**2, filter(lambda x: x % 2 == 0, numbers)), 0)
+print(filtered)
+'''
 
 
-# ==============================================================================
-# LEVEL 2 - EXERCISE 8: Chain Two or More List Iterators
-# ==============================================================================
-# Challenge:
-#   Chain two or more higher-order operations together in a pipeline
-#   (e.g., filter numbers, map transformations, then reduce to a final result).
-#
-# Adversarial Test Matrix:
-#   1. Standard Case: Clear functional pipeline (e.g. filter evens -> square -> sum).
-#   2. Boundary Case: Pipeline functions cleanly when intermediary produces an empty sequence.
-#   3. Trap Case: Avoid nested parentheses confusion; ensure lazy consumption flows properly.
-# ==============================================================================
-
-# Write your solution below:
-
-
-
-
-# ==============================================================================
-# LEVEL 2 - EXERCISE 9: get_string_lists Function
-# ==============================================================================
-# Challenge:
-#   Declare a function called `get_string_lists` which takes a list as a
-#   parameter and returns a list containing only string items using `filter()`.
-#
-# Function signature:
-#   def get_string_lists(lst):
-#
-# Adversarial Test Matrix:
-#   1. Standard Case: `[1, 'apple', 3.14, 'banana', True, 'cherry']` -> `['apple', 'banana', 'cherry']`
-#   2. Boundary Case: List of numbers only `[1, 2, 3]` -> `[]`; empty list `[]` -> `[]`
-#   3. Trap Case: Ensure boolean `True`/`False` are not treated as strings; use `isinstance(x, str)`.
-# ==============================================================================
-
-# Write your solution below:
+# LEVEL 2 - EXERCISE 9: get_string_lists Function — verified 2026-10-09
+'''
+mixed_list = [1, 'apple', 3.14, 'banana', True, 'cherry']
+def get_string_lists(lst):
+    return list(filter(lambda x: isinstance(x,str), lst))
+print(get_string_lists(mixed_list))
+'''
 
 
 
