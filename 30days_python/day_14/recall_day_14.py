@@ -131,3 +131,50 @@ print(country)
 country = list(filter(lambda x: len(x) >= 6, countries))
 print(country)
 '''
+
+
+# ==============================================================================
+# BATCHED RECALL: LEVEL 2 (Exercises 7, 8, and 9)
+# ==============================================================================
+# Instructions:
+#   Do NOT look back at `exercise_day_14.py` or `alternative_day14_solution.py`.
+#   Write your implementations strictly from memory below.
+#
+# Recall Prompt 7: Filter Countries Starting with 'E'
+#   Input:
+#     countries = ['Estonia', 'Finland', 'Sweden', 'Denmark', 'Norway', 'Iceland']
+#   Expected Output:
+#     ['Estonia']
+#   Constraints:
+#     Extract country names that start with the letter 'E' (or 'e') into a list.
+#   Adversarial Test Matrix:
+#     1. Standard Case: the expected output above
+#     2. Boundary Case: `[]` -> `[]`
+#     3. Trap Case: Multi-case check `['estonia', 'Estonia', 'spain']` -> `['estonia', 'Estonia']`
+#
+# Recall Prompt 8: Chain Transformations and Sum
+#   Input:
+#     numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+#   Expected Output:
+#     220
+#   Constraints:
+#     Identify the even numbers, square them, and calculate the total sum of those squared values as a single integer.
+#   Adversarial Test Matrix:
+#     1. Standard Case: the expected output above
+#     2. Boundary Case: `[]` -> `0`
+#     3. Trap Case: Only odd numbers `[1, 3, 5]` -> `0`; negative even numbers `[-2, -4]` -> `20`
+#
+# Recall Prompt 9: get_string_lists Function
+#   Input:
+#     mixed_list = [1, 'apple', 3.14, 'banana', True, 'cherry']
+#   Expected Output:
+#     ['apple', 'banana', 'cherry']
+#   Constraints:
+#     Define a function `get_string_lists(lst)` that accepts a list of mixed data types and returns a list containing only the string items.
+#   Adversarial Test Matrix:
+#     1. Standard Case: the expected output above
+#     2. Boundary Case: `[]` -> `[]`
+#     3. Trap Case: No strings present `[1, 2.5, True, False, None]` -> `[]`; preserves empty string `['', 42]` -> `['']`
+# ==============================================================================
+
+# Write your recall solutions below:

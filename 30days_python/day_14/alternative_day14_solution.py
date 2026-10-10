@@ -173,3 +173,86 @@ print(country_w_six_or_more)
 country_w_six_or_more = list(filter(lambda x: len(x) >= 6, countries))
 print(country_w_six_or_more)
 '''
+
+
+# ==============================================================================
+# Level 2 - Exercise 7: Filter Countries Starting with 'E' (Pass 2: Alternative Exploration) — verified 2026-10-10
+# ==============================================================================
+# Exploration Objectives:
+# 1. Implementation Alternatives:
+#    - Option A (List Comprehension):
+#      Filter elements starting with `'E'` using a list comprehension: `[elem for elem in ... if <condition>]`.
+#    - Option B (Case-Insensitive Tuple Matching):
+#      Pass a tuple of allowed prefixes to `.startswith(('E', 'e'))` within `filter()` or a comprehension.
+#
+# 2. Mechanistic Analysis & Trade-offs:
+#    - String Prefix Flexibility: `str.startswith()` accepts a tuple of candidates (e.g. `str.startswith(('A', 'B'))`), making multi-character/multi-casing checks fast and idiomatic without boolean concatenation.
+# ==============================================================================
+
+# Target Output: ['Estonia']
+'''
+# Option A
+target_letter = 'E', 'e'
+country = [x for x in countries if x.startswith(target_letter)]
+print(country)
+
+# Option B
+country = list(filter(lambda x: x.startswith(("E" , 'e')), countries))
+print(country)
+'''
+
+# ==============================================================================
+# Level 2 - Exercise 8: Chain Two or More List Iterators (Pass 2: Alternative Exploration) — verified 2026-10-10
+# ==============================================================================
+# Exploration Objectives:
+# 1. Implementation Alternatives:
+#    - Option A (Generator Expression with built-in sum()):
+#      Replace the nested `reduce()` + `map()` + `filter()` pipeline with a single generator expression fed into built-in `sum()`:
+#      `sum(transform(elem) for elem in ... if predicate(elem))`
+#    - Option B (Comprehension + built-in sum()):
+#      Compare the generator pipeline against a list comprehension fed into `sum()`.
+#
+# 2. Mechanistic Analysis & Trade-offs:
+#    - Functional vs Pythonic: In Python, `sum(f(x) for x in seq if cond(x))` is universally preferred over nested `reduce(lambda ..., map(..., filter(...)))` because it eliminates lambda dispatch overhead, avoids deep nesting parentheses, and runs via optimized C loops.
+# ==============================================================================
+
+# Target Output: 220
+'''
+# Option A:
+nums = sum(x ** 2 for x in numbers if x % 2 == 0)
+print(nums)
+
+# Option B:
+nums = sum([x ** 2 for x in numbers if x % 2 == 0])
+print(nums)
+'''
+# ==============================================================================
+# Level 2 - Exercise 9: get_string_lists Function (Pass 2: Alternative Exploration) — verified 2026-10-10
+# ==============================================================================
+# Exploration Objectives:
+# 1. Implementation Alternatives:
+#    - Option A (List Comprehension inside function):
+#      Implement `get_string_lists(lst)` using a concise list comprehension: `[elem for elem in lst if isinstance(elem, str)]`.
+#    - Option B (Generator Function with yield):
+#      Define a generator function `def get_string_gen(lst):` that `yield`s string elements on demand, then materialize with `list()`.
+#
+# 2. Mechanistic Analysis & Trade-offs:
+#    - Memory footprint: A generator function streams items one-by-one with O(1) auxiliary space until consumed by the caller, which is ideal for massive collections.
+# ==============================================================================
+
+# Target Output: ['apple', 'banana', 'cherry']
+'''
+# Option A
+mixed_list = [1, 'apple', 3.14, 'banana', True, 'cherry']
+def get_string_lists(lst):
+    return [x for x in lst if isinstance(x, str)]
+print(get_string_lists(mixed_list))
+
+# Option B
+mixed_list = [1, 'apple', 3.14, 'banana', True, 'cherry']
+def get_string_gen(lst):
+    for x in lst:
+        if isinstance(x, str):
+            yield x
+print(list(get_string_gen(mixed_list)))
+'''
