@@ -165,7 +165,8 @@ print(get_string_lists(mixed_list))
 # ==============================================================================
 
 # Write your solution below:
-
+sum_of_nums = reduce(lambda x, y : x + y, numbers)
+print(sum_of_nums)
 
 
 
@@ -185,7 +186,8 @@ print(get_string_lists(mixed_list))
 
 # Write your solution below:
 
-
+country_concat = reduce(lambda x, y, z, n, p: f'{x}, {y}' + f'{z}, {n}',countries)
+print(country_concat)
 
 
 # ==============================================================================

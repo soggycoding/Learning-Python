@@ -3,7 +3,8 @@
 # ==============================================================================
 # Starter Datasets Provided for Day 14
 # ==============================================================================
-countries = ['Estonia', 'Finland', 'Sweden', 'Denmark', 'Norway', 'Iceland']
+from functools import reduce
+countries = ['estonia', 'Finland', 'Sweden', 'Denmark', 'Norway', 'Iceland']
 names = ['Asabeneh', 'Lidiya', 'Ermias', 'Abraham']
 numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
@@ -177,4 +178,22 @@ print(country)
 #     3. Trap Case: No strings present `[1, 2.5, True, False, None]` -> `[]`; preserves empty string `['', 42]` -> `['']`
 # ==============================================================================
 
-# Write your recall solutions below:
+# Recall Prompt 7: Filter Countries Starting with 'E' — verified 2026-10-11
+'''
+country = [x for x in countries if x.startswith(("E", 'e'))]
+print(country)
+'''
+
+# Recall Prompt 8: Chain Transformations and Sum — verified 2026-10-11
+'''
+nums = sum(x ** 2 for x in numbers if x % 2 == 0)
+print(nums)
+'''
+
+# Recall Prompt 9: get_string_lists Function — verified 2026-10-11
+'''
+mixed_list = [1, 'apple', 3.14, 'banana', True, 'cherry']
+def get_string_lists(val):
+    return [x for x in val if isinstance(x, str)]
+print(get_string_lists(mixed_list))
+'''
