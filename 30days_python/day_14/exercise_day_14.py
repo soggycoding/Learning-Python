@@ -165,7 +165,7 @@ print(get_string_lists(mixed_list))
 # ==============================================================================
 
 # Write your solution below:
-sum_of_nums = reduce(lambda x, y : x + y, numbers)
+sum_of_nums = reduce(lambda x, y : x + y, numbers, 0)
 print(sum_of_nums)
 
 
@@ -185,10 +185,10 @@ print(sum_of_nums)
 # ==============================================================================
 
 # Write your solution below:
-
+'''
 country_concat = reduce(lambda x, y, z, n, p: f'{x}, {y}' + f'{z}, {n}',countries)
 print(country_concat)
-
+'''
 
 # ==============================================================================
 # LEVEL 2 - EXERCISE 12: categorize_countries
