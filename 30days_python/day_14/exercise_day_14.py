@@ -1,5 +1,6 @@
 # Day 14: Higher Order Functions, Closures & Decorators Exercises
 
+import enum
 import string
 from functools import reduce
 
@@ -152,62 +153,37 @@ print(get_string_lists(mixed_list))
 
 
 
-# ==============================================================================
-# LEVEL 2 - EXERCISE 10: Sum Numbers with reduce()
-# ==============================================================================
-# Challenge:
-#   Use `reduce()` from `functools` to sum all the numbers in the `numbers` list.
-#
-# Adversarial Test Matrix:
-#   1. Standard Case: `numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]` -> `55`
-#   2. Boundary Case: Single element `[42]` -> `42`; empty list with initializer `0` -> `0`
-#   3. Trap Case: Pass initializer `0` to prevent `TypeError` on empty lists.
-# ==============================================================================
-
-# Write your solution below:
+# LEVEL 2 - EXERCISE 10: Sum Numbers with reduce() — verified 2026-10-12
+'''
 sum_of_nums = reduce(lambda x, y : x + y, numbers, 0)
 print(sum_of_nums)
-
-
-
-# ==============================================================================
-# LEVEL 2 - EXERCISE 11: Concatenate Countries into a Sentence with reduce()
-# ==============================================================================
-# Challenge:
-#   Use `reduce()` to concatenate all countries in `countries` to produce this
-#   exact sentence:
-#   "Estonia, Finland, Sweden, Denmark, Norway, and Iceland are north European countries"
-#
-# Adversarial Test Matrix:
-#   1. Standard Case: Matches target string with Oxford comma and conjunction: "..., Norway, and Iceland are north European countries".
-#   2. Boundary Case: Handling trailing and special formatting accurately.
-#   3. Trap Case: Ensure the sentence ending is exact without extra trailing commas.
-# ==============================================================================
-
-# Write your solution below:
 '''
-country_concat = reduce(lambda x, y, z, n, p: f'{x}, {y}' + f'{z}, {n}',countries)
+
+
+
+# LEVEL 2 - EXERCISE 11: Concatenate Countries into a Sentence with reduce() — verified 2026-10-13
+'''
+last_index = len(countries) - 1
+index_countries = list(enumerate(countries))
+country_concat = reduce(lambda x, y: (f'{x}, and {y[1]} are north European countries' if y[0] == last_index else f"{x}, {y[1]}"), 
+index_countries[1:],
+index_countries[0][1])
 print(country_concat)
 '''
 
-# ==============================================================================
-# LEVEL 2 - EXERCISE 12: categorize_countries
-# ==============================================================================
-# Challenge:
-#   Declare a function called `categorize_countries` that takes a pattern (e.g.
-#   'land', 'ia', 'island', 'stan') and returns a list of countries containing
-#   that pattern from the full countries dataset.
-#
-# Function signature:
-#   def categorize_countries(pattern):
-#
-# Adversarial Test Matrix:
-#   1. Standard Case: `categorize_countries('land')` returns all countries ending with or containing 'land'.
-#   2. Boundary Case: Pattern not found returns `[]`.
-#   3. Trap Case: Case-insensitive search (`pattern.lower() in country.lower()`).
-# ==============================================================================
+# LEVEL 2 - EXERCISE 12: categorize_countries — verified 2026-10-13
+'''
+from countries_data import countries_data
+def categorize_countries(pattern):
+    filtered_country = []
+    for country in countries_data:
+        country_name = country["name"]
+        if pattern.lower() in country_name.lower() :
+            filtered_country.append(country_name)
+    return filtered_country
 
-# Write your solution below:
+print(categorize_countries("stan"))
+'''
 
 
 
