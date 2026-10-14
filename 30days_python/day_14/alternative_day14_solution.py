@@ -324,3 +324,7 @@ print(result)
 # ==============================================================================
 
 # Target Output: list of matched country names (e.g. categorize_countries('land'))
+from countries_data import countries_data
+def categorize_countries(pattern):
+    return [item["name"] for item in countries_data if pattern.lower() in item["name"].lower()]
+print(categorize_countries(""))
