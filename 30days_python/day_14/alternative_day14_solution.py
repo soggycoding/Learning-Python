@@ -3,6 +3,7 @@
 # ==============================================================================
 # Starter Datasets Provided for Day 14
 # ==============================================================================
+from operator import contains
 from functools import reduce
 import operator
 countries = ['Estonia', 'Finland', 'Sweden', 'Denmark', 'Norway', 'Iceland']
@@ -310,7 +311,7 @@ print(result)
 '''
 
 # ==============================================================================
-# Level 2 - Exercise 12: categorize_countries (Pass 2: Alternative Exploration)
+# Level 2 - Exercise 12: categorize_countries (Pass 2: Alternative Exploration) — verified 2026-10-16
 # ==============================================================================
 # Exploration Objectives:
 # 1. Implementation Alternatives:
@@ -324,7 +325,21 @@ print(result)
 # ==============================================================================
 
 # Target Output: list of matched country names (e.g. categorize_countries('land'))
+'''
+# Option A
 from countries_data import countries_data
 def categorize_countries(pattern):
     return [item["name"] for item in countries_data if pattern.lower() in item["name"].lower()]
-print(categorize_countries(""))
+print(categorize_countries("land"))
+
+# Option B
+from countries_data import countries_data
+def categorize_countries(pattern):
+    filtered = filter(lambda country: pattern.lower() in country["name"].lower(), countries_data)
+    mapped = map(lambda country: country["name"], filtered)
+    return list(mapped)
+
+print(categorize_countries("land"))
+'''
+
+

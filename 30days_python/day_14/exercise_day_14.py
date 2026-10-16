@@ -188,26 +188,20 @@ print(categorize_countries("stan"))
 
 
 
-# ==============================================================================
-# LEVEL 2 - EXERCISE 13: countries_by_starting_letter
-# ==============================================================================
-# Challenge:
-#   Create a function returning a dictionary where keys stand for starting letters
-#   of countries and values are the number of country names starting with that letter.
-#
-# Function signature:
-#   def countries_by_starting_letter():
-#
-# Adversarial Test Matrix:
-#   1. Standard Case: Returns dict `{ 'A': count, 'B': count, ... }`.
-#   2. Boundary Case: Letters with 0 countries should not have invalid counts.
-#   3. Trap Case: Ensure uppercase standardization of starting letters.
-# ==============================================================================
-
-# Write your solution below:
-
-
-
+# LEVEL 2 - EXERCISE 13: countries_by_starting_letter — verified 2026-10-16
+'''
+from countries_data import countries_data
+def countries_by_starting_letter():
+    result = {}
+    for country in countries_data:
+        country_name = country["name"][0].upper()
+        if country_name in result:
+            result[country_name] += 1
+        else:
+            result[country_name] = 1
+    return result
+print(countries_by_starting_letter())
+'''
 
 # ==============================================================================
 # LEVEL 2 - EXERCISE 14: get_first_ten_countries

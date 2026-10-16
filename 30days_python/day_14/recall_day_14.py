@@ -4,7 +4,7 @@
 # Starter Datasets Provided for Day 14
 # ==============================================================================
 from functools import reduce
-countries = ['estonia', 'Finland', 'Sweden', 'Denmark', 'Norway', 'Iceland']
+countries = ['Estonia', 'Finland', 'Sweden', 'Denmark', 'Norway', 'Iceland']
 names = ['Asabeneh', 'Lidiya', 'Ermias', 'Abraham']
 numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
@@ -196,4 +196,72 @@ mixed_list = [1, 'apple', 3.14, 'banana', True, 'cherry']
 def get_string_lists(val):
     return [x for x in val if isinstance(x, str)]
 print(get_string_lists(mixed_list))
+'''
+
+
+# ==============================================================================
+# BATCHED RECALL: LEVEL 2 (Exercises 10, 11, and 12)
+# ==============================================================================
+# Instructions:
+#   Do NOT look back at `exercise_day_14.py` or `alternative_day14_solution.py`.
+#   Write your implementations strictly from memory below.
+#
+# Recall Prompt 10: Sum Numbers
+#   Input:
+#     numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+#   Expected Output:
+#     55
+#   Constraints:
+#     Compute and return the total sum of all numbers in the list.
+#   Adversarial Test Matrix:
+#     1. Standard Case: numbers -> 55
+#     2. Boundary Case: [] -> 0
+#     3. Trap Case: Negative numbers [-5, 5, -10, 10] -> 0
+#
+# Recall Prompt 11: Concatenate Countries into a Sentence
+#   Input:
+#     countries = ['Estonia', 'Finland', 'Sweden', 'Denmark', 'Norway', 'Iceland']
+#   Expected Output:
+#     "Estonia, Finland, Sweden, Denmark, Norway, and Iceland are north European countries"
+#   Constraints:
+#     Join the country names with commas, prefix the final country with "and ", and append " are north European countries".
+#   Adversarial Test Matrix:
+#     1. Standard Case: the expected output above
+#     2. Boundary Case: Single element ['Estonia'] -> proper formatting without trailing/broken punctuation
+#     3. Trap Case: Exact punctuation check — Oxford comma before "and", no double commas or trailing spaces
+#
+# Recall Prompt 12: categorize_countries Function
+#   Input:
+#     countries_data (from countries_data import countries_data), pattern string
+#   Expected Output:
+#     List of country names (e.g. categorize_countries('land'))
+#   Constraints:
+#     Define a function `categorize_countries(pattern)` that returns a list of names of countries where the country's name contains the specified pattern substring (case-insensitively).
+#   Adversarial Test Matrix:
+#     1. Standard Case: 'land' -> 29 countries
+#     2. Boundary Case: 'xyz_nonexistent' -> []
+#     3. Trap Case: Casing variation 'ICE' -> ['Iceland']
+# ==============================================================================
+
+# Recall Prompt 10: Sum Numbers — verified 2026-10-16
+'''
+result = sum(numbers)
+print(result)
+'''
+
+# Recall Prompt 11: Concatenate Countries into a Sentence — verified 2026-10-16
+'''
+country = reduce(lambda x, y: x + ', ' + y, countries[:-1])
+print(country + f', and {countries[-1]} ' + "are north European countries")
+'''
+
+# Recall Prompt 12: categorize_countries Function — verified 2026-10-16
+'''
+from countries_data import countries_data
+def categorize_countries(pattern):
+    filtered = filter(lambda country: pattern.lower() in country["name"].lower(), countries_data)
+    mapped = map(lambda county: county["name"], filtered)
+    return list(mapped)
+
+print(categorize_countries("FIN"))
 '''
