@@ -1,5 +1,7 @@
 # Day 14: Higher Order Functions, Closures & Decorators Exercises
 
+from collections import Counter
+import collections
 import enum
 import string
 from functools import reduce
@@ -220,8 +222,12 @@ print(countries_by_starting_letter())
 # ==============================================================================
 
 # Write your solution below:
-
-
+from countries_data import countries_data
+'''
+def get_first_ten_countries():
+    return [country["name"] for country in countries_data[:10]]
+print(get_first_ten_countries())
+'''
 
 
 # ==============================================================================
@@ -239,10 +245,12 @@ print(countries_by_starting_letter())
 #   2. Boundary Case: If dataset has fewer than 10, return all available.
 #   3. Trap Case: Slice indexing `[-10:]` does not invert order.
 # ==============================================================================
-
+'''
 # Write your solution below:
-
-
+def get_last_ten_countries():
+    return [country["name"] for country in countries_data[-10:]]
+print(get_last_ten_countries())
+'''
 
 
 # ==============================================================================
@@ -261,4 +269,20 @@ print(countries_by_starting_letter())
 # ==============================================================================
 
 # Write your solution below:
-
+'''
+sorted_by_name = sorted(countries_data, key=lambda country: country["name"])
+sorted_by_capital = sorted(countries_data, key=lambda country: country["capital"])
+sorted_by_population = sorted(countries_data, key=lambda country: country["population"])
+'''
+def country_language():
+    result = {}
+    for country in countries_data:
+        multi_language = country["languages"]
+        for single_language in multi_language:
+            if single_language in result:
+                result[single_language] += 1
+            else:
+                result[single_language] = 1
+    return result
+most_spoken_language = sorted(country_language(), key=lambda item: item[1], reverse=True)
+print(most_spoken_language)
