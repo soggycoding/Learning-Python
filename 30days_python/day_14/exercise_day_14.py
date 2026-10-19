@@ -274,6 +274,7 @@ sorted_by_name = sorted(countries_data, key=lambda country: country["name"])
 sorted_by_capital = sorted(countries_data, key=lambda country: country["capital"])
 sorted_by_population = sorted(countries_data, key=lambda country: country["population"])
 '''
+'''
 def country_language():
     result = {}
     for country in countries_data:
@@ -283,6 +284,12 @@ def country_language():
                 result[single_language] += 1
             else:
                 result[single_language] = 1
-    return result
-most_spoken_language = sorted(country_language(), key=lambda item: item[1], reverse=True)
-print(most_spoken_language)
+    return sorted(result.items(), key=lambda item: item[1], reverse=True)[:10]
+print(country_language())
+'''
+'''
+def populated_country():
+    sorted_by_population = sorted(countries_data, key=lambda country: country["population"], reverse=True)[:10]
+    return [{"country": c["name"], "population": c["population"]} for c in sorted_by_population]
+print(populated_country())
+'''
