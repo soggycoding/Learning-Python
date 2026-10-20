@@ -3,6 +3,11 @@
 # ==============================================================================
 # Starter Datasets Provided for Day 14
 # ==============================================================================
+from collections import deque
+import itertools
+from operator import itemgetter
+from collections import defaultdict
+from collections import Counter
 from operator import contains
 from functools import reduce
 import operator
@@ -341,5 +346,238 @@ def categorize_countries(pattern):
 
 print(categorize_countries("land"))
 '''
+
+
+# ==============================================================================
+# Level 2 - Exercise 13: countries_by_starting_letter (Pass 2: Alternative Exploration)
+# ==============================================================================
+# Exploration Objectives:
+# 1. Implementation Alternatives:
+#    - Option A (dict.get() with a Default):
+#      Replace the `if key in result / else` branch with a single line that reads the
+#      current count with a fallback default and adds 1. Research: what does the 2nd
+#      argument of `dict.get()` do?
+#    - Option B (collections.Counter + Generator Expression):
+#      Counting things is so common that the standard library has a dict subclass built
+#      for it. Feed it a generator expression that produces each country's first letter:
+#      `Counter(<first letter> for <country> in ...)`. No loop body, no branching.
+#    - Option C (collections.defaultdict):
+#      Explore `defaultdict(int)`. Why can you write `result[key] += 1` on a key that
+#      doesn't exist yet without a KeyError?
+#
+# 2. Mechanistic Analysis & Trade-offs:
+#    - Double Lookup: Your Pass 1 `if key in result: result[key] += 1` hashes the key
+#      twice (once for `in`, once for `+=`). Which options avoid that?
+#    - Counter Extras: Counter is still a dict, but it adds `.most_common(n)`. Which
+#      Level 3 task could reuse it?
+#    - Complexity: All options are O(N) time and O(K) space (K = unique letters).
+#
+# 3. Additional Challenges & Edge Cases:
+#    - Non-ASCII Trap: The dataset contains 'Åland Islands'. What key does it produce?
+#      Should 'Å' be its own bucket or count under 'A'? (Research: `unicodedata.normalize`.)
+#    - Sorted Output: Return the dict ordered alphabetically by letter.
+# ==============================================================================
+
+# Target Output (counts per first letter, e.g.): {'A': 15, 'B': 21, 'C': 23, ..., 'Z': 2, 'Å': 1}
+# Write your Pass 2 solution below:
+from countries_data import countries_data
+'''
+# Option A
+def countries_by_starting_letters():
+    result = {}
+    for country in countries_data:
+        country_name = country["name"][0].upper()
+        result[country_name] = result.get(country_name, 0) + 1
+    return result
+print(countries_by_starting_letters())
+'''
+'''
+# Option B
+def countries_by_starting_letters():
+    return dict(Counter([country["name"][0].upper() for country in countries_data]))
+print(countries_by_starting_letters())
+'''
+'''
+# Option C
+def countries_by_starting_letters():
+    letter_counts = defaultdict(int)
+    for country in countries_data:
+        first_letter = country["name"][0].upper()
+        letter_counts[first_letter] += 1
+    return dict(letter_counts)
+print(countries_by_starting_letters())
+'''
+# ==============================================================================
+# Level 2 - Exercise 14: get_first_ten_countries (Pass 2: Alternative Exploration)
+# ==============================================================================
+# Exploration Objectives:
+# 1. Implementation Alternatives:
+#    - Option A (map() + operator.itemgetter):
+#      Replace the comprehension with `map()` over the sliced data. Instead of a lambda,
+#      use the standard library's ready-made "grab this key" callable from the
+#      `operator` module.
+#    - Option B (itertools.islice: Lazy Slicing):
+#      Slicing `[:10]` only works on sequences (lists, tuples, strings). Rewrite the
+#      function using `itertools.islice()`, which works on ANY iterable,
+#      including generators that have no `len()` and can't be indexed.
+#
+# 2. Mechanistic Analysis & Trade-offs:
+#    - Slice Copy vs Lazy Iterator: `countries_data[:10]` builds a new 10-item list.
+#      `islice` creates nothing up front; it stops pulling items after 10.
+#    - itemgetter vs lambda: `itemgetter('name')` runs in C with no Python frame per call.
+#    - Complexity: O(k) time where k = 10, for both slicing and islice.
+#
+# 3. Additional Challenges & Edge Cases:
+#    - Parameterize: `get_first_n_countries(n=10)`. What should happen with n=0? A negative n?
+#    - Generator Source: Test your Option B on `(c for c in countries_data)`. Does
+#      Option A still work on that input? Why not?
+# ==============================================================================
+
+# Target Output: ['Afghanistan', 'Åland Islands', 'Albania', 'Algeria', 'American Samoa', 'Andorra', 'Angola', 'Anguilla', 'Antarctica', 'Antigua and Barbuda']
+# Write your Pass 2 solution below:
+'''
+# Option A:
+def get_first_ten_countries():
+    return list(map(itemgetter('name'), countries_data[:10]))
+print(get_first_ten_countries()) 
+'''
+'''
+# Option B:
+def get_first_ten_countries():
+    return list(map(itemgetter('name'), itertools.islice(countries_data, 10)))
+print(get_first_ten_countries()) 
+'''
+
+# ==============================================================================
+# Level 2 - Exercise 15: get_last_ten_countries (Pass 2: Alternative Exploration)
+# ==============================================================================
+# Exploration Objectives:
+# 1. Implementation Alternatives:
+#    - Option A (map() + operator.itemgetter):
+#      Same tool as Exercise 14 Option A, applied to the negative slice.
+#    - Option B (collections.deque with maxlen):
+#      A `deque` created with `maxlen=10` automatically drops old items from the left
+#      as new ones arrive. Feed the whole stream of names into it. What's left at the end?
+#
+# 2. Mechanistic Analysis & Trade-offs:
+#    - Negative Slicing Needs a Length: `[-10:]` only works when Python knows the size.
+#      A generator has no end until you consume it. Which option still works?
+#    - Memory: Option B walks all N items (O(N) time) but never holds more than 10 (O(1) space).
+#
+# 3. Additional Challenges & Edge Cases:
+#    - Fewer Than 10: Test on a 3-item list. Does `[-10:]` crash or return all 3?
+#    - Off-by-One Trap: Compare `data[-10:]` vs `data[len(data) - 10:]` on a 3-item list.
+#      What does the negative start index do in the second version?
+# ==============================================================================
+
+# Target Output: ['Uruguay', 'Uzbekistan', 'Vanuatu', 'Venezuela (Bolivarian Republic of)', 'Viet Nam', 'Wallis and Futuna', 'Western Sahara', 'Yemen', 'Zambia', 'Zimbabwe']
+# Write your Pass 2 solution below:
+'''
+# Option A
+def get_last_ten_countries():
+    return list(map(itemgetter("name"), countries_data[-10:]))
+print(get_last_ten_countries())
+'''
+# Option B
+def get_last_ten_countries():
+    dq = deque([countries_data], maxlen=10)
+    return dq
+print(get_last_ten_countries())
+
+# ==============================================================================
+# Level 3 - Exercise 1A: Sort by Name, Capital, and Population (Pass 2: Alternative Exploration)
+# ==============================================================================
+# Exploration Objectives:
+# 1. Implementation Alternatives:
+#    - Option A (operator.itemgetter as the key):
+#      Replace each `key=lambda country: country["..."]` with `itemgetter`.
+#    - Option B (list.sort() In-Place vs sorted()):
+#      Rewrite one sort using `.sort()` on a copy. What does `.sort()` return?
+#      (Same trap as `random.shuffle` on Day 12.)
+#
+# 2. Mechanistic Analysis & Trade-offs:
+#    - sorted() vs .sort(): One builds a new list, the other mutates and returns None.
+#      When would you choose in-place?
+#    - Stability: Python's sort (Timsort) is stable. Equal keys keep their original
+#      order. How does that let you chain two sorts to get a multi-key ordering?
+#    - Complexity: O(N log N) time; sorted() needs O(N) extra space.
+#
+# 3. Additional Challenges & Edge Cases:
+#    - Unicode Trap: Sort by name and print the LAST 3 items. Why is 'Åland Islands'
+#      after 'Zimbabwe'? (Research: how strings compare by code point, `str.casefold`,
+#      `locale.strxfrm`.)
+#    - Empty Capital Trap: 5 countries have capital == '' (Antarctica, Bouvet Island,
+#      Heard Island and McDonald Islands, Macao, US Minor Outlying Islands). They sort to
+#      the FRONT. Push them to the END using a TUPLE key, without filtering them out.
+#    - Multi-Key: Sort by population descending, then by name ascending for ties.
+#      Do it with ONE key, without `reverse=True`. (Hint: what happens if you negate a number?)
+# ==============================================================================
+
+# Target Output: 3 sorted lists. Check: by name -> starts 'Afghanistan', by population -> starts with the smallest
+# Write your Pass 2 solution below:
+
+
+
+# ==============================================================================
+# Level 3 - Exercise 1B: Ten Most Spoken Languages (Pass 2: Alternative Exploration)
+# ==============================================================================
+# Exploration Objectives:
+# 1. Implementation Alternatives:
+#    - Option A (Counter + Nested Generator + most_common):
+#      Flatten every country's `languages` list with a nested generator expression
+#      (Day 13 flattening pattern!), feed it to `Counter`, and use `.most_common(10)`.
+#      Target: a single expression inside the function.
+#    - Option B (itertools.chain.from_iterable Pipeline):
+#      Decouple flattening from counting: first build a flat stream of languages with
+#      `chain.from_iterable(map(...))`, then count it.
+#    - Option C (heapq.nlargest on Your Pass 1 Dict):
+#      Keep your manual tally, but replace `sorted(...)[:10]` with `heapq.nlargest(10, ...)`.
+#
+# 2. Mechanistic Analysis & Trade-offs:
+#    - Full Sort vs Heap: `sorted(...)[:10]` sorts ALL K languages, O(K log K).
+#      `nlargest(10, ...)` keeps a 10-item heap, O(K log 10). When does that matter?
+#    - Reuse: Is this the same counting problem as Exercise 13? What changed?
+#
+# 3. Additional Challenges & Edge Cases:
+#    - Tie Trap: 10th place is a TIE. 'Serbian' and 'Swahili' both have 4. Which one
+#      appears in your result, and why? Is that the same across all 3 options?
+#      Write a version that includes every language tied with 10th place.
+# ==============================================================================
+
+# Target Output: [('English', 91), ('French', 45), ('Arabic', 25), ('Spanish', 24), ('Portuguese', 9), ('Russian', 9), ('Dutch', 8), ('German', 7), ('Chinese', 5), (<Serbian or Swahili>, 4)]
+# Write your Pass 2 solution below:
+
+
+
+# ==============================================================================
+# Level 3 - Exercise 1C: Ten Most Populated Countries (Pass 2: Alternative Exploration)
+# ==============================================================================
+# Exploration Objectives:
+# 1. Implementation Alternatives:
+#    - Option A (heapq.nlargest with key=):
+#      Get the top 10 dictionaries directly with `heapq.nlargest(n, iterable, key=...)`.
+#      No full sort, no slicing, no `reverse=True`.
+#    - Option B (itemgetter Key + Projection Pipeline):
+#      Keep `sorted(..., reverse=True)[:10]`, but use `itemgetter` for the key AND build the
+#      output records with `map()` instead of a comprehension.
+#
+# 2. Mechanistic Analysis & Trade-offs:
+#    - O(N log N) vs O(N log k): You sort 250 countries just to keep 10. Explain why
+#      `nlargest` does less work, and when `sorted` is still the better choice
+#      (hint: the docs say what happens when n is close to N).
+#    - Data Shape: Your Pass 1 returns dicts `{"country": ..., "population": ...}`.
+#      Compare that with returning `(name, population)` tuples. Which is easier for
+#      a caller to use? Which is easier to print?
+#
+# 3. Additional Challenges & Edge Cases:
+#    - Parameterize: `most_populated(n=10)`. Test n=0 and n=1000 (more than the dataset).
+#    - Formatting: Print the result as a ranked table with thousands separators:
+#      ` 1. China                 1,377,422,166` (research the f-string `,` format spec
+#      and string alignment like `:<20`).
+# ==============================================================================
+
+# Target Output: [China 1377422166, India 1295210000, United States of America 323947000, Indonesia 258705000, Brazil 206135893, Pakistan 194125062, Nigeria 186988000, Bangladesh 161006790, Russian Federation 146599183, Japan 126960000]
+# Write your Pass 2 solution below:
+
 
 
