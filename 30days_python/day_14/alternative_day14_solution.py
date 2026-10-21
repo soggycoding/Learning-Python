@@ -3,6 +3,7 @@
 # ==============================================================================
 # Starter Datasets Provided for Day 14
 # ==============================================================================
+from unittest import result
 from collections import deque
 import itertools
 from operator import itemgetter
@@ -478,12 +479,13 @@ def get_last_ten_countries():
     return list(map(itemgetter("name"), countries_data[-10:]))
 print(get_last_ten_countries())
 '''
+'''
 # Option B
 def get_last_ten_countries():
-    dq = deque([countries_data], maxlen=10)
-    return dq
+    dq = deque([country["name"] for country in countries_data], maxlen=10)
+    return list(dq)
 print(get_last_ten_countries())
-
+'''
 # ==============================================================================
 # Level 3 - Exercise 1A: Sort by Name, Capital, and Population (Pass 2: Alternative Exploration)
 # ==============================================================================
@@ -512,12 +514,29 @@ print(get_last_ten_countries())
 #    - Multi-Key: Sort by population descending, then by name ascending for ties.
 #      Do it with ONE key, without `reverse=True`. (Hint: what happens if you negate a number?)
 # ==============================================================================
-
+from countries_data import countries_data
 # Target Output: 3 sorted lists. Check: by name -> starts 'Afghanistan', by population -> starts with the smallest
 # Write your Pass 2 solution below:
+'''
+# Option A:
+sorted_names = sorted(countries_data, key=itemgetter("name"))
+mapped_names = list(map(itemgetter("name"), sorted_names))
+print(mapped_names)
+'''
+'''
+sorted_capital = sorted(countries_data, key=itemgetter("capital", "name"))
+mapped_capital = list(map(itemgetter("capital", "name"), sorted_capital))
+print(mapped_capital[:5])
+'''
+'''
+sorted_population = sorted(countries_data, key=itemgetter("population", "name"))
+mapped_population = list(map(itemgetter("population", "name"), sorted_population))
+print(mapped_population)
+'''
 
-
-
+# Option B
+sorted_by_name = sorted(countries_data, key=lambda country: country["name"])
+print(sorted_by_name)
 # ==============================================================================
 # Level 3 - Exercise 1B: Ten Most Spoken Languages (Pass 2: Alternative Exploration)
 # ==============================================================================

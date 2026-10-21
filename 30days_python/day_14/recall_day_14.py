@@ -3,6 +3,8 @@
 # ==============================================================================
 # Starter Datasets Provided for Day 14
 # ==============================================================================
+import itertools
+from operator import itemgetter
 from functools import reduce
 countries = ['Estonia', 'Finland', 'Sweden', 'Denmark', 'Norway', 'Iceland']
 names = ['Asabeneh', 'Lidiya', 'Ermias', 'Abraham']
@@ -264,4 +266,84 @@ def categorize_countries(pattern):
     return list(mapped)
 
 print(categorize_countries("FIN"))
+'''
+
+# ==============================================================================
+# BATCHED RECALL: LEVEL 2 (Exercises 13, 14, and 15)
+# ==============================================================================
+# Instructions:
+#   Do NOT look back at `exercise_day_14.py` or `alternative_day14_solution.py`.
+#   Write your implementations strictly from memory below.
+#   Each function takes a `data` parameter that defaults to `countries_data`,
+#   so you can run the Boundary and Trap cases on small hand-made lists.
+#
+# Recall Prompt 13: countries_by_starting_letter Function
+#   Input:
+#     countries_data (from countries_data import countries_data), 250 country dicts
+#   Expected Output:
+#     A dict mapping each first letter to how many countries start with it, e.g.
+#     {'A': 15, 'B': 21, 'C': 23, ..., 'S': 33, ..., 'Z': 2, 'Å': 1}
+#   Constraints:
+#     Define `countries_by_starting_letter(data=countries_data)`.
+#     Count with ONE lookup per country: no `if key in result / else` branch.
+#   Adversarial Test Matrix:
+#     1. Standard Case: default data -> 'S' is 33, 'Q' is 1, and the values sum to 250
+#     2. Boundary Case: `[]` -> `{}`
+#     3. Trap Case: `[{'name': 'chad'}, {'name': 'Chile'}]` -> `{'C': 2}` (lowercase name still
+#        lands in the uppercase bucket); no letter appears with a count of 0 (there is no 'X' key)
+#
+# Recall Prompt 14: get_first_ten_countries Function
+#   Input:
+#     countries_data (from countries_data import countries_data)
+#   Expected Output:
+#     ['Afghanistan', 'Åland Islands', 'Albania', 'Algeria', 'American Samoa', 'Andorra',
+#      'Angola', 'Anguilla', 'Antarctica', 'Antigua and Barbuda']
+#   Constraints:
+#     Define `get_first_ten_countries(data=countries_data)` that returns a list of NAMES
+#     (strings, not dicts), in their original order.
+#   Adversarial Test Matrix:
+#     1. Standard Case: the expected output above, length exactly 10
+#     2. Boundary Case: a 3-item list -> all 3 names, no IndexError
+#     3. Trap Case: `data=(c for c in countries_data)` (a generator) -> same 10 names.
+#        Plain slicing can't do this. Which tool can?
+#
+# Recall Prompt 15: get_last_ten_countries Function
+#   Input:
+#     countries_data (from countries_data import countries_data)
+#   Expected Output:
+#     ['Uruguay', 'Uzbekistan', 'Vanuatu', 'Venezuela (Bolivarian Republic of)', 'Viet Nam',
+#      'Wallis and Futuna', 'Western Sahara', 'Yemen', 'Zambia', 'Zimbabwe']
+#   Constraints:
+#     Define `get_last_ten_countries(data=countries_data)` that returns a list of NAMES
+#     in their original order ('Zimbabwe' LAST, not first).
+#   Adversarial Test Matrix:
+#     1. Standard Case: the expected output above, length exactly 10
+#     2. Boundary Case: a 3-item list -> all 3 names, in order
+#     3. Trap Case: `data=(c for c in countries_data)` (a generator) -> same 10 names,
+#        and your code never holds more than 10 names at once
+# ==============================================================================
+from countries_data import countries_data
+# Recall Prompt 13: countries_by_starting_letter Function
+'''
+def countries_by_starting_letter(data=countries_data):
+    result = {}
+    for country in data:
+        first_letter = country["name"][0].upper()
+        result[first_letter] = result.get(first_letter, 0) + 1
+    return result
+print(countries_by_starting_letter())
+'''
+'''
+# Recall Prompt 14: get_first_ten_countries Function
+def get_first_ten_countries(data=countries_data):
+    return list(map(itemgetter("name"), itertools.islice(data, 10)))
+print(get_first_ten_countries())
+'''
+'''
+from collections import deque
+# Recall Prompt 15: get_last_ten_countries Function
+def get_last_ten_countries(data=countries_data):
+    db = deque(data, maxlen=10)
+    return list(map(itemgetter("name"), db))
+print(get_last_ten_countries())
 '''
