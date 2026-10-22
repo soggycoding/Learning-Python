@@ -3,6 +3,8 @@
 # ==============================================================================
 # Starter Datasets Provided for Day 14
 # ==============================================================================
+import heapq
+from itertools import chain
 from unittest import result
 from collections import deque
 import itertools
@@ -533,10 +535,15 @@ sorted_population = sorted(countries_data, key=itemgetter("population", "name"))
 mapped_population = list(map(itemgetter("population", "name"), sorted_population))
 print(mapped_population)
 '''
-
+'''
 # Option B
-sorted_by_name = sorted(countries_data, key=lambda country: country["name"])
-print(sorted_by_name)
+#sorted_by_name = sorted(countries_data, key=lambda country: country["name"])
+#print(sorted_by_name)
+countries_copy = countries_data.copy()
+countries_copy.sort(key=lambda country: country["name"])
+mapped_names = list(map(itemgetter("name"), countries_copy))
+print(mapped_names)
+'''
 # ==============================================================================
 # Level 3 - Exercise 1B: Ten Most Spoken Languages (Pass 2: Alternative Exploration)
 # ==============================================================================
@@ -565,9 +572,32 @@ print(sorted_by_name)
 
 # Target Output: [('English', 91), ('French', 45), ('Arabic', 25), ('Spanish', 24), ('Portuguese', 9), ('Russian', 9), ('Dutch', 8), ('German', 7), ('Chinese', 5), (<Serbian or Swahili>, 4)]
 # Write your Pass 2 solution below:
-
-
-
+'''
+# Option A
+most_spoken_language = [languages for language in countries_data for languages in language["languages"]]
+language_counter = Counter(most_spoken_language)
+print(language_counter.most_common(10))
+'''
+'''
+# Option B
+flattened_iterator = chain.from_iterable(map(lambda x: x["languages"], countries_data))
+language_counter = Counter(flattened_iterator)
+print(language_counter.most_common(10))
+'''
+'''
+# Option C
+def language_counter(data=countries_data):
+    result = {}
+    for language in data:
+        multi_language = language["languages"]
+        for single_langauge in multi_language:
+            if single_langauge in result:
+                result[single_langauge] += 1
+            else:
+                result[single_langauge] = 1
+    return heapq.nlargest(10, [(v, k) for k, v in result.items()])
+print(language_counter())
+'''
 # ==============================================================================
 # Level 3 - Exercise 1C: Ten Most Populated Countries (Pass 2: Alternative Exploration)
 # ==============================================================================
@@ -597,6 +627,13 @@ print(sorted_by_name)
 
 # Target Output: [China 1377422166, India 1295210000, United States of America 323947000, Indonesia 258705000, Brazil 206135893, Pakistan 194125062, Nigeria 186988000, Bangladesh 161006790, Russian Federation 146599183, Japan 126960000]
 # Write your Pass 2 solution below:
-
-
-
+'''
+# Option A:
+top_10 = heapq.nlargest(10, countries_data, key=itemgetter("population"))
+print(list(map(itemgetter("name","population"), top_10)))
+'''
+'''
+# Option B:
+flatten_population = list(map(itemgetter("name", "population"), countries_data))
+print(sorted(flatten_population, key=itemgetter(1), reverse=True)[:10])
+'''
