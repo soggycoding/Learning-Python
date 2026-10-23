@@ -3,6 +3,8 @@
 # ==============================================================================
 # Starter Datasets Provided for Day 14
 # ==============================================================================
+import heapq
+from collections import Counter
 import itertools
 from operator import itemgetter
 from functools import reduce
@@ -323,7 +325,7 @@ print(categorize_countries("FIN"))
 #        and your code never holds more than 10 names at once
 # ==============================================================================
 from countries_data import countries_data
-# Recall Prompt 13: countries_by_starting_letter Function
+# Recall Prompt 13: countries_by_starting_letter Function — verified 2026-10-23
 '''
 def countries_by_starting_letter(data=countries_data):
     result = {}
@@ -334,16 +336,113 @@ def countries_by_starting_letter(data=countries_data):
 print(countries_by_starting_letter())
 '''
 '''
-# Recall Prompt 14: get_first_ten_countries Function
+# Recall Prompt 14: get_first_ten_countries Function — verified 2026-10-23
 def get_first_ten_countries(data=countries_data):
     return list(map(itemgetter("name"), itertools.islice(data, 10)))
 print(get_first_ten_countries())
 '''
 '''
 from collections import deque
-# Recall Prompt 15: get_last_ten_countries Function
+# Recall Prompt 15: get_last_ten_countries Function — verified 2026-10-23
 def get_last_ten_countries(data=countries_data):
     db = deque(data, maxlen=10)
     return list(map(itemgetter("name"), db))
 print(get_last_ten_countries())
+'''
+
+# ==============================================================================
+# BATCHED RECALL: LEVEL 3 (Exercises 1A, 1B, and 1C)
+# ==============================================================================
+# Instructions:
+#   Do NOT look back at `exercise_day_14.py` or `alternative_day14_solution.py`.
+#   Write your implementations strictly from memory below.
+#
+# Recall Prompt 16: Sort Countries by Name, Capital, and Population (Exercise 1A)
+#   Input:
+#     countries_data (from countries_data import countries_data)
+#   Expected Output:
+#     Three separate sorted collections:
+#     - By name (ascending: A to Z)
+#     - By capital (ascending: A to Z)
+#     - By population (ordered by population count)
+#   Constraints:
+#     Use key extractor callables (e.g., `operator.itemgetter` or clean lambdas).
+#     Pure operation: do NOT mutate the original `countries_data` list.
+#   Adversarial Test Matrix:
+#     1. Standard Case:
+#        - Name sort starts with 'Afghanistan'
+#        - Population sort is strictly ordered by numeric value
+#     2. Boundary Case:
+#        - Empty list `[]` sorts cleanly to `[]` without error
+#     3. Trap Case:
+#        - Immutability check: `countries_data` original ordering is untouched
+#        - Tie-breaking: multi-key ordering works cleanly when primary keys match or are empty
+#
+# Recall Prompt 17: Ten Most Spoken Languages (Exercise 1B)
+#   Input:
+#     countries_data (from countries_data import countries_data)
+#   Expected Output:
+#     A list of 10 `(language, count)` tuples:
+#     [('English', 91), ('French', 45), ('Arabic', 25), ('Spanish', 24), ('Portuguese', 9),
+#      ('Russian', 9), ('Dutch', 8), ('German', 7), ('Chinese', 5), ('Serbian' or 'Swahili', 4)]
+#   Constraints:
+#     Define `most_spoken_languages(data=countries_data, n=10)`.
+#     Flatten the nested `languages` lists using a clean generator/comprehension or `itertools.chain`
+#     and leverage standard library counting tools (e.g., `Counter`).
+#   Adversarial Test Matrix:
+#     1. Standard Case: default dataset returns exactly 10 pairs with counts matching above
+#     2. Boundary Case: `data=[]` -> `[]`; `n=0` -> `[]`
+#     3. Trap Case: Countries with multiple languages (e.g., Switzerland with 4) must increment
+#        each language count independently; `n > len(unique_languages)` returns all available without crash
+#
+# Recall Prompt 18: Ten Most Populated Countries (Exercise 1C)
+#   Input:
+#     countries_data (from countries_data import countries_data)
+#   Expected Output:
+#     The top 10 most populated countries (e.g. list of `(name, population)` tuples or dicts):
+#     [('China', 1377422166), ('India', 1295210000), ('United States of America', 323947000), ...]
+#   Constraints:
+#     Define `most_populated_countries(data=countries_data, n=10)`.
+#     Extract top N without unnecessary full-dataset reallocations (leverage `heapq.nlargest` or key extraction).
+#   Adversarial Test Matrix:
+#     1. Standard Case: default dataset -> 10 items, strictly descending from China to Japan
+#     2. Boundary Case: `data=[]` -> `[]`; `n=3` on a 5-item list returns top 3
+#     3. Trap Case: Ordering check — strictly descending order (highest population first);
+#        `n > len(data)` returns all available records safely
+# ==============================================================================
+from countries_data import countries_data
+
+# Recall Prompt 16: Sort Countries by Name, Capital, and Population — verified 2026-10-23
+'''
+sorted_by_name = sorted(countries_data, key=itemgetter("name"))
+mapped_by_name = list(map(itemgetter("name"), sorted_by_name))
+print(mapped_by_name)
+'''
+'''
+sorted_by_capital = sorted(countries_data, key=itemgetter("capital"))
+mapped_by_capital = list(map(itemgetter("name","capital"), sorted_by_capital))
+print(mapped_by_capital)
+'''
+'''
+sorted_by_population = sorted(countries_data, key=itemgetter("population"))
+mapped_by_population = list(map(itemgetter("name", "population"), sorted_by_population))
+print(mapped_by_population)
+'''
+
+# Recall Prompt 17: Ten Most Spoken Languages — verified 2026-10-23
+'''
+def most_spoken_language(data=countries_data, n=10):
+    sorted_by_language = [languages for language in data for languages in language["languages"]]
+    result = Counter(sorted_by_language)
+    return result.most_common(n)
+print(most_spoken_language())
+'''
+
+# Recall Prompt 18: Ten Most Populated Countries — verified 2026-10-23
+'''
+def most_populated_country(data=countries_data, n=10):
+    sorted_by_population = heapq.nlargest(n, data, key=itemgetter("population"))
+    mapped_by_population = list(map(itemgetter("name", "population"), sorted_by_population))
+    return mapped_by_population
+print(most_populated_country())
 '''
