@@ -96,13 +96,17 @@ show_visits()
 #   2. Change the function to use slices (`items[:1]`, `items[-1:]`) and rerun
 #      your (a) input. What happens now?
 # ==============================================================================
-'''
+
 def first_and_last(items):
-    return items[0], items[-1]
+    return (items[:1], items[-10:])
 
 print(first_and_last(['Estonia', 'Finland', 'Sweden']))
-'''
+
 # Your notes:
+# IndexError list of index out of range, I tried doing a -10 on the index that is only 3 sequences
+# I IndexError with a tuple
+# 1. I made the 2nd item be out of index making the 2nd crash while the first go through
+# 2. It does not error it separates the two items  making it do the first item as the first in the index and the 2nd one as a new index
 
 
 # ==============================================================================
