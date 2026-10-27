@@ -27,10 +27,10 @@
 # Requirements:
 #   - Provide a 1-sentence note for each explaining *why* CPython raised it.
 # ==============================================================================
-
+'''
 # Write your Exercise 1 solution below:
-
-
+hello = ['hio
+'''
 # ==============================================================================
 # Exercise 2: Compile-Time (Parsing) vs Runtime Errors
 # ==============================================================================
@@ -42,10 +42,11 @@
 #      syntax error written directly in `my_script.py`?
 #   3. How can you catch a `SyntaxError` dynamically at runtime?
 # ==============================================================================
-
-# Write your Exercise 2 explanation below:
-
-
+'''
+1. Since the python checks the whole code first before running
+2. Because the syntax error prevents the code from finishing making it never executes
+3. When the code is compiled during an execution
+'''
 # ==============================================================================
 # LEVEL 2: REAL-WORLD BUG DIAGNOSIS & REFACTORING
 # ==============================================================================
