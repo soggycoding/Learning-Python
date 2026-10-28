@@ -81,7 +81,15 @@ hello = ['hio
 # ==============================================================================
 
 # Write your Exercise 3 solution below:
-
+def extract_user_location(payload, default="UNKNOWN"):
+    try:
+        city = payload["user"]["profile"]["address"]["city"]
+        result = city.upper()
+    except (AttributeError, TypeError, KeyError):
+        return default
+    else:
+        return result
+print(extract_user_location({"user": {"profile": {"address": {"city": None}}}}))
 
 # ==============================================================================
 # Exercise 4: Query Parameter Sanitization (Preventing TypeError & ValueError)
