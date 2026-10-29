@@ -79,8 +79,9 @@ hello = ['hio
 #   3. Trap Case: `{"user": {"profile": None}}` -> `"UNKNOWN"` (must NOT raise `AttributeError: 'NoneType' object has no attribute 'get'`)
 #   4. Trap Case: `{"user": {"profile": {"address": {"city": None}}}}` -> `"UNKNOWN"`
 # ==============================================================================
-
+'''
 # Write your Exercise 3 solution below:
+from typing import final
 def extract_user_location(payload, default="UNKNOWN"):
     try:
         city = payload["user"]["profile"]["address"]["city"]
@@ -90,7 +91,7 @@ def extract_user_location(payload, default="UNKNOWN"):
     else:
         return result
 print(extract_user_location({"user": {"profile": {"address": {"city": None}}}}))
-
+'''
 # ==============================================================================
 # Exercise 4: Query Parameter Sanitization (Preventing TypeError & ValueError)
 # ==============================================================================
@@ -115,7 +116,23 @@ print(extract_user_location({"user": {"profile": {"address": {"city": None}}}}))
 # ==============================================================================
 
 # Write your Exercise 4 solution below:
-
+def parse_pagination_params(page_raw, limit_raw, default_page=1, default_limit=20, max_limit=100):
+    try:
+        int_page = int(page_raw)
+        if int_page <= 0:
+            int_page = default_page
+    except (ValueError, TypeError):
+        int_page = default_page
+    try:
+        limit_int_page = int(limit_raw)
+        if limit_int_page < 1:
+            limit_int_page = default_limit
+        if limit_int_page > max_limit:
+            limit_int_page = default_limit
+    except (ValueError, TypeError):
+        limit_int_page = default_limit
+    return (int_page, limit_int_page)
+print(parse_pagination_params("1", "invalid"))
 
 # ==============================================================================
 # Exercise 5: Analytics Metrics (Preventing ZeroDivisionError & IndexError)
