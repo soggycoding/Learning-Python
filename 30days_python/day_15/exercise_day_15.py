@@ -114,7 +114,7 @@ print(extract_user_location({"user": {"profile": {"address": {"city": None}}}}))
 #   3. Trap Case: Invalid strings `parse_pagination_params("invalid", "-5")` -> `(1, 20)`
 #   4. Trap Case: Limit capping `parse_pagination_params("1", "500")` -> `(1, 20)` (or clamped to 100)
 # ==============================================================================
-
+'''
 # Write your Exercise 4 solution below:
 def parse_pagination_params(page_raw, limit_raw, default_page=1, default_limit=20, max_limit=100):
     try:
@@ -133,7 +133,7 @@ def parse_pagination_params(page_raw, limit_raw, default_page=1, default_limit=2
         limit_int_page = default_limit
     return (int_page, limit_int_page)
 print(parse_pagination_params("1", "invalid"))
-
+'''
 # ==============================================================================
 # Exercise 5: Analytics Metrics (Preventing ZeroDivisionError & IndexError)
 # ==============================================================================
@@ -162,7 +162,25 @@ print(parse_pagination_params("1", "invalid"))
 # ==============================================================================
 
 # Write your Exercise 5 solution below:
-
+def calculate_transaction_metrics(transactions):
+    try:
+        sum_trans = sum(transactions)
+        len_trans = len(transactions)
+        result = {
+            "count" : len_trans,
+            "total" : float(sum_trans),
+            "average" : float(sum_trans / len_trans),
+            "latest" : transactions[-1]
+        }
+    except (ZeroDivisionError, IndexError):
+        result = {
+                "count": 0,
+                "total": 0.0,
+                "average": 0.0,
+                "latest": None
+            }
+    return result
+print(calculate_transaction_metrics([10.0, 20.0, 30.0]))
 
 # ==============================================================================
 # LEVEL 3: PRODUCTION ARCHITECTURE & EXCEPTION PATTERNS
