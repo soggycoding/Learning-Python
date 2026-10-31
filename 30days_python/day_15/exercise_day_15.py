@@ -160,8 +160,9 @@ print(parse_pagination_params("1", "invalid"))
 #   2. Boundary Case: `[]` -> `{"count": 0, "total": 0.0, "average": 0.0, "latest": None}`
 #   3. Trap Case: `[-50.0, 50.0]` -> `{"count": 2, "total": 0.0, "average": 0.0, "latest": 50.0}`
 # ==============================================================================
-
+'''
 # Write your Exercise 5 solution below:
+from functools import partialmethod
 def calculate_transaction_metrics(transactions):
     try:
         sum_trans = sum(transactions)
@@ -181,7 +182,7 @@ def calculate_transaction_metrics(transactions):
             }
     return result
 print(calculate_transaction_metrics([10.0, 20.0, 30.0]))
-
+'''
 # ==============================================================================
 # LEVEL 3: PRODUCTION ARCHITECTURE & EXCEPTION PATTERNS
 # ==============================================================================
@@ -200,6 +201,16 @@ print(calculate_transaction_metrics([10.0, 20.0, 30.0]))
 # ==============================================================================
 
 # Write your Exercise 6 solution below:
+def get_user_role_lbyl(cache, token):
+    if token in cache:
+        role = cache[token]
+        if isinstance(role, dict):
+            if "role" in role:
+                return role["role"]
+    return "GUEST"
+
+cache = {"session_token_1": {"user_id": 99, "role": "admin"}}
+print(get_user_role_lbyl(cache, "admin"))
 
 
 # ==============================================================================
