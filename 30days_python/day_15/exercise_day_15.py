@@ -191,27 +191,70 @@ print(calculate_transaction_metrics([10.0, 20.0, 30.0]))
 # Exercise 6: LBYL vs EAFP Comparison
 # ==============================================================================
 # Challenge:
-#   Given a cache dictionary `cache = {"session_token_1": {"user_id": 99, "role": "admin"}}`:
-#   Write TWO separate functions to fetch the `"role"`:
-#   1. `get_user_role_lbyl(cache, token)`: Uses Look-Before-You-Leap (`if key in dict: ...`)
-#   2. `get_user_role_eafp(cache, token)`: Uses Easier-to-Ask-for-Forgiveness (`try...except KeyError: ...`)
+#   In web services, session caches map a session token to a user session object:
+#     cache = {
+#         "session_token_1": {"user_id": 99, "role": "admin"},
+#         "session_token_2": {"user_id": 101, "role": "member"}
+#     }
 #
-#   Both functions must return the role string if found, or `"GUEST"` if missing or malformed.
-#   Include a short docstring explaining the concurrency / race condition trade-off between the two.
+#   Write TWO separate functions to look up a given `token` in `cache` and return its `"role"`:
+#   1. `get_user_role_lbyl(cache, token)`:
+#      - Uses Look-Before-You-Leap: strictly use conditional checks (`if key in dict`, `isinstance`).
+#      - Do NOT use `try...except`.
+#   2. `get_user_role_eafp(cache, token)`:
+#      - Uses Easier-to-Ask-for-Forgiveness: directly access `cache[token]["role"]` inside a `try` block.
+#      - Handle potential exceptions (`KeyError`, `TypeError`, etc.) in the `except` block.
+#      - Do NOT use preventative `if` key checks.
+#
+# Requirements:
+#   - Both functions must return the role string (e.g. `"admin"`) if valid.
+#   - If `token` is not found, or if the stored session is malformed (e.g. `None`, not a dict,
+#     or missing the `"role"` key), return `"GUEST"`.
+#   - Include a short docstring in each function explaining the concurrency / race condition
+#     trade-off between LBYL and EAFP (specifically TOCTOU: Time-Of-Check to Time-Of-Use).
+#
+# Function signatures:
+#   def get_user_role_lbyl(cache, token):
+#   def get_user_role_eafp(cache, token):
+#
+# Adversarial Test Matrix:
+#   1. Standard Case:
+#      cache = {"tok_1": {"user_id": 1, "role": "admin"}}
+#      get_user_role_*(cache, "tok_1") -> "admin"
+#   2. Boundary Case (Token not in cache):
+#      get_user_role_*(cache, "unknown_tok") -> "GUEST"
+#   3. Trap Case (Session value is None / not a dict):
+#      cache = {"tok_none": None}
+#      get_user_role_*(cache, "tok_none") -> "GUEST"
+#   4. Trap Case (Session is a dict but missing "role"):
+#      cache = {"tok_norole": {"user_id": 42}}
+#      get_user_role_*(cache, "tok_norole") -> "GUEST"
 # ==============================================================================
 
 # Write your Exercise 6 solution below:
+cache = {"session_token_1": {"user_id": 99, "role": "admin"}}
+'''
 def get_user_role_lbyl(cache, token):
     if token in cache:
-        role = cache[token]
-        if isinstance(role, dict):
-            if "role" in role:
-                return role["role"]
+        user_info = cache[token]
+        if isinstance(user_info, dict):
+            if "role" in user_info:
+                return user_info["role"]
     return "GUEST"
-
-cache = {"session_token_1": {"user_id": 99, "role": "admin"}}
-print(get_user_role_lbyl(cache, "admin"))
-
+print(get_user_role_lbyl(cache, "session_token_2"))
+'''
+'''
+def get_user_role_eafp(cache, token):
+    try:
+        return cache[token]["role"]
+    except (KeyError, TypeError):
+        return "GUEST"
+print(get_user_role_eafp(cache,"session_token_2"))
+'''
+'''
+Doing lBYl is inefficient when being used in a big server and it will keep doing first to last everytime when checking 
+Doing EAFP on the other hand is more efficient since there is less code, handles error well with except. It also leaps through the dict and go straight to the user to check if there is a role in it
+'''
 
 # ==============================================================================
 # Exercise 7: Robust Resource Lifecycle (`try / except / else / finally`)
