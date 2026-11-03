@@ -232,6 +232,7 @@ print(calculate_transaction_metrics([10.0, 20.0, 30.0]))
 # ==============================================================================
 
 # Write your Exercise 6 solution below:
+from sys import call_tracing
 cache = {"session_token_1": {"user_id": 99, "role": "admin"}}
 '''
 def get_user_role_lbyl(cache, token):
@@ -252,7 +253,7 @@ def get_user_role_eafp(cache, token):
 print(get_user_role_eafp(cache,"session_token_2"))
 '''
 '''
-Doing lBYl is inefficient when being used in a big server and it will keep doing first to last everytime when checking 
+Doing lBYl is inefficient when being used in a big server and it will check and wait everytime unlike EAFP 
 Doing EAFP on the other hand is more efficient since there is less code, handles error well with except. It also leaps through the dict and go straight to the user to check if there is a role in it
 '''
 
@@ -263,15 +264,94 @@ Doing EAFP on the other hand is more efficient since there is less code, handles
 #   Implement a simulated database transaction worker `execute_database_job(job_func, connection)`.
 #   The lifecycle must strictly follow:
 #   - `try`: Run `job_func(connection)`.
-#   - `except DatabaseError as err`: Log the error and call `connection.rollback()`.
+#   - `except DatabaseError as err`: Log/capture the error and call `connection.rollback()`.
 #   - `else`: Executed ONLY if `job_func` succeeded without exceptions; call `connection.commit()`.
 #   - `finally`: Executed under ALL circumstances; call `connection.close()`.
 #
-#   Return a status dict: `{"status": "SUCCESS" | "FAILED", "error": Optional[str]}`.
+# Function signature:
+#   def execute_database_job(job_func, connection):
+#       # Returns: {"status": "SUCCESS" | "FAILED", "error": Optional[str]}
+#
+# Simulation Setup:
+#   class DatabaseError(Exception):
+#       pass
+#
+#   class MockConnection:
+#       def __init__(self):
+#           self.committed = False
+#           self.rolled_back = False
+#           self.closed = False
+#       def commit(self): self.committed = True
+#       def rollback(self): self.rolled_back = True
+#       def close(self): self.closed = True
+#
+# Adversarial Test Matrix:
+#   1. Standard Case (Transaction Success):
+#      Job: lambda conn: "OK"
+#      Output: {"status": "SUCCESS", "error": None}
+#      Lifecycle State: committed == True, rolled_back == False, closed == True
+#
+#   2. Boundary Case (Handled Database Failure):
+#      Job: lambda conn: (_ for _ in ()).throw(DatabaseError("Deadlock detected"))
+#      Output: {"status": "FAILED", "error": "Deadlock detected"}
+#      Lifecycle State: committed == False, rolled_back == True, closed == True
+#
+#   3. Trap Case (Unexpected Critical Error - e.g. KeyError):
+#      Job: lambda conn: 1 / 0  (ZeroDivisionError)
+#      Output / Behavior: ZeroDivisionError is NOT swallowed (bubbles up)
+#      Lifecycle State: committed == False, rolled_back == False, closed == True (must still close!)
 # ==============================================================================
+'''
+class DatabaseError(Exception):
+    pass
 
+class MockConnection:
+    def __init__(self):
+        self.committed = False
+        self.rolled_back = False
+        self.closed = False
+    def commit(self): self.committed = True
+    def rollback(self): self.rolled_back = True
+    def close(self): self.closed = True
 # Write your Exercise 7 solution below:
+def execute_database_job(job_func, connection):
+    status = {"status" : "SUCCESS", "error" : None}
+    try:
+        job_func(connection)
+    except DatabaseError as e:
+        connection.rollback()
+        status["status"] = "FAILED"
+        status["error"] = str(e)
+        return status
+    else:
+        connection.commit()
+        return status
+    finally:
+        connection.close()
+conn1 = MockConnection()
+def successful_job(conn):
+    return "insert record"
 
+result1 = execute_database_job(successful_job, conn1)
+print(result1)
+print("Committed:", conn1.committed, "Rolled back:", conn1.rolled_back, "Closed:", conn1.closed)
+
+conn2 = MockConnection()
+def failing_job(conn):
+    raise DatabaseError("Deadlock detected")
+result2 = execute_database_job(failing_job, conn2)
+print(result2)  
+print("Committed:", conn2.committed, "Rolled back:", conn2.rolled_back, "Closed:", conn2.closed)
+
+conn3 = MockConnection()
+def crash_job(conn):
+    return 10 / 0  # ZeroDivisionError!
+try:
+    execute_database_job(crash_job, conn3)
+except ZeroDivisionError:
+    print("Caught unexpected error - it bubbled up properly!")
+print("Closed:", conn3.closed)
+'''
 
 # ==============================================================================
 # Exercise 8: Custom Exception Hierarchy & Explicit Chaining (`from err`)
@@ -283,9 +363,49 @@ Doing EAFP on the other hand is more efficient since there is less code, handles
 #   1. Define a base domain exception `AppException(Exception)`.
 #   2. Define a specialized subclass `EntityNotFoundError(AppException)`.
 #   3. Implement `find_user_by_id(user_db, user_id)`:
-#      - If `user_id` is missing from `user_db` (which raises `KeyError`), catch the `KeyError`
+#      - If `user_id` is missing from `user_db` (which raises `KeyError`), catch the `KeyError as err`
 #        and explicitly raise `EntityNotFoundError(f"User {user_id} does not exist") from err`.
 #      - Verify using `__cause__` that original exception context is preserved!
+#
+# Function signature:
+#   def find_user_by_id(user_db, user_id):
+#
+# Adversarial Test Matrix:
+#   1. Standard Case (User Found):
+#      find_user_by_id({101: {"username": "ada"}}, 101) -> {"username": "ada"}
+#
+#   2. Boundary Case (User Missing -> Wrapped Domain Exception):
+#      find_user_by_id({}, 999) -> raises EntityNotFoundError("User 999 does not exist")
+#
+#   3. Trap Case (Explicit Exception Chaining Preserved):
+#      try:
+#          find_user_by_id({}, 999)
+#      except EntityNotFoundError as e:
+#          assert isinstance(e.__cause__, KeyError)  # Original KeyError MUST be attached via 'from err'!
+#          assert isinstance(e, AppException)       # Must inherit from base domain AppException!
 # ==============================================================================
-
+'''
 # Write your Exercise 8 solution below:
+class AppException(Exception):
+    pass
+
+class EntityNotFoundError(AppException):
+    pass
+
+def find_user_by_id(user_db, user_id):
+    try:
+        return user_db[user_id]
+    except KeyError as err:
+        raise EntityNotFoundError(f"User {user_id} does not exist") from err
+
+user = find_user_by_id({101: {"username": "ada"}}, 101)
+print("Found:", user)
+# 2 & 3. Boundary & Trap Cases (Testing error raising & exception chaining)
+try:
+    find_user_by_id({}, 999)
+except EntityNotFoundError as e:
+    print("Caught domain exception:", e)
+    assert isinstance(e.__cause__, KeyError)  # Verifies 'from err' worked!
+    assert isinstance(e, AppException)       # Verifies inheritance worked!
+    print("All assertions passed! __cause__ is:", repr(e.__cause__))
+'''
