@@ -26,7 +26,7 @@
 #   Option B: capture_exception(lambda: 1 / 0) -> (False, "ZeroDivisionError", "division by zero")
 #             capture_exception(lambda: [][0]) -> (False, "IndexError", "list index out of range")
 # ==============================================================================
-
+'''
 # Write your Exercise 1 (Pass 2) solution below:
 # Option A:
 try:
@@ -35,8 +35,16 @@ except Exception as err:
     print(type(err).__name__)
     print(err.args)
     print(err.__class__.__mro__)
-
-
+'''
+'''
+def capture_exception(func):
+    try:
+        func()
+        return(True, None, None)
+    except Exception as err:
+        return(False, type(err).__name__, str(err))
+print(capture_exception(lambda: [][0]))
+'''
 # ==============================================================================
 # Exercise 2: Catching Syntax Errors at Runtime (Pass 2)
 # ==============================================================================
@@ -56,18 +64,34 @@ except Exception as err:
 #      error stops compilation, so the `try` block never gets to run.
 #    - `ast.parse()` parses code safely as data without executing it.
 #
-# Target Output:
-#   validate_syntax("x = [1, 2,") -> (False, "unexpected EOF while parsing")
-#   validate_syntax("x = 10")      -> (True, None)
+# Function signature:
+#   def validate_syntax(code_str):
+#
+# Adversarial Test Matrix:
+#   1. Standard Case (Valid Python Code):
+#      validate_syntax("x = 10 + 20") -> (True, None)
+#
+#   2. Boundary Case (Unclosed brackets / unexpected EOF):
+#      validate_syntax("x = [1, 2,") -> (False, "unexpected EOF while parsing")
+#
+#   3. Trap Case (IndentationError - subclass of SyntaxError):
+#      validate_syntax("def foo():\npass") -> (False, "expected an indented block after function definition on line 1")
+#
+#   4. Trap Case (Empty String - valid empty module in Python):
+#      validate_syntax("") -> (True, None)
 # ==============================================================================
-
+'''
+import ast
 # Write your Exercise 2 (Pass 2) solution below:
-try:
-    answer = [0][1]
-except IndexError as err:
-    raise type(err).__name__
-
-
+def validate_syntax(code_str):
+    try:
+        ast.parse(code_str)
+    except SyntaxError as err:
+        return (False, err.msg)
+    else:
+        return (True, None)
+print(validate_syntax("x = 10 + 20"))
+'''
 # ==============================================================================
 # Exercise 3: Nested Dict Extraction (Pass 2: Functional vs Pattern Matching)
 # ==============================================================================
@@ -93,10 +117,21 @@ except IndexError as err:
 #    - `reduce`: Works with any dynamic list of keys passed at runtime.
 #    - `match / case`: Clean syntax for fixed schemas; checks types automatically (`str(city)`).
 #
-# Target Output:
-#   extract_user_location(payload_valid)   -> "BERLIN"
-#   extract_user_location(payload_missing) -> "UNKNOWN"
-#   extract_user_location(payload_empty)   -> "UNKNOWN"
+# Function signature:
+#   def extract_user_location(payload, default="UNKNOWN"):
+#
+# Adversarial Test Matrix:
+#   1. Standard Case (Full valid payload):
+#      extract_user_location({"user": {"profile": {"address": {"city": "Berlin"}}}}) -> "BERLIN"
+#
+#   2. Boundary Case (Empty payload):
+#      extract_user_location({}) -> "UNKNOWN"
+#
+#   3. Trap Case (Intermediate node is None):
+#      extract_user_location({"user": {"profile": None}}) -> "UNKNOWN"
+#
+#   4. Trap Case (City value is None or non-string):
+#      extract_user_location({"user": {"profile": {"address": {"city": None}}}}) -> "UNKNOWN"
 # ==============================================================================
 
 # Write your Exercise 3 (Pass 2) solution below:
@@ -120,10 +155,14 @@ except IndexError as err:
 #    - `max(low, min(val, high))` clamps a number in one line with no branching (`if/else`).
 #    - Centralizing `safe_int()` keeps endpoints DRY.
 #
-# Target Output:
-#   parse_pagination_params("2", "50")      -> (2, 50)
-#   parse_pagination_params("invalid", "-5") -> (1, 20)
-#   parse_pagination_params("1", "500")     -> (1, 20)  # or clamped to (1, 100)
+# Function signature:
+#   def parse_pagination_params(page_raw, limit_raw, default_page=1, default_limit=20, max_limit=100):
+#
+# Adversarial Test Matrix:
+#   1. Standard Case: parse_pagination_params("2", "50") -> (2, 50)
+#   2. Boundary Case (None inputs): parse_pagination_params(None, None) -> (1, 20)
+#   3. Trap Case (Invalid strings / negative): parse_pagination_params("invalid", "-5") -> (1, 20)
+#   4. Trap Case (Out of bounds upper): parse_pagination_params("1", "500") -> (1, 20) (or clamped to 100)
 # ==============================================================================
 
 # Write your Exercise 4 (Pass 2) solution below:
@@ -147,9 +186,13 @@ except IndexError as err:
 #      can handle generators / streams that cannot be re-read.
 #    - `statistics.fmean()` is implemented in C and runs faster than Python-level loops.
 #
-# Target Output:
-#   calculate_transaction_metrics([10.0, 20.0, 30.0]) -> {"count": 3, "total": 60.0, "average": 20.0, "latest": 30.0}
-#   calculate_transaction_metrics([])                 -> {"count": 0, "total": 0.0, "average": 0.0, "latest": None}
+# Function signature:
+#   def calculate_transaction_metrics(transactions):
+#
+# Adversarial Test Matrix:
+#   1. Standard Case: calculate_transaction_metrics([10.0, 20.0, 30.0]) -> {"count": 3, "total": 60.0, "average": 20.0, "latest": 30.0}
+#   2. Boundary Case (Empty list): calculate_transaction_metrics([]) -> {"count": 0, "total": 0.0, "average": 0.0, "latest": None}
+#   3. Trap Case (Cancelling negatives): calculate_transaction_metrics([-50.0, 50.0]) -> {"count": 2, "total": 0.0, "average": 0.0, "latest": 50.0}
 # ==============================================================================
 
 # Write your Exercise 5 (Pass 2) solution below:
@@ -178,10 +221,14 @@ except IndexError as err:
 #      - If misses are common: `.get()` or `if` avoids exception overhead.
 #    - The `or {}` pattern prevents `AttributeError` when a key exists but holds `None`.
 #
-# Target Output:
-#   get_user_role(cache, "session_token_1") -> "admin"
-#   get_user_role(cache, "bad_token")       -> "GUEST"
-#   get_user_role({"t": None}, "t")         -> "GUEST"
+# Function signature:
+#   def get_user_role(cache, token):
+#
+# Adversarial Test Matrix:
+#   1. Standard Case: get_user_role({"tok_1": {"role": "admin"}}, "tok_1") -> "admin"
+#   2. Boundary Case (Missing token): get_user_role({}, "bad_token") -> "GUEST"
+#   3. Trap Case (Session value is None): get_user_role({"t": None}, "t") -> "GUEST"
+#   4. Trap Case (Missing 'role' key): get_user_role({"t": {"user_id": 5}}, "t") -> "GUEST"
 # ==============================================================================
 
 # Write your Exercise 6 (Pass 2) solution below:
@@ -208,10 +255,22 @@ except IndexError as err:
 #      with a clean `with transaction_scope(conn):` block.
 #    - This is the exact pattern used by SQLAlchemy (`session.begin()`).
 #
-# Target Output:
-#   with transaction_scope(conn) as c:
-#       # do database work...
-#   # commit/rollback/close happen automatically
+# Adversarial Test Matrix:
+#   1. Standard Case (Success):
+#      with transaction_scope(conn): pass
+#      conn.committed == True, conn.rolled_back == False, conn.closed == True
+#
+#   2. Boundary Case (DatabaseError):
+#      try:
+#          with transaction_scope(conn): raise DatabaseError("Deadlock")
+#      except DatabaseError: pass
+#      conn.committed == False, conn.rolled_back == True, conn.closed == True
+#
+#   3. Trap Case (Unexpected exception bubbles up):
+#      try:
+#          with transaction_scope(conn): 1 / 0
+#      except ZeroDivisionError: pass
+#      conn.closed == True (must still close!)
 # ==============================================================================
 
 # Write your Exercise 7 (Pass 2) solution below:
@@ -235,9 +294,22 @@ except IndexError as err:
 #    - `raise ... from None`: Strips internal causes (for public security).
 #    - A `.to_dict()` method lets Flask's `@app.errorhandler` return clean JSON in 1 line.
 #
-# Target Output:
-#   err = EntityNotFoundError("User", 999)
-#   err.to_dict() -> {"error": "User with ID '999' not found.", "entity": "User", "status": 404}
+# Adversarial Test Matrix:
+#   1. Standard Case (.to_dict() output):
+#      err = EntityNotFoundError("User", 999)
+#      err.to_dict() -> {"error": "User with ID '999' not found.", "entity": "User", "status": 404}
+#
+#   2. Boundary Case (Inheritance hierarchy):
+#      issubclass(EntityNotFoundError, AppException) == True
+#      issubclass(AppException, Exception) == True
+#
+#   3. Trap Case (Traceback suppression with 'from None'):
+#      try:
+#          try: {}["missing"]
+#          except KeyError: raise EntityNotFoundError("User", 1) from None
+#      except EntityNotFoundError as e:
+#          e.__cause__ is None
+#          e.__suppress_context__ is True
 # ==============================================================================
 
 # Write your Exercise 8 (Pass 2) solution below:
