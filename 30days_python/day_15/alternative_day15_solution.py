@@ -92,6 +92,16 @@ def validate_syntax(code_str):
         return (True, None)
 print(validate_syntax("x = 10 + 20"))
 '''
+'''
+def validate_syntax(code_str):
+    try:
+        compile(code_str, "<string>", "exec")
+    except SyntaxError as err:
+        return (False, err.msg)
+    else:
+        return (True, None)
+print(validate_syntax("x = 10 + 20"))
+'''
 # ==============================================================================
 # Exercise 3: Nested Dict Extraction (Pass 2: Functional vs Pattern Matching)
 # ==============================================================================
@@ -135,7 +145,17 @@ print(validate_syntax("x = 10 + 20"))
 # ==============================================================================
 
 # Write your Exercise 3 (Pass 2) solution below:
-
+from functools import reduce
+from typing import final
+def extract_user_location(payload, default="UNKNOWN"):
+    try:
+        path = ["user", "profile", "address", "city"]
+        result = reduce(lambda acc, key: acc.get(key) if isinstance(acc, dict) else None, path, payload).upper()
+    except (AttributeError, TypeError, KeyError):
+        return default
+    else:
+        return result
+print(extract_user_location({}))
 
 
 # ==============================================================================
