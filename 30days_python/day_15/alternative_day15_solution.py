@@ -143,7 +143,7 @@ print(validate_syntax("x = 10 + 20"))
 #   4. Trap Case (City value is None or non-string):
 #      extract_user_location({"user": {"profile": {"address": {"city": None}}}}) -> "UNKNOWN"
 # ==============================================================================
-
+'''
 # Write your Exercise 3 (Pass 2) solution below:
 from functools import reduce
 from typing import final
@@ -156,8 +156,16 @@ def extract_user_location(payload, default="UNKNOWN"):
     else:
         return result
 print(extract_user_location({}))
-
-
+'''
+'''
+def extract_user_location(payload, default="UNKNOWN"):
+    match payload:
+        case {"user": {"profile": {"address": {"city": str(city)}}}}:
+            return city.upper()
+        case _:
+            return default
+print(extract_user_location({"user": {"profile": {"address": {"city": "Berlin"}}}}))
+'''
 # ==============================================================================
 # Exercise 4: Query Param Sanitization (Pass 2: Helper & Math Clamping)
 # ==============================================================================
@@ -186,9 +194,20 @@ print(extract_user_location({}))
 # ==============================================================================
 
 # Write your Exercise 4 (Pass 2) solution below:
-
-
-
+def safe_int(val, default):
+    try:
+        return int(val)
+    except (ValueError, TypeError):
+        return default
+def parse_pagination_params(page_raw, limit_raw, default_page=1, default_limit=20, max_limit=100):
+    page = safe_int(page_raw, default_page)
+    limit = safe_int(limit_raw, default_limit)
+    if page < 1:
+        page = default_page
+    if limit < 1 or limit > max_limit:
+        limit = default_limit
+    return (page, limit)
+print(parse_pagination_params("1", "500"))
 # ==============================================================================
 # Exercise 5: Analytics Metrics (Pass 2: Standard Library & Single-Pass Loop)
 # ==============================================================================
