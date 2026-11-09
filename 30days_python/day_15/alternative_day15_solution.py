@@ -192,7 +192,7 @@ print(extract_user_location({"user": {"profile": {"address": {"city": "Berlin"}}
 #   3. Trap Case (Invalid strings / negative): parse_pagination_params("invalid", "-5") -> (1, 20)
 #   4. Trap Case (Out of bounds upper): parse_pagination_params("1", "500") -> (1, 20) (or clamped to 100)
 # ==============================================================================
-
+'''
 # Write your Exercise 4 (Pass 2) solution below:
 def safe_int(val, default):
     try:
@@ -208,6 +208,8 @@ def parse_pagination_params(page_raw, limit_raw, default_page=1, default_limit=2
         limit = default_limit
     return (page, limit)
 print(parse_pagination_params("1", "500"))
+'''
+
 # ==============================================================================
 # Exercise 5: Analytics Metrics (Pass 2: Standard Library & Single-Pass Loop)
 # ==============================================================================
@@ -235,9 +237,26 @@ print(parse_pagination_params("1", "500"))
 # ==============================================================================
 
 # Write your Exercise 5 (Pass 2) solution below:
-
-
-
+from ast import Return
+def calculate_transaction_metrics(transactions):
+    count = 0
+    total = 0.0
+    average = 0.0
+    latest = None
+    try:
+        count = len(transactions)
+        total = sum(transactions)
+        average = total/len(transactions)
+        latest = transactions[-1]
+    except ZeroDivisionError:
+        pass
+    return {
+    "count": count,
+    "total": float(total),
+    "average": float(average),
+    "latest": latest  # float if exists, or None if empty
+    }
+print(calculate_transaction_metrics([]))
 # ==============================================================================
 # Exercise 6: LBYL vs EAFP (Pass 2: Chained .get() vs Pattern Matching)
 # ==============================================================================
