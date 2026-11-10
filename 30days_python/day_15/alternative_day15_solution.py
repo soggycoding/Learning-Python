@@ -235,7 +235,7 @@ print(parse_pagination_params("1", "500"))
 #   2. Boundary Case (Empty list): calculate_transaction_metrics([]) -> {"count": 0, "total": 0.0, "average": 0.0, "latest": None}
 #   3. Trap Case (Cancelling negatives): calculate_transaction_metrics([-50.0, 50.0]) -> {"count": 2, "total": 0.0, "average": 0.0, "latest": 50.0}
 # ==============================================================================
-
+'''
 # Write your Exercise 5 (Pass 2) solution below:
 from ast import Return
 def calculate_transaction_metrics(transactions):
@@ -257,6 +257,7 @@ def calculate_transaction_metrics(transactions):
     "latest": latest  # float if exists, or None if empty
     }
 print(calculate_transaction_metrics([]))
+'''
 # ==============================================================================
 # Exercise 6: LBYL vs EAFP (Pass 2: Chained .get() vs Pattern Matching)
 # ==============================================================================
@@ -288,9 +289,14 @@ print(calculate_transaction_metrics([]))
 #   3. Trap Case (Session value is None): get_user_role({"t": None}, "t") -> "GUEST"
 #   4. Trap Case (Missing 'role' key): get_user_role({"t": {"user_id": 5}}, "t") -> "GUEST"
 # ==============================================================================
-
+'''
 # Write your Exercise 6 (Pass 2) solution below:
+def get_user_role(cache, token):
+    role = (cache.get(token) or {}).get("role", "GUEST")
+    return role
 
+print(get_user_role({"tok_1": {"role": "admin"}}, "tok_1"))
+'''
 
 
 # ==============================================================================
@@ -332,8 +338,35 @@ print(calculate_transaction_metrics([]))
 # ==============================================================================
 
 # Write your Exercise 7 (Pass 2) solution below:
+from contextlib import contextmanager
 
+class DatabaseError(Exception):
+    pass
 
+class MockConnection:
+    def __init__(self):
+        self.committed = False
+        self.rolled_back = False
+        self.closed = False
+    def commit(self):
+        self.committed = True
+    def rollback(self):
+        self.rolled_back = True
+    def close(self):
+        self.closed = True
+        
+@contextmanager
+def transaction_scope(connection):
+    try:
+        yield connection
+    
+    except DatabaseError as err:
+        connection.rollback()
+        raise
+    else:
+        connection.commit()
+    finally:
+        connection.close()
 
 # ==============================================================================
 # Exercise 8: Domain Exceptions (Pass 2: Traceback Suppression & .to_dict())
