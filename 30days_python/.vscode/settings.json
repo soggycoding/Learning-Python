@@ -16,5 +16,9 @@
     "editor.acceptSuggestionOnEnter": "on",
     "editor.acceptSuggestionOnCommitCharacter": false,
     "editor.suggest.preview": false,
-    "editor.tabCompletion": "off"
+    "editor.tabCompletion": "off",
+    "editor.autoClosingBrackets": "never",
+    "editor.autoClosingQuotes": "never",
+    "editor.autoClosingDelete": "never",
+    "editor.autoSurround": "never"
 }

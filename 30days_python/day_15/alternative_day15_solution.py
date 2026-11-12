@@ -336,7 +336,7 @@ print(get_user_role({"tok_1": {"role": "admin"}}, "tok_1"))
 #      except ZeroDivisionError: pass
 #      conn.closed == True (must still close!)
 # ==============================================================================
-
+'''
 # Write your Exercise 7 (Pass 2) solution below:
 from contextlib import contextmanager
 
@@ -367,7 +367,7 @@ def transaction_scope(connection):
         connection.commit()
     finally:
         connection.close()
-
+'''
 # ==============================================================================
 # Exercise 8: Domain Exceptions (Pass 2: Traceback Suppression & .to_dict())
 # ==============================================================================
@@ -404,3 +404,36 @@ def transaction_scope(connection):
 # ==============================================================================
 
 # Write your Exercise 8 (Pass 2) solution below:
+
+class AppException(Exception):
+    pass
+
+class EntityNotFoundError(AppException):
+    def __init__(self, entity_type, entity_id, status_code=404):
+        self.entity_type = entity_type
+        self.entity_id = entity_id
+        self.status_code = status_code
+        super().__init__(f"{entity_type} with ID '{entity_id}' not found.")
+    def to_dict(self):
+        return {
+            "error": str(self),
+            "entity": self.entity_type,
+            "status": self.status_code
+        }
+
+def find_user_by_id(user_db, user_id):
+    try:
+        return user_db[user_id]
+    except KeyError as err:
+        raise EntityNotFoundError("User", user_id) from None
+
+err = EntityNotFoundError("User", 999)
+print(err.to_dict())
+
+try:
+    find_user_by_id({}, 999)
+except EntityNotFoundError as e:
+    print(e.to_dict())
+    assert e.__cause__ is None
+    assert e.__suppress_context__ is True
+    print("Traceback suppressed successfully!")
