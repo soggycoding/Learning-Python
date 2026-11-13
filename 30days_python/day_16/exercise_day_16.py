@@ -35,11 +35,24 @@
 #      get_datetime_components(datetime(1970, 1, 1, 0, 0, 0)) ->
 #        {"year": 1970, "month": 1, "day": 1, "hour": 0, "minute": 0, "second": 0, "timestamp": ...}
 # ==============================================================================
-
+'''
 # Write your Exercise 1 solution below:
-
-
-
+from datetime import datetime, date, time, timedelta, timezone
+def get_datetime_components(dt=None):
+    if dt is None:
+        dt = datetime.now()
+    return {
+            "year": dt.year,
+            "month": dt.month,
+            "day": dt.day,
+            "hour": dt.hour,
+            "minute": dt.minute,
+            "second": dt.second,
+            "timestamp": float(dt.timestamp())
+        }
+test_dt = datetime(2026, 11, 12, 16, 30, 45)
+print(get_datetime_components(test_dt))
+'''
 # ==============================================================================
 # Exercise 2: Format Datetime with strftime
 # ==============================================================================
@@ -65,8 +78,12 @@
 # ==============================================================================
 
 # Write your Exercise 2 solution below:
-
-
+from datetime import datetime
+def format_datetime_custom(dt=None):
+    if dt is None:
+        dt = datetime.now()
+    return f"{dt.month}/{dt.day}/{dt.year}, {dt.hour}:{dt.minute}:{dt.second}"
+print(format_datetime_custom(datetime(2026, 11, 12, 16, 5, 30)))
 
 # ==============================================================================
 # Exercise 3: Parse Date String with strptime
