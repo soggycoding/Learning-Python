@@ -3,7 +3,9 @@
 # ==============================================================================
 # LEVEL 1: CORE DATETIME EXTRACTION & FORMATTING
 # ==============================================================================
-
+from warnings import catch_warnings
+from time import strftime
+from datetime import datetime, date, time, timedelta, timezone
 # ==============================================================================
 # Exercise 1: Extract Date Attributes & Unix Timestamp
 # ==============================================================================
@@ -76,15 +78,16 @@ print(get_datetime_components(test_dt))
 #   3. Trap Case (Midnight boundary):
 #      format_datetime_custom(datetime(2026, 1, 1, 0, 0, 0)) -> "01/01/2026, 00:00:00"
 # ==============================================================================
-
+'''
 # Write your Exercise 2 solution below:
 from datetime import datetime
 def format_datetime_custom(dt=None):
     if dt is None:
         dt = datetime.now()
-    return f"{dt.month}/{dt.day}/{dt.year}, {dt.hour}:{dt.minute}:{dt.second}"
-print(format_datetime_custom(datetime(2026, 11, 12, 16, 5, 30)))
+    return dt.strftime("%m/%d/%Y, %H:%M:%S")
 
+print(format_datetime_custom(datetime(2026, 11, 12, 16, 5, 30)))
+'''
 # ==============================================================================
 # Exercise 3: Parse Date String with strptime
 # ==============================================================================
@@ -108,8 +111,14 @@ print(format_datetime_custom(datetime(2026, 11, 12, 16, 5, 30)))
 # ==============================================================================
 
 # Write your Exercise 3 solution below:
+def parse_human_date(date_str):
+    try:
+        parsed_date = datetime.strptime(date_str, "Today is %d %B, %Y")
+        return parsed_date
+    except ValueError:
+        raise ValueError("Invalid date format")
 
-
+print(parse_human_date("Today is 5 December, 2019"))
 
 # ==============================================================================
 # LEVEL 2: TEMPORAL ARITHMETIC & DURATION MATH
