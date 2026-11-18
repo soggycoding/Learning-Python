@@ -26,8 +26,17 @@
 #        get_datetime_components() -> returns all 7 keys populated with current local time.
 #     3. Trap Case (Zero-value clock):
 #        get_datetime_components(datetime(2025, 1, 1, 0, 0, 0)) -> hour, minute, second must be 0.
-#
-#
+from multiprocessing.sharedctypes import Value
+from datetime import datetime, date, time, timedelta, timezone
+from warnings import catch_warnings
+import re
+'''
+def get_datetime_components(dt=None):
+    if dt is None:
+        dt = datetime.now()
+    return {"year": dt.year, "month": dt.month, "day": dt.day, "hour": dt.hour, "minute": dt.minute, "second": dt.second, "timestamp": dt.timestamp()}
+print(get_datetime_components(datetime(2025, 1, 1, 0, 0, 0)))
+'''
 # Recall Prompt 2: Custom Datetime Formatting
 #   Function:
 #     format_datetime_custom(dt=None)
@@ -46,8 +55,13 @@
 #        format_datetime_custom(datetime(2025, 3, 5, 4, 7, 9)) -> "03/05/2025, 04:07:09"
 #     3. Trap Case (Midnight boundary):
 #        format_datetime_custom(datetime(2026, 1, 1, 0, 0, 0)) -> "01/01/2026, 00:00:00"
-#
-#
+'''
+def format_datetime_custom(dt=None):
+    if dt is None:
+        dt = datetime.now()
+    return dt.strftime("%m/%d/%Y, %H:%M:%S")
+print(format_datetime_custom(datetime(2026, 11, 12, 16, 5, 30)))
+'''
 # Recall Prompt 3: Human Date Sentence Parser
 #   Function:
 #     parse_human_date(date_str)
@@ -67,13 +81,12 @@
 #     3. Trap Case (Malformed text):
 #        parse_human_date("Date: 5 December, 2019") -> raises ValueError("Invalid date format")
 # ==============================================================================
-
-# Recall Prompt 1 Solution:
-
-
-
-# Recall Prompt 2 Solution:
-
-
-
-# Recall Prompt 3 Solution:
+'''
+def parse_human_date(date_str):
+    try:
+        parsed = datetime.strptime(date_str, "Today is %d %B, %Y")
+        return parsed
+    except ValueError:
+        raise ValueError("Invalid date format")
+print(parse_human_date("Date: 5 December, 2019"))
+'''
